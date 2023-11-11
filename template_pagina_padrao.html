@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="pt_bt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <style type="text/css">
+      body {
+        background-color: grey;
+        margin: 5 5 5 5;
+      }
+
+      .logo {
+        height: 50px;
+        margin: auto;
+      }
+      header {
+        width: 100%;
+        height: 150px;
+        background-color: white;
+        margin: 5 5 5 5;
+      }
+      .titulo_pagina {
+        text-align: center;
+        font-size: 18px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 700;
+        width: 60%;
+
+        color: rgb(5, 5, 5);
+        padding: 10px;
+        margin: 10px;
+      }
+      .titulo {
+        display: flex;
+      }
+      .placeholdertitulo {
+        width: 20%;
+      }
+      .subtitulo {
+        display: flex;
+      }
+      .infos_empregador {
+        display: flex;
+      }
+      .linha1_empregador {
+        display: flex;
+        margin-left: 4px;
+        margin-right: 4px;
+        flex-direction: row;
+        width: 1920px;
+
+        justify-content: space-between;
+      }
+      .linha1_empregador .empregador {
+        display: inherit;
+        margin-left: 4px;
+        margin-right: 4px;
+        width: 192px;
+      }
+      .linha1_empregador .empregador label {
+        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 700;
+        margin-left: 10px;
+        margin-right: 10px;
+        width: 150px;
+      }
+      .linha1_empregador .empregador span {
+        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 500;
+        width: 100%;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
+      
+      .linha1_empregador .empregador_info {
+        display: inherit;
+        margin-left: 4px;
+        margin-right: 4px;
+        width: 1344px;
+      }
+      .linha1_empregador .empregador_info {
+        display: inherit;
+        margin-left: 4px;
+        margin-right: 4px;
+      }
+      .linha1_empregador .empregador_info label {
+        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 700;
+        width: 150px;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+      .linha1_empregador .empregador_info span {
+        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 500;
+        width: 100%;
+        margin-left: 10px;
+        margin-right: 10px;
+        align-items: start;
+      }
+
+
+      .linha1_empregador .qtd_trabalhadores {
+        display: inherit;
+        margin-left: 4px;
+        margin-right: 4px;
+        width: 192px;
+      }
+      .linha1_empregador .qtd_trabalhadores label {
+        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 700;
+        width: 100%;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+      .linha1_empregador .qtd_trabalhadores span {
+        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 500;
+        width: 100%;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
+      .linha1_empregador .origem {
+        display: inherit;
+        margin-left: 4px;
+        margin-right: 4px;
+        width: 192px;
+      }
+      .linha1_empregador .origem label {
+        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 700;
+        width: 100%;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+      .linha1_empregador .origem span {
+        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 500;
+        width: 100%;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+    </style>
+    <header>
+      <div class="titulo">
+        <img
+          class="logo"
+          src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
+        />
+        <span class="titulo_pagina">Detalhe da Guia a Ser Emitida</span>
+        <div class="placeholdertitulo"></div>
+      </div>
+      <div class="infos_empregador">
+        <div class="linha1_empregador">
+          <div class="empregador">
+            <label class="subtitulo" for="Empregador">Empregador: </label>
+            <span> 33.780.199</span>
+          </div>
+          <div class="empregador_info">
+            <label class="nome" for="Nome Empregador">Nome Empregador: </label>
+            <span> KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA</span>
+          </div>
+          <div class="qtd_trabalhadores">
+            <label class="nome" for="Nome Empregador"
+              >Qtd. Trabalhadores:
+            </label>
+            <span> 114</span>
+          </div>
+          <div class="origem">
+            <label class="nome" for="Nome Empregador">Origem: </label>
+            <span> Gestão de Guias</span>
+          </div>
+        </div>
+      </div>
+    </header>
+  </body>
+</html>
