@@ -20,7 +20,9 @@
       flex-direction: column;
       margin: 0 auto;
     }
-
+    header{
+      padding: 0 10px;
+    }
     .titulo {
       display: flex;
       justify-content: space-between;
@@ -60,18 +62,33 @@
     .tituloTabela hr {
       border: 2px solid black;
     }
-
+    main hr{
+      border: 0.15rem solid black;
+    }
     .topoTabela {
       padding-top: 10px;
       display: flex;
       gap: 80px;
       font-size: 1.1rem;
+      padding-bottom: 10px;
     }
     .infoTabela label {
       padding-right: 10px;
+      
+    }
+    
+    th{
+      padding: 0 2px;
     }
 
- 
+    td{
+      padding: 5px 2px;
+      border: 3px solid white;
+    }
+    
+    tr:nth-child(even) {
+      background:white;
+    }
     
     
 
@@ -110,6 +127,41 @@
           <span> KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA </span>
         </div>
 
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+
         <div class="col">
           <label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
         </div>
@@ -129,11 +181,12 @@
 
       <div class="tituloTabela">
         <span><b>Relação de Trabalhadores</b></span>
-        <hr />
+        
       </div>
     </header>
 
     <main>
+      <hr/>
       <div class="topoTabela">
         <div class="infoTabela">
           <label for="">Estabelecimento:</label>
@@ -145,15 +198,63 @@
         </div>
       </div>
 
-      <table style="width: 1920px; ">
-        <tr>
-          <th colspan="4">Comp.Apuração Comp.Referência Nome Trabalhador Matrícula CPF Categoria Vencimento Tipo Depósito Base Remuneração Total Valor FGTS na Guia Juros Atualiz. Monetária Multa Total</th>
+      <table style="width: 1920px; border-collapse: collapse; text-align: left; background-color: #E4E6D8;" >
+        <tr style=" background-color: #CCCCBE; height: 50px;">
+          <th>Comp.<br>
+            Apuração</th>
+          <th>
+            Comp.<br>
+Referência
+          </th>
+          <th>
+            Nome Trabalhador
+          </th>
+          <th>Matrícula</th>
+          <th>CPF</th>
+          <th>Categoria</th>
+          <th>Vencimento</th>
+          <th>Tipo Depósito</th>
+          <th>Base Remuneração<br> Total</th>
+          <th>Valor FGTS<br> na Guia</th>
+          <th>Juros</th>
+          <th>Atualiz.<br> Monetária</th>
+          <th>Multa</th>
+          <th>Total</th>
+          
         </tr>
-        <tr style="background-color: aqua;">
-          <td style="padding-left: 5px; max-width: 200px;">09/2023 <span style="padding-left: 150px;">ANA CLAUDIA CANDIDO DA SILVA</span></td>
-          <td style="width: 200px;">4</td>
-          <td style="display: flex; justify-content: space-between;">087.556.237-00 <span>101</span> <span>06/10/2023</span> <span>Mensal</span></td>
-          <td>1.516,00 121,28 0,60 0,06 6,06 128,00</td>
+
+        <tr>
+          <td>09/2023</td>
+          <td></td>
+          <td>ANA CLAUDIA CANDIDO DA SILVA</td>
+          <td>4</td>
+          <td>087.556.237-00</td>
+          <td>101</td>
+          <td>06/10/2023</td>
+          <td>Mensal</td>
+          <td>1.516,00</td>
+          <td>121,28</td>
+          <td>0,60</td>
+          <td>0,06</td>
+          <td>6,06</td>
+          <td>128,00</td>
+        </tr>
+
+        <tr>
+          <td>09/2023</td>
+          <td></td>
+          <td>ANA CLAUDIA CANDIDO DA SILVA</td>
+          <td>4</td>
+          <td>087.556.237-00</td>
+          <td>101</td>
+          <td>06/10/2023</td>
+          <td>Mensal</td>
+          <td>1.516,00</td>
+          <td>121,28</td>
+          <td>0,60</td>
+          <td>0,06</td>
+          <td>6,06</td>
+          <td>128,00</td>
         </tr>
       </table>
       
