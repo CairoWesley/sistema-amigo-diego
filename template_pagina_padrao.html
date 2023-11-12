@@ -62,8 +62,8 @@
     .tituloTabela hr {
       border: 2px solid black;
     }
-    main hr{
-      border: 0.15rem solid black;
+    main {
+      padding: 0 10px;
     }
     .topoTabela {
       padding-top: 10px;
@@ -76,21 +76,27 @@
       padding-right: 10px;
       
     }
-    
+    hr{
+      border: .1rem solid black;
+      margin: 0 auto ;
+      width: 100%;
+    }
     th{
       padding: 0 2px;
     }
 
     td{
       padding: 5px 2px;
-      border: 3px solid white;
+      
     }
     
     tr:nth-child(even) {
       background:white;
     }
-    
-    
+    tr{
+        padding: 0 10px;
+    }
+   
 
 
   </style>
@@ -184,9 +190,9 @@
         
       </div>
     </header>
-
+    <hr/>
     <main>
-      <hr/>
+      
       <div class="topoTabela">
         <div class="infoTabela">
           <label for="">Estabelecimento:</label>
@@ -198,9 +204,9 @@
         </div>
       </div>
 
-      <table style="width: 1920px; border-collapse: collapse; text-align: left; background-color: #E4E6D8;" >
+      <table style="width: 100% ; border-collapse: collapse; text-align: left; background-color: #E4E6D8;" >
         <tr style=" background-color: #CCCCBE; height: 50px;">
-          <th>Comp.<br>
+          <th style="text-align: center;">Comp.<br>
             Apuração</th>
           <th>
             Comp.<br>
@@ -209,56 +215,77 @@ Referência
           <th>
             Nome Trabalhador
           </th>
-          <th>Matrícula</th>
-          <th>CPF</th>
-          <th>Categoria</th>
+          <th style="width:225px">Matrícula</th>
+          <th style="width: 110px;">CPF</th>
+          <th style="text-align: right; padding-right: 20px;">Categoria</th>
           <th>Vencimento</th>
           <th>Tipo Depósito</th>
-          <th>Base Remuneração<br> Total</th>
-          <th>Valor FGTS<br> na Guia</th>
-          <th>Juros</th>
-          <th>Atualiz.<br> Monetária</th>
-          <th>Multa</th>
-          <th>Total</th>
+          <th style="text-align: right; width: 140px;">Base Remuneração<br> Total</th>
+          <th style="text-align: right;">Valor FGTS<br> na Guia</th>
+          <th style="width: 80px; text-align: center;">Juros</th>
+          <th style="text-align: right; width: 10px; padding-right: 20px;">Atualiz.<br> Monetária</th>
+          <th style="text-align: center;" >Multa</th>
+          <th style="text-align: right;">Total</th>
           
-        </tr>
-
+       
         <tr>
-          <td>09/2023</td>
+          <td style="text-align: center;">09/2023</td>
           <td></td>
-          <td>ANA CLAUDIA CANDIDO DA SILVA</td>
-          <td>4</td>
+          <td style="border-left: 3px solid white;">ANA CLAUDIA CANDIDO DA SILVA</td>
+          <td style="border-left: 3px solid white;">4</td>
           <td>087.556.237-00</td>
-          <td>101</td>
+          <td style="text-align: right; padding-right: 20px;">101</td>
           <td>06/10/2023</td>
-          <td>Mensal</td>
-          <td>1.516,00</td>
-          <td>121,28</td>
-          <td>0,60</td>
-          <td>0,06</td>
-          <td>6,06</td>
-          <td>128,00</td>
+          <td >Mensal</td>
+          <td style="text-align: right; border-left: 3px solid white;">1.516,00</td>
+          <td style="text-align: right;">121,28</td>
+          <td style="text-align: center;">0,60</td>
+          <td style="text-align: right; padding-right: 20px;">0,06</td>
+          <td style="text-align: center;">6,06</td>
+          <td  style="text-align: right;">128,00</td>
         </tr>
-
         <tr>
-          <td>09/2023</td>
+          <td style="text-align: center;">09/2023</td>
           <td></td>
-          <td>ANA CLAUDIA CANDIDO DA SILVA</td>
-          <td>4</td>
+          <td style="border-left: 3px solid white;">ANA CLAUDIA CANDIDO DA SILVA</td>
+          <td style="border-left: 3px solid white;">4</td>
           <td>087.556.237-00</td>
-          <td>101</td>
+          <td style="text-align: right; padding-right: 20px;">101</td>
           <td>06/10/2023</td>
-          <td>Mensal</td>
-          <td>1.516,00</td>
-          <td>121,28</td>
-          <td>0,60</td>
-          <td>0,06</td>
-          <td>6,06</td>
-          <td>128,00</td>
+          <td >Mensal</td>
+          <td style="text-align: right; border-left: 3px solid white;">1.516,00</td>
+          <td style="text-align: right;">121,28</td>
+          <td style="text-align: center;">0,60</td>
+          <td style="text-align: right; padding-right: 20px;">0,06</td>
+          <td style="text-align: center;">6,06</td>
+          <td  style="text-align: right;">128,00</td>
         </tr>
+        <tr>
+          <td style="text-align: center;">09/2023</td>
+          <td></td>
+          <td style="border-left: 3px solid white;">ANA CLAUDIA CANDIDO DA SILVA</td>
+          <td style="border-left: 3px solid white;">4</td>
+          <td>087.556.237-00</td>
+          <td style="text-align: right; padding-right: 20px;">101</td>
+          <td>06/10/2023</td>
+          <td >Mensal</td>
+          <td style="text-align: right; border-left: 3px solid white;">1.516,00</td>
+          <td style="text-align: right;">121,28</td>
+          <td style="text-align: center;">0,60</td>
+          <td style="text-align: right; padding-right: 20px;">0,06</td>
+          <td style="text-align: center;">6,06</td>
+          <td  style="text-align: right;">128,00</td>
+        </tr>
+        
+
+        
+
+        
       </table>
+      
       
 
     </main>
+    <hr/>
   </body>
 </html>
