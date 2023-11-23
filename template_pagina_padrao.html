@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
   </head>
   <style type="text/css">
     * {
@@ -20,6 +22,7 @@
     }
     header {
       padding: 0 0px;
+      page-break-before: always;
     }
 
     .titulo {
@@ -103,32 +106,251 @@
       font-weight: bold;
     }
 
-    .categoriaInfo h1{
+    .categoriaInfo h1 {
       font-size: 0.35rem;
     }
   </style>
-  <script src="https://d3js.org/d3-collection.v1.min.js"></script>
-  <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
-  <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
-  <script src="https://d3js.org/d3-request.v1.min.js"></script>
-  <body id="main">
-    <script>
-      d3.csv("/planilha1.csv", (itens) => {
-        console.log(itens[0], itens[1]);
+  <script>
+    var Empregador;
+    var Nome_empregador;
+    var Vencimento_guia;
+    var qtd_trabalhadores;
+    var Origem;
+    var Estabelecimento;
+    var Tomador;
 
-        var body = document.getElementById("main");
-        itens.map((item) => {
-          var element = document.createElement("div");
-          element.innerHTML = `
-      `;
-          body.appendChild(element);
-        });
+    d3.dsv(";")("./info_empresa.csv", (items) => {
+      print(items[0]);
+      const item = items[0];
+      Empregador = item.Empregador;
+      Nome_empregador = item.Nome_empregador;
+      Vencimento_guia = item.Vencimento_guia;
+      Origem = item.Origem;
+      Estabelecimento = item.Estabelecimento;
+      Tomador = item.Tomador;
+    });
+
+    d3.dsv(";")("/planilha1.csv", (items) => {
+      console.log;
+      console.log(items[0], items[1]);
+      const tamanho_maximo = 24;
+
+      const paginas_2 = [];
+      let pagina_atual = [];
+
+      items.map((item, i) => {
+        if (pagina_atual.length != tamanho_maximo) {
+          pagina_atual.push(item);
+        } else {
+          paginas_2.push(pagina_atual);
+
+          pagina_atual = [];
+          pagina_atual.push(item);
+        }
+        if (i == items.length - 1) {
+          paginas_2.push(pagina_atual);
+        }
       });
-      // Criar paginação
-      // se a quantidade de itens na pagina não couber, verificar o que fazer
-      // gerar o loop
-      // criar os outros templates com os valores atualizados das somas.
-    </script>
+      var body = document.getElementById("main");
+      paginas_2.map((item) => {
+        var element = document.createElement("div");
+        element.innerHTML = `
+        <header>
+    <div class="titulo">
+      <img
+        class="logo"
+        src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
+        width="100"
+      />
+
+      <span style="transform: translate(-25%)"
+        ><b>Detalhe da Guia a Ser Emitida</b></span
+      >
+
+      <span></span>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label class="subtitulo" for="Empregador">Empregador: </label>
+        <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+      </div>
+
+      <div class="col-2">
+        <span class="empregadorNum" style="font-size: 0.75rem"
+          >${Empregador}</span
+        >
+        <span style="font-size: 0.75rem"> ${Vencimento_guia}</span>
+      </div>
+      <div class="col">
+        <label class="subtitulo" for="Empregador">Nome Empregador: </label>
+      </div>
+      <div class="col">
+        <span> ${Nome_empregador} </span>
+      </div>
+
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+
+      <div class="col">
+        <label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
+      </div>
+
+      <div class="col">
+        <span> ${items.length}</span>
+      </div>
+
+      <div class="col">
+        <label class="subtitulo" for="Empregador"> Origem:</label>
+      </div>
+
+      <div class="col">
+        <span>${Origem}</span>
+      </div>
+    </div>
+
+    <div class="tituloTabela">
+      <span><b>Relação de Trabalhadores</b></span>
+    </div>
+    <hr />
+  </header>
+  <main>
+    <div class="topoTabela">
+      <div class="infoTabela">
+        <label for="">Estabelecimento:</label>
+        <span>${Estabelecimento}</span>
+      </div>
+      <div class="infoTabela">
+        <label>Tomador:</label>
+        <span>${Tomador}</span>
+      </div>
+    </div>
+    <table
+      style="
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        background-color: #e4e6d8;
+      "
+    >
+      <tr style="background-color: #ccccbe; height: 50px">
+        <th style="text-align: center">
+          Comp.<br />
+          Apuração
+        </th>
+        <th style="text-align: center">
+          Comp.<br />
+          Referência
+        </th>
+        <th style="max-width: 600px">Nome Trabalhador</th>
+        <th style="width: 125px">Matrícula</th>
+        <th style="max-width: 150px">CPF</th>
+        <th style="text-align: right; padding-right: 20px">Categoria</th>
+        <th>Vencimento</th>
+        <th>Tipo Depósito</th>
+        <th style="text-align: right; max-width: 50px">
+          Base Remuneração<br />
+          Total
+        </th>
+        <th style="text-align: right">
+          Valor FGTS<br />
+          na Guia
+        </th>
+        <th style="width: 80px; text-align: center">Juros</th>
+        <th style="text-align: right; width: 10px; padding-right: 20px">
+          Atualiz.<br />
+          Monetária
+        </th>
+        <th style="text-align: center">Multa</th>
+        <th style="text-align: right">Total</th>
+      </tr>
+  ${item.map((dado) => {
+    print(dado);
+    return `<tr>
+        <td style="text-align: center">
+          ${dado["Comp. Apuração"]}
+          </td>
+        <td style="text-align: center">
+          ${dado["Comp. Referência"]}
+          </td>
+        <td style="border-right: 3px solid white">
+          ${dado["Nome Trabalhador"]}
+        </td>
+        <td style="border-right: 3px solid white">
+          ${dado["Matricula"]}
+          </td>
+        <td>
+          ${dado["CPF"]}
+          </td>
+        <td style="text-align: right; padding-right: 20px">
+          ${dado["Categoria"]}
+          </td>
+        <td style="padding-left: 5px">      
+                ${dado["Vencimento"]}
+</td>
+        <td>        
+              ${dado["Tipo Depósito"]}
+</td>
+        <td style="text-align: right; border-left: 3px solid white">
+          ${dado["Base Remuneração Total"]}
+
+        </td>
+        <td style="text-align: right">          
+                ${dado["Valor FGTS na Guia"]}
+</td>
+        <td style="text-align: center">
+          ${dado["Juros"]}
+          </td>
+        <td style="text-align: right; padding-right: 20px">    
+                      ${dado["Atualiz. Monetária"]}
+</td>
+        <td style="text-align: center">                        ${dado["Multa"]}
+</td>
+        <td style="text-align: right">                        ${dado["Total"]}
+</td>
+      </tr>`;
+  })}
+    </table>
+  </main>
+  <hr style="page-break-after: always" />
+    `;
+        body.appendChild(element);
+      });
+    });
+
+  </script>
+
+  <body id="main">
     <header>
       <div class="titulo">
         <img
@@ -242,458 +464,46 @@
         "
       >
         <tr style="background-color: #ccccbe; height: 50px">
-          <th style="text-align: center">
-            Comp.<br />
-            Apuração
-          </th>
-          <th style="text-align: center">
-            Comp.<br />
-            Referência
-          </th>
-          <th style="max-width: 600px">Nome Trabalhador</th>
-          <th style="width: 125px">Matrícula</th>
-          <th style="max-width: 150px">CPF</th>
-          <th style="text-align: right; padding-right: 20px">Categoria</th>
-          <th>Vencimento</th>
-          <th>Tipo Depósito</th>
-          <th style="text-align: right; max-width: 50px">
-            Base Remuneração<br />
-            Total
-          </th>
-          <th style="text-align: right">
-            Valor FGTS<br />
-            na Guia
-          </th>
-          <th style="width: 80px; text-align: center">Juros</th>
-          <th style="text-align: right; width: 10px; padding-right: 20px">
-            Atualiz.<br />
-            Monetária
-          </th>
-          <th style="text-align: center">Multa</th>
-          <th style="text-align: right">Total</th>
-        </tr>
-
-        <tr>
-          <td style="text-align: center">09/2023</td>
-          <td></td>
-          <td style="border-right: 3px solid white">
-            ANA CLAUDIA CANDIDO DA SILVA
-          </td>
-          <td style="border-right: 3px solid white">4</td>
-          <td>087.556.237-00</td>
-          <td style="text-align: right; padding-right: 20px">101</td>
-          <td style="padding-left: 5px">06/10/2023</td>
-          <td>Mensal</td>
-          <td style="text-align: right; border-left: 3px solid white">
-            1.516,00
-          </td>
-          <td style="text-align: right">121,28</td>
-          <td style="text-align: center">0,60</td>
-          <td style="text-align: right; padding-right: 20px">0,06</td>
-          <td style="text-align: center">6,06</td>
-          <td style="text-align: right">128,00</td>
-        </tr>
-        <tr>
-          <td style="text-align: center">09/2023</td>
-          <td></td>
-          <td style="border-right: 3px solid white">
-            ANA CLAUDIA CANDIDO DA SILVA
-          </td>
-          <td style="border-right: 3px solid white">4</td>
-          <td>087.556.237-00</td>
-          <td style="text-align: right; padding-right: 20px">101</td>
-          <td style="padding-left: 5px">06/10/2023</td>
-          <td>Mensal</td>
-          <td style="text-align: right; border-left: 3px solid white">
-            1.516,00
-          </td>
-          <td style="text-align: right">121,28</td>
-          <td style="text-align: center">0,60</td>
-          <td style="text-align: right; padding-right: 20px">0,06</td>
-          <td style="text-align: center">6,06</td>
-          <td style="text-align: right">128,00</td>
-        </tr>
-      </table>
-    </main>
-
-    <hr style="page-break-after: always" />
-
-    <header>
-      <div class="titulo">
-        <img
-          class="logo"
-          src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
-          width="100"
-        />
-
-        <span style="transform: translate(-25%)"
-          ><b>Detalhe da Guia a Ser Emitida</b></span
-        >
-
-        <span></span>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <label class="subtitulo" for="Empregador">Empregador: </label>
-          <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-        </div>
-
-        <div class="col-2">
-          <span class="empregadorNum" style="font-size: 0.75rem"
-            >33.780.199</span
-          >
-          <span style="font-size: 0.75rem"> 23/10/2023</span>
-        </div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-        </div>
-
-        <div class="col">
-          <span> KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA </span>
-        </div>
-
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
-        </div>
-
-        <div class="col">
-          <span> 114</span>
-        </div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador"> Origem:</label>
-        </div>
-
-        <div class="col">
-          <span>Gestão de Guias</span>
-        </div>
-      </div>
-
-      <div class="tituloTabela">
-        <span><b>Relação de Trabalhadores</b></span>
-      </div>
-      <hr />
-    </header>
-    <main>
-      <div class="topoTabela">
-        <div class="infoTabela">
-          <label for="">Estabelecimento:</label>
-          <span>33.780.199/0001-77</span>
-        </div>
-        <div class="infoTabela">
-          <label for="">Tomador:</label>
-          <span>32.855.236/0001-04</span>
-        </div>
-      </div>
-
-      <table
-        style="
-          width: 100%;
-          border-collapse: collapse;
-          text-align: left;
-          background-color: #e4e6d8;
-        "
-      >
-        <tr style="background-color: #ccccbe; height: 50px">
-          <th style="text-align: center">
-            Comp.<br />
-            Apuração
-          </th>
-          <th style="text-align: center">
-            Comp.<br />
-            Referência
-          </th>
-          <th style="max-width: 600px">Nome Trabalhador</th>
-          <th style="width: 125px">Matrícula</th>
-          <th style="max-width: 150px">CPF</th>
-          <th style="text-align: right; padding-right: 20px">Categoria</th>
-          <th>Vencimento</th>
-          <th>Tipo Depósito</th>
-          <th style="text-align: right; max-width: 50px">
-            Base Remuneração<br />
-            Total
-          </th>
-          <th style="text-align: right">
-            Valor FGTS<br />
-            na Guia
-          </th>
-          <th style="width: 80px; text-align: center">Juros</th>
-          <th style="text-align: right; width: 10px; padding-right: 20px">
-            Atualiz.<br />
-            Monetária
-          </th>
-          <th style="text-align: center">Multa</th>
-          <th style="text-align: right">Total</th>
-        </tr>
-
-        <tr>
-          <td style="text-align: center">09/2023</td>
-          <td></td>
-          <td style="border-right: 3px solid white">
-            ANA CLAUDIA CANDIDO DA SILVA
-          </td>
-          <td style="border-right: 3px solid white">4</td>
-          <td>087.556.237-00</td>
-          <td style="text-align: right; padding-right: 20px">101</td>
-          <td style="padding-left: 5px">06/10/2023</td>
-          <td>Mensal</td>
-          <td style="text-align: right; border-left: 3px solid white">
-            1.516,00
-          </td>
-          <td style="text-align: right">121,28</td>
-          <td style="text-align: center">0,60</td>
-          <td style="text-align: right; padding-right: 20px">0,06</td>
-          <td style="text-align: center">6,06</td>
-          <td style="text-align: right">128,00</td>
-        </tr>
-        <tr>
-          <td style="text-align: center">09/2023</td>
-          <td></td>
-          <td style="border-right: 3px solid white">
-            ANA CLAUDIA CANDIDO DA SILVA
-          </td>
-          <td style="border-right: 3px solid white">4</td>
-          <td>087.556.237-00</td>
-          <td style="text-align: right; padding-right: 20px">101</td>
-          <td style="padding-left: 5px">06/10/2023</td>
-          <td>Mensal</td>
-          <td style="text-align: right; border-left: 3px solid white">
-            1.516,00
-          </td>
-          <td style="text-align: right">121,28</td>
-          <td style="text-align: center">0,60</td>
-          <td style="text-align: right; padding-right: 20px">0,06</td>
-          <td style="text-align: center">6,06</td>
-          <td style="text-align: right">128,00</td>
-        </tr>
-      </table>
-
-      <hr />
-      <div class="infoTable">
-        <span style="padding-right: 5px">Total do Tomador</span>
-        <span style="padding-right: 50px">32.855.236/0001-04</span>
-        <span style="padding-right: 34px">10.079,67</span>
-        <span style="padding-right: 33px">806,37</span>
-        <span style="padding-right: 53px"> 3,99 </span>
-        <span style="padding-right: 22px">0,39</span>
-        <span style="padding-right: 18px">40,30</span>
-        <span>851,05</span>
-      </div>
-      <div class="infoTable">
-        <span style="padding-right: 5px">Total do Estabelecimento</span>
-        <span style="padding-right: 50px">32.855.236/0001-04</span>
-        <span style="padding-right: 34px">10.079,67</span>
-        <span style="padding-right: 33px">806,37</span>
-        <span style="padding-right: 53px"> 3,99 </span>
-        <span style="padding-right: 22px">0,39</span>
-        <span style="padding-right: 18px">40,30</span>
-        <span>851,05</span>
-      </div>
-      <div class="infoTable">
-        <span style="padding-right: 50px">Total da Guia</span>
-        <span style="padding-right: 34px">10.079,67</span>
-        <span style="padding-right: 33px">806,37</span>
-        <span style="padding-right: 53px"> 3,99 </span>
-        <span style="padding-right: 22px">0,39</span>
-        <span style="padding-right: 18px">40,30</span>
-        <span>851,05</span>
-      </div>
-    </main>
-
-    <hr style="page-break-after: always" />
-
-    <header>
-      <div class="titulo">
-        <img
-          class="logo"
-          src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
-          width="100"
-        />
-
-        <span style="transform: translate(-25%)"
-          ><b>Detalhe da Guia a Ser Emitida</b></span
-        >
-
-        <span></span>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <label class="subtitulo" for="Empregador">Empregador: </label>
-          <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-        </div>
-
-        <div class="col-2">
-          <span class="empregadorNum" style="font-size: 0.75rem"
-            >33.780.199</span
-          >
-          <span style="font-size: 0.75rem"> 23/10/2023</span>
-        </div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-        </div>
-
-        <div class="col">
-          <span> KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA </span>
-        </div>
-
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
-        </div>
-
-        <div class="col">
-          <span> 114</span>
-        </div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador"> Origem:</label>
-        </div>
-
-        <div class="col">
-          <span>Gestão de Guias</span>
-        </div>
-      </div>
-
-      <div class="tituloTabela">
-        <span><b>Relação de Trabalhadores</b></span>
-      </div>
-      <hr />
-    </header>
-    <main>
-      <div class="topoTabela">
-        <div class="infoTabela">
-          <label for="">Estabelecimento:</label>
-          <span>33.780.199/0001-77</span>
-        </div>
-        <div class="infoTabela">
-          <label for="">Tomador:</label>
-          <span>32.855.236/0001-04</span>
-        </div>
-      </div>
-
-      <table
-        style="
-          width: 100%;
-          border-collapse: collapse;
-          text-align: left;
-          background-color: #e4e6d8;
-        "
-      >
-        <tr style="background-color: #ccccbe; height: 50px">
-          <th style="text-align: center">
-            Comp.
-            Apuração
-          </th>
-          <th style="text-align: center">
-            Categoria
-          </th>
+          <th style="text-align: center">Comp. Apuração</th>
+          <th style="text-align: center">Categoria</th>
           <th style="max-width: 600px">Qtd. Trabalhadores</th>
-          <th style="width: 125px">Base Remuneração<br> Total</th>
+          <th style="width: 125px">
+            Base Remuneração<br />
+            Total
+          </th>
           <th style="max-width: 150px">FGTS Mensal na Guia</th>
-          <th style="text-align: right; padding-right: 20px">FGTS Rescisório na<br> Guia</th>
-          <th>Ind. Compensatória<br> na Guia</th>
+          <th style="text-align: right; padding-right: 20px">
+            FGTS Rescisório na<br />
+            Guia
+          </th>
+          <th>
+            Ind. Compensatória<br />
+            na Guia
+          </th>
           <th>Juros</th>
           <th style="text-align: right; max-width: 50px">
             s Atualiz. Monetária
           </th>
-          <th style="text-align: right">
-            Multa
-          </th>
-        
+          <th style="text-align: right">Multa</th>
+
           <th style="text-align: right">Total</th>
         </tr>
 
         <tr>
           <td style="text-align: center">09/2023</td>
           <td>101</td>
-          <td style="border-right: 3px solid white">
-            114
-          </td>
+          <td style="border-right: 3px solid white">114</td>
           <td style="border-right: 3px solid white">217.348,55</td>
           <td>17.189,25</td>
           <td style="text-align: right; padding-right: 20px">99,04</td>
           <td style="padding-left: 5px">497,32</td>
           <td>88,07</td>
-          <td style="text-align: right; border-left: 3px solid white">
-            8,51
-          </td>
+          <td style="text-align: right; border-left: 3px solid white">8,51</td>
           <td style="text-align: right">889,13</td>
           <td style="text-align: center">18.771,32</td>
-         
         </tr>
 
-        <tr style="background-color: white;">
+        <tr style="background-color: white">
           <td style="text-align: center"></td>
           <td></td>
           <td style="border-right: 3px solid white">
@@ -709,14 +519,8 @@
           </td>
           <td style="text-align: right"><b>889,13</b></td>
           <td style="text-align: center"><b>18.771,32</b></td>
-         
         </tr>
-        
-        
       </table>
-
-
-      
 
       <div class="categoriaInfo">
         <h1>Descrição das categorias:</h1>
@@ -839,5 +643,6 @@
         <h1>905 - Atleta não profissional em formação que receba bolsa</h1>
       </div>
     </main>
+    <hr style="page-break-after: always" />
   </body>
 </html>
