@@ -9,6 +9,8 @@
 
     <script src="http://d3js.org/d3.v3.min.js"></script>
   </head>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/jquerycsvtotable/jquery.csvToTable.js"></script>
   <style type="text/css">
     * {
       margin: 0;
@@ -132,275 +134,125 @@
   </style>
 
   <body id="main">
-    <script>
-      var Empregador;
-      var Nome_empregador;
-      var Vencimento_guia;
-      var qtd_trabalhadores;
-      var Origem;
-      var Estabelecimento;
-      var Tomador;
+    <script async>
+      async function run() {
+        function setAtributes() {
+          //"qtd_trabalhadores","estabelecimento"]
+          //////////////////////////////
+          const estabelecimento_html =
+            document.getElementsByName("estabelecimento");
 
-      const myPromise = new Promise((resolve, reject) => {
-        d3.dsv(";")("./info_empresa.csv", (items) => {
-          const item = items[0];
-          Empregador = item.Empregador;
-          Nome_empregador = item.Nome_empregador;
-          Vencimento_guia = item.Vencimento_guia;
-          Origem = item.Origem;
-          Estabelecimento = item.Estabelecimento;
-          Tomador = item.Tomador;
-        });
+          estabelecimento_html.forEach((estabelecimento) => {
+            estabelecimento.innerHTML = Estabelecimento;
+          });
+          //////////////////////////
 
-        d3.dsv(";")("./planilha1.csv", (items) => {
-          const tamanho_maximo = 29;
+          //////////////////////////////
+          const n_empregador_html = document.getElementsByName("n_empregador");
 
-          const paginas_2 = [];
-          console.log(items.length);
-          let pagina_atual = [];
+          n_empregador_html.forEach((estabelecimento) => {
+            estabelecimento.innerHTML = Empregador;
+          });
+          //////////////////////////
 
-          items.map((item, i) => {
-            console.log(i);
-            if (pagina_atual.length != tamanho_maximo) {
-              pagina_atual.push(item);
-            } else {
-              paginas_2.push(pagina_atual);
+          //////////////////////////////
+          const vencimento_guia = document.getElementsByName("vencimento_guia");
 
-              pagina_atual = [];
-              pagina_atual.push(item);
-            }
-            if (i == items.length - 1) {
-              paginas_2.push(pagina_atual);
-            }
+          vencimento_guia.forEach((estabelecimento) => {
+            estabelecimento.innerHTML = Vencimento_guia;
+          });
+          //////////////////////////
+
+          //////////////////////////////
+          const nome_empregador = document.getElementsByName("nome_empregador");
+
+          nome_empregador.forEach((estabelecimento) => {
+            estabelecimento.innerHTML = Nome_empregador;
+          });
+          //////////////////////////
+
+          //////////////////////////////
+          const qtd_trabalhadores_html =
+            document.getElementsByName("qtd_trabalhadores");
+
+          qtd_trabalhadores_html.forEach((estabelecimento) => {
+            estabelecimento.innerHTML = qtd_trabalhadores;
+          });
+          //////////////////////////
+        }
+        var Empregador;
+        var Nome_empregador;
+        var Vencimento_guia;
+        var qtd_trabalhadores;
+        var Origem;
+        var Estabelecimento;
+        var Tomador;
+        var data = [];
+        var estabelecimentos = [];
+        const general_data = new Object();
+
+        const myPromise = new Promise((resolve, reject) => {
+          d3.dsv(";")("http://localhost:8000/info_empresa.csv", (items) => {
+            estabelecimentos = items.filter(estabelecimento => estabelecimento.Empregador != "");
           });
 
-          var body = document.getElementById("main");
-          paginas_2.map((item) => {
-            const element = document.createElement("div");
-            element.className = "tamanhoPage";
-            element.innerHTML = `
-        <header>
-    <div class="titulo">
-      <img
-        class="logo"
-        src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
-        width="100"
-      />
+          d3.dsv(";")("http://localhost:8000/planilha1.csv", (items) => {
+            data = items;
 
-      <span style="transform: translate(-25%)"
-        ><b>Detalhe da Guia a Ser Emitida</b></span
-      >
-
-      <span></span>
-    </div>
-    <div class="row">
-      <div class="col">
-        <label class="subtitulo" for="Empregador">Empregador: </label>
-        <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-      </div>
-
-      <div class="col-2">
-        <span class="empregadorNum" style="font-size: 0.75rem"
-          >${Empregador}</span
-        >
-        <span style="font-size: 0.75rem"> ${Vencimento_guia}</span>
-      </div>
-      <div class="col">
-        <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-      </div>
-      <div class="col">
-        <span> ${Nome_empregador} </span>
-      </div>
-
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-
-      <div class="col">
-        <label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
-      </div>
-
-      <div class="col">
-        <span> ${items.length}</span>
-      </div>
-
-      <div class="col">
-        <label class="subtitulo" for="Empregador"> Origem:</label>
-      </div>
-
-      <div class="col">
-        <span>${Origem}</span>
-      </div>
-    </div>
-
-    <div class="tituloTabela">
-      <span><b>Relação de Trabalhadores</b></span>
-    </div>
-    <hr />
-  </header>
-  <main>
-    <div class="topoTabela">
-      <div class="infoTabela">
-        <label for="">Estabelecimento:</label>
-        <span>${Estabelecimento}</span>
-      </div>
-      <div class="infoTabela">
-        <label>Tomador:</label>
-        <span>${Tomador}</span>
-      </div>
-    </div>
-    <table
-      style="
-        width: 100%;
-        border-collapse: collapse;
-        text-align: left;
-        background-color: #e4e6d8;
-      "
-    >
-      <tr style="background-color: #ccccbe; height: 25px">
-        <th style="text-align: center">
-          Comp.<br />
-          Apuração
-        </th>
-        <th style="text-align: center">
-          Comp.<br />
-          Referência
-        </th>
-        <th style="max-width: 600px">Nome Trabalhador</th>
-        <th style="width: 125px">Matrícula</th>
-        <th style="max-width: 150px">CPF</th>
-        <th style="text-align: right; padding-right: 20px">Categoria</th>
-        <th>Vencimento</th>
-        <th>Tipo Depósito</th>
-        <th style="text-align: right; max-width: 50px">
-          Base Remuneração<br />
-          Total
-        </th>
-        <th style="text-align: right">
-          Valor FGTS<br />
-          na Guia
-        </th>
-        <th style="width: 80px; text-align: center">Juros</th>
-        <th style="text-align: right; width: 10px; padding-right: 20px">
-          Atualiz.<br />
-          Monetária
-        </th>
-        <th style="text-align: center">Multa</th>
-        <th style="text-align: right">Total</th>
-      </tr>
-  ${item
-    .map((dado) => {
-      print(dado);
-      return `<tr>
-        <td style="text-align: center">
-          ${dado["Comp. Apuração"]}
-          </td>
-        <td style="text-align: center">
-          ${dado["Comp. Referência"]}
-          </td>
-        <td style="border-right: 3px solid white">
-          ${dado["Nome Trabalhador"]}
-        </td>
-        <td style="border-right: 3px solid white">
-          ${dado["Matricula"]}
-          </td>
-        <td>
-          ${dado["CPF"]}
-          </td>
-        <td style="text-align: right; padding-right: 20px">
-          ${dado["Categoria"]}
-          </td>
-        <td style="padding-left: 5px">      
-                ${dado["Vencimento"]}
-</td>
-        <td>        
-              ${dado["Tipo Depósito"]}
-</td>
-        <td style="text-align: right; border-left: 3px solid white">
-          ${dado["Base Remuneração Total"]}
-
-        </td>
-        <td style="text-align: right">          
-                ${dado["Valor FGTS na Guia"]}
-</td>
-        <td style="text-align: center">
-          ${dado["Juros"]}
-          </td>
-        <td style="text-align: right; padding-right: 20px">    
-                      ${dado["Atualiz. Monetária"]}
-</td>
-        <td style="text-align: center">                        ${dado["Multa"]}
-</td>
-        <td style="text-align: right">                        ${dado["Total"]}
-</td>
-      </tr>`;
-    })
-    .join("")}
-    </table>
-  </main>
-
-
-  <footer>
-    <hr>
-    <div>
-      </div>
-    <div style="display:flex; font-size:8px; justify-content:space-between; padding:2px 2px;">
-      <p>Todos os valores exibidos estão expressos em reais (R$)</p>
-      <div style="display:flex; justify-content:space-around;">
-
-        <p>
-          Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
-       
-        <p style="margin-left: 50px;" >
-          Página 1 de 9
-        </p>
-      </div>
-    </div> 
-    <span style=""></span>
-  </footer>
-  <div class="quebraPag"></div>
-  `;
-            body.appendChild(element);
+            resolve();
           });
-          resolve();
-        });
-      }).then(() => {
-        const body = document.getElementById("main");
-        console.log("teste");
-        const element = document.createElement("div");
-        console.log(body);
-        element.className = "tamanhoPage";
-        element.innerHTML = `
+        }).then(() => {
+          // Empregador = item.Empregador;
+          //   Nome_empregador = item.Nome_empregador;
+          //   Vencimento_guia = item.Vencimento_guia;
+          //   Origem = item.Origem;
+          //   Estabelecimento = item.Estabelecimento;
+          //   Tomador = item.Tomador;
+
+          //   general_data.Empregador = item.Empregador;
+          //   general_data.Nome_empregador = item.Nome_empregador;
+          //   general_data.Vencimento_guia = item.Vencimento_guia;
+          //   general_data.Origem = item.Origem;
+          //   general_data.Estabelecimento = item.Estabelecimento;
+          //   general_data.Tomador = item.Tomador;
+
+          const companys = [];
+          data.forEach((item) => {
+            if (!companys.includes(item.Tomador)) {
+              companys.push(item.Tomador);
+            }
+          });
+          
+          companys.forEach((company) => {
+            const data2 = data.filter((x) => x.Tomador == company);
+            const company_atual = estabelecimentos.filter(x=> x.Tomador == company)[0]
+            console.log(company_atual,company)
+            const tamanho_maximo = 28;
+
+            const paginas_2 = [];
+            let pagina_atual = [];
+            qtd_trabalhadores = data2.length;
+
+            data2.map((item, i) => {
+              if (pagina_atual.length != tamanho_maximo) {
+                pagina_atual.push(item);
+              } else {
+                paginas_2.push(pagina_atual);
+
+                pagina_atual = [];
+                pagina_atual.push(item);
+              }
+              if (i == data2.length - 1) {
+                paginas_2.push(pagina_atual);
+              }
+            });
+            console.log(paginas_2);
+            var body = document.getElementById("main");
+            console.log(paginas_2, pagina_atual);
+            paginas_2.map((item) => {
+              const element = document.createElement("div");
+              element.className = "tamanhoPage";
+              element.innerHTML = `
 <header>
 <div class="titulo">
 <img
@@ -415,7 +267,6 @@ width="100"
 
 <span></span>
 </div>
-
 <div class="row">
 <div class="col">
 <label class="subtitulo" for="Empregador">Empregador: </label>
@@ -424,17 +275,15 @@ width="100"
 
 <div class="col-2">
 <span class="empregadorNum" style="font-size: 0.75rem"
-  >33.780.199</span
+>${company_atual.Estabelecimento}</span
 >
-<span style="font-size: 0.75rem"> 23/10/2023</span>
+<span style="font-size: 0.75rem"> ${company_atual.Vencimento_guia}</span>
 </div>
-
 <div class="col">
 <label class="subtitulo" for="Empregador">Nome Empregador: </label>
 </div>
-
 <div class="col">
-<span> KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA </span>
+<span> ${company_atual.Nome_empregador} </span>
 </div>
 
 <div></div>
@@ -476,7 +325,229 @@ width="100"
 </div>
 
 <div class="col">
-<span> 114</span>
+<span> ${data2.length}</span>
+</div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Origem:</label>
+</div>
+
+<div class="col">
+<span>${company_atual.Origem}</span>
+</div>
+</div>
+
+<div class="tituloTabela">
+<span><b>Relação de Trabalhadores</b></span>
+</div>
+<hr />
+</header>
+<main>
+<div class="topoTabela">
+<div class="infoTabela">
+<label for="">Estabelecimento:</label>
+<span>${company_atual.Estabelecimento}</span>
+</div>
+<div class="infoTabela">
+<label>Tomador:</label>
+<span>${company_atual.Tomador}</span>
+</div>
+</div>
+<table
+style="
+width: 100%;
+border-collapse: collapse;
+text-align: left;
+background-color: #e4e6d8;
+"
+>
+<tr style="background-color: #ccccbe; height: 25px">
+<th style="text-align: center">
+Comp.<br />
+Apuração
+</th>
+<th style="text-align: center">
+Comp.<br />
+Referência
+</th>
+<th style="max-width: 600px">Nome Trabalhador</th>
+<th style="width: 125px">Matrícula</th>
+<th style="max-width: 150px">CPF</th>
+<th style="text-align: right; padding-right: 20px">Categoria</th>
+<th>Vencimento</th>
+<th>Tipo Depósito</th>
+<th style="text-align: right; max-width: 50px">
+Base Remuneração<br />
+Total
+</th>
+<th style="text-align: right">
+Valor FGTS<br />
+na Guia
+</th>
+<th style="width: 80px; text-align: center">Juros</th>
+<th style="text-align: right; width: 10px; padding-right: 20px">
+Atualiz.<br />
+Monetária
+</th>
+<th style="text-align: center">Multa</th>
+<th style="text-align: right">Total</th>
+</tr>
+${item
+  .map((dado) => {
+    return `<tr>
+<td style="text-align: center">
+${dado["Comp. Apuração"]}
+</td>
+<td style="text-align: center">
+${dado["Comp. Referência"]}
+</td>
+<td style="border-right: 3px solid white">
+${dado["Nome Trabalhador"]}
+</td>
+<td style="border-right: 3px solid white">
+${dado["Matricula"]}
+</td>
+<td>
+${dado["CPF"]}
+</td>
+<td style="text-align: right; padding-right: 20px">
+${dado["Categoria"]}
+</td>
+<td style="padding-left: 5px">      
+${dado["Vencimento"]}
+</td>
+<td>        
+${dado["Tipo Depósito"]}
+</td>
+<td style="text-align: right; border-left: 3px solid white">
+${dado["Base Remuneração Total"]}
+
+</td>
+<td style="text-align: right">          
+${dado["Valor FGTS na Guia"]}
+</td>
+<td style="text-align: center">
+${dado["Juros"]}
+</td>
+<td style="text-align: right; padding-right: 20px">    
+${dado["Atualiz. Monetária"]}
+</td>
+<td style="text-align: center">                        ${dado["Multa"]}
+</td>
+<td style="text-align: right">                        ${dado["Total"]}
+</td>
+</tr>`;
+  })
+  .join("")}
+</table>
+</main>
+
+
+<footer>
+<hr>
+<div>
+</div>
+<div style="display:flex; font-size:8px; justify-content:space-between; padding:2px 2px;">
+<p>Todos os valores exibidos estão expressos em reais (R$)</p>
+<div style="display:flex; justify-content:space-around;">
+
+<p>
+Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+
+<p style="margin-left: 50px;" >
+Página 1 de 9
+</p>
+</div>
+</div> 
+<span style=""></span>
+</footer>
+<div class="quebraPag"></div>
+`;
+              body.appendChild(element);
+            });
+           // data2.forEach((items, i) => {});
+          });
+
+          const body = document.getElementById("main");
+          const element = document.createElement("div");
+          element.className = "tamanhoPage";
+          element.innerHTML = `
+<header>
+<div class="titulo">
+<img
+class="logo"
+src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
+width="100"
+/>
+
+<span style="transform: translate(-25%)"
+><b>Detalhe da Guia a Ser Emitida</b></span
+>
+
+<span></span>
+</div>
+
+<div class="row">
+<div class="col">
+<label class="subtitulo" for="Empregador">Empregador: </label>
+<label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+</div>
+
+<div class="col-2">
+<span class="empregadorNum" style="font-size: 0.75rem"
+  >${Empregador}</span
+>
+<span style="font-size: 0.75rem"> ${Vencimento_guia}</span>
+</div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador">Nome Empregador: </label>
+</div>
+
+<div class="col">
+<span> ${Nome_empregador}</span>
+</div>
+
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
+</div>
+
+<div class="col">
+<span> ${data.length}</span>
 </div>
 
 <div class="col">
@@ -497,11 +568,11 @@ width="100"
 <div class="topoTabela">
 <div class="infoTabela">
 <label for="">Estabelecimento:</label>
-<span>33.780.199/0001-77</span>
+<span>${Estabelecimento}</span>
 </div>
 <div class="infoTabela">
 <label for="">Tomador:</label>
-<span>32.855.236/0001-04</span>
+<span>${Tomador}</span>
 </div>
 </div>
 
@@ -696,9 +767,12 @@ público, sem vínculo de emprego/estatutário
 <footer></footer>
 <div class="quebraPag"></div>
 `;
+          //setAtributes();
 
-        body.append(element);
-      });
+          body.append(element);
+        });
+      }
+      run();
     </script>
   </body>
   <div>
@@ -724,10 +798,15 @@ público, sem vínculo de emprego/estatutário
         </div>
 
         <div class="col-2">
-          <span class="empregadorNum" style="font-size: 0.75rem"
+          <span
+            class="empregadorNum"
+            name="n_empregador"
+            style="font-size: 0.75rem"
             >33.780.199</span
           >
-          <span style="font-size: 0.75rem"> 23/10/2023</span>
+          <span style="font-size: 0.75rem" name="vencimento_guia">
+            23/10/2023</span
+          >
         </div>
 
         <div class="col">
@@ -735,7 +814,9 @@ público, sem vínculo de emprego/estatutário
         </div>
 
         <div class="col">
-          <span> KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA </span>
+          <span name="nome_empregador">
+            KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA
+          </span>
         </div>
 
         <div></div>
@@ -777,7 +858,7 @@ público, sem vínculo de emprego/estatutário
         </div>
 
         <div class="col">
-          <span> 114</span>
+          <span name="qtd_trabalhadores"> 114</span>
         </div>
 
         <div class="col">
@@ -798,7 +879,7 @@ público, sem vínculo de emprego/estatutário
       <div class="topoTabela">
         <div class="infoTabela">
           <label for="">Estabelecimento:</label>
-          <span>33.780.199/0001-77</span>
+          <span name="estabelecimento"></span>
         </div>
       </div>
 
@@ -994,9 +1075,7 @@ público, sem vínculo de emprego/estatutário
             na Guia
           </th>
           <th>Juros</th>
-          <th style="text-align: right; max-width: 50px">
-            Atualiz. Monetária
-          </th>
+          <th style="text-align: right; max-width: 50px">Atualiz. Monetária</th>
           <th style="text-align: right">Multa</th>
 
           <th style="text-align: right">Total</th>
@@ -1170,9 +1249,7 @@ público, sem vínculo de emprego/estatutário
             na Guia
           </th>
           <th>Juros</th>
-          <th style="text-align: right; max-width: 50px">
-            Atualiz. Monetária
-          </th>
+          <th style="text-align: right; max-width: 50px">Atualiz. Monetária</th>
           <th style="text-align: right">Multa</th>
 
           <th style="text-align: right">Total</th>
