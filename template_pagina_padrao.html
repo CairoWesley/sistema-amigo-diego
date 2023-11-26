@@ -56,7 +56,8 @@
       gap: 5px;
       font-size: 0.75rem;
     }
-
+    footer {
+    }
     .col-2 {
       display: flex;
       flex-direction: column;
@@ -135,6 +136,7 @@
 
   <body id="main">
     <script async>
+
       async function run() {
         function setAtributes() {
           //"qtd_trabalhadores","estabelecimento"]
@@ -180,6 +182,41 @@
           });
           //////////////////////////
         }
+        
+        function sumData(tomador,key,dados,type,condition,value){
+
+          let items
+          if(tomador !=undefined){ 
+            items =  dados.filter( (item) => item.Tomador== tomador)
+
+          }else{ 
+            items = dados
+          }
+          
+
+
+          if(condition !=undefined){
+         
+              items.filter( (item)=> { 
+              item[condition] == value
+            })
+            
+            
+          }
+
+          let total = 0
+          if(type=="int"){ 
+            items.forEach((item) => total += parseInt(item[key]))
+
+          }
+          else{ 
+          items.forEach((item) => total += parseFloat(item[key]))
+
+          }
+          return total
+
+        }
+        
         var Empregador;
         var Nome_empregador;
         var Vencimento_guia;
@@ -189,32 +226,23 @@
         var Tomador;
         var data = [];
         var estabelecimentos = [];
-        const general_data = new Object();
+        let general_data = new Object();
 
         const myPromise = new Promise((resolve, reject) => {
           d3.dsv(";")("http://localhost:8000/info_empresa.csv", (items) => {
-            estabelecimentos = items.filter(estabelecimento => estabelecimento.Empregador != "");
+            estabelecimentos = items.filter(
+              (estabelecimento) => estabelecimento.Empregador != ""
+            );
+            general_data = estabelecimentos[0]
+
           });
 
           d3.dsv(";")("http://localhost:8000/planilha1.csv", (items) => {
             data = items;
-
             resolve();
           });
         }).then(() => {
-          // Empregador = item.Empregador;
-          //   Nome_empregador = item.Nome_empregador;
-          //   Vencimento_guia = item.Vencimento_guia;
-          //   Origem = item.Origem;
-          //   Estabelecimento = item.Estabelecimento;
-          //   Tomador = item.Tomador;
 
-          //   general_data.Empregador = item.Empregador;
-          //   general_data.Nome_empregador = item.Nome_empregador;
-          //   general_data.Vencimento_guia = item.Vencimento_guia;
-          //   general_data.Origem = item.Origem;
-          //   general_data.Estabelecimento = item.Estabelecimento;
-          //   general_data.Tomador = item.Tomador;
 
           const companys = [];
           data.forEach((item) => {
@@ -222,13 +250,16 @@
               companys.push(item.Tomador);
             }
           });
-          
           companys.forEach((company) => {
             const data2 = data.filter((x) => x.Tomador == company);
-            const company_atual = estabelecimentos.filter(x=> x.Tomador == company)[0]
-            console.log(company_atual,company)
+
+            sumData(1,"Comp. Apuração",data2,"int")
+            const company_atual = estabelecimentos.filter(
+              (x) => x.Tomador == company
+            )[0];
+            console.log(company_atual, company);
             const tamanho_maximo = 28;
-//
+            //
             const paginas_2 = [];
             let pagina_atual = [];
             qtd_trabalhadores = data2.length;
@@ -405,7 +436,7 @@ ${dado["Comp. Referência"]}
 ${dado["Nome Trabalhador"]}
 </td>
 <td style="border-right: 3px solid white">
-${dado["Matricula"]}
+${dado["Matrícula"]}
 </td>
 <td>
 ${dado["CPF"]}
@@ -465,7 +496,7 @@ Página 1 de 9
 `;
               body.appendChild(element);
             });
-           // data2.forEach((items, i) => {});
+            // data2.forEach((items, i) => {});
           });
 
           const body = document.getElementById("main");
@@ -495,9 +526,9 @@ width="100"
 
 <div class="col-2">
 <span class="empregadorNum" style="font-size: 0.75rem"
-  >${Empregador}</span
+  >${general_data.Empregador}</span
 >
-<span style="font-size: 0.75rem"> ${Vencimento_guia}</span>
+<span style="font-size: 0.75rem"> ${general_data.Vencimento_guia}</span>
 </div>
 
 <div class="col">
@@ -505,7 +536,7 @@ width="100"
 </div>
 
 <div class="col">
-<span> ${Nome_empregador}</span>
+<span> ${general_data.Nome_empregador}</span>
 </div>
 
 <div></div>
@@ -555,7 +586,7 @@ width="100"
 </div>
 
 <div class="col">
-<span>Gestão de Guias</span>
+<span>${general_data.Origem}</span>
 </div>
 </div>
 
@@ -568,12 +599,9 @@ width="100"
 <div class="topoTabela">
 <div class="infoTabela">
 <label for="">Estabelecimento:</label>
-<span>${Estabelecimento}</span>
+<span>${general_data.Estabelecimento}</span>
 </div>
-<div class="infoTabela">
-<label for="">Tomador:</label>
-<span>${Tomador}</span>
-</div>
+
 </div>
 
 <table
@@ -611,17 +639,17 @@ background-color: #e4e6d8;
 </tr>
 
 <tr>
-<td style="text-align: center">09/2023</td>
-<td style="text-align: center;">101</td>
-<td style="border-right: 3px solid white">114</td>
-<td style="border-right: 3px solid white">217.348,55</td>
-<td>17.189,25</td>
-<td style="text-align: right; padding-right: 20px">99,04</td>
-<td style="padding-left: 5px">497,32</td>
-<td>88,07</td>
-<td style="text-align: right; border-left: 3px solid white">8,51</td>
-<td style="text-align: right">889,13</td>
-<td style="text-align: right">18.771,32</td>
+<td style="text-align: center">${data[0]["Comp. Apuração"]}</td>
+<td style="text-align: center;">${data[0]["Categoria"]}</td>
+<td style="border-right: 3px solid white">${data.length}</td>
+<td style="border-right: 3px solid white">${sumData(undefined,"Base Remuneração Total",data,"float")}</td>
+<td>${sumData(undefined,"Valor FGTS na Guia",data,"float")}</td>
+<td style="text-align: right; padding-right: 20px">${sumData(undefined,"Base Remuneração Total",data,"float","Tipo Depósito","Verba Indenizatória")}</td>
+<td style="padding-left: 5px">${sumData(undefined,"Valor FGTS na Guia",data,"float","Tipo Depósito","Multa Rescisória")}</td>
+<td>${sumData(undefined,"Juros",data,"float")}</td>
+<td style="text-align: right; border-left: 3px solid white">${sumData(undefined,"Atualiz. Monetária",data,"float")}</td>
+<td style="text-align: right">${sumData(undefined,"Multa",data,"float")}</td>
+<td style="text-align: right">${sumData(undefined,"Total",data,"total")}</td>
 </tr>
 
 <tr style="background-color: white">
@@ -630,16 +658,16 @@ background-color: #e4e6d8;
 <td style="border-right: 3px solid white">
   <b>Total da Guia</b>
 </td>
-<td style="border-right: 3px solid white"><b>217.348,55</b></td>
-<td><b>17.189,25</b></td>
-<td style="text-align: right; padding-right: 20px"><b>99,04</b></td>
-<td style="padding-left: 5px"><b>497,32</b></td>
-<td><b>88,07</b></td>
+<td style="border-right: 3px solid white"><b>${sumData(undefined,"Base Remuneração Total",data,"float")}</b></td>
+<td><b>${sumData(undefined,"Valor FGTS na Guia",data,"float","Tipo Depósito","Multa Rescisória")}</b></td>
+<td style="text-align: right; padding-right: 20px"><b>${sumData(undefined,"Base Remuneração Total",data,"float","Tipo Depósito","Verba Indenizatória")}</b></td>
+<td style="padding-left: 5px"><b>${sumData(undefined,"Valor FGTS na Guia",data,"float","Tipo Depósito","Multa Rescisória")}</b></td>
+<td><b>${sumData(undefined,"Juros",data,"float")}</b></td>
 <td style="text-align: right; border-left: 3px solid white">
-  <b>8,51</b>
+  <b>${sumData(undefined,"Atualiz. Monetária",data,"float")}</b>
 </td>
-<td style="text-align: right"><b>889,13</b></td>
-<td style="text-align: right"><b>18.771,32</b></td>
+<td style="text-align: right"><b>${sumData(undefined,"Multa",data,"float")}</b></td>
+<td style="text-align: right"><b>${sumData(undefined,"Total",data,"float")}</b></td>
 </tr>
 </table>
 
@@ -764,8 +792,26 @@ público, sem vínculo de emprego/estatutário
 <h1>905 - Atleta não profissional em formação que receba bolsa</h1>
 </div>
 </main>
-<footer></footer>
-<div class="quebraPag"></div>
+
+<footer>
+      <hr>
+      <div>
+      </div>
+      <div style="display:flex; font-size:8px; justify-content:space-between; padding:2px 2px;">
+      <p>Todos os valores exibidos estão expressos em reais (R$)</p>
+      <div style="display:flex; justify-content:space-around;">
+      
+      <p>
+      Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+      
+      <p style="margin-left: 50px;" >
+      Página 1 de 9
+      </p>
+      </div>
+      </div> 
+      <span></span>
+      </footer>
+      <div class="quebraPag"></div>
 `;
           //setAtributes();
 
@@ -775,7 +821,8 @@ público, sem vínculo de emprego/estatutário
       run();
     </script>
   </body>
-  <div>
+
+  <div name="Relação de Tipos de Valor" class="tamanhoPage">
     <header>
       <div class="titulo">
         <img
@@ -940,11 +987,30 @@ público, sem vínculo de emprego/estatutário
       </table>
     </main>
 
-    <footer></footer>
+    <footer>
+      <hr />
+      <div></div>
+      <div
+        style="
+          display: flex;
+          font-size: 8px;
+          justify-content: space-between;
+          padding: 2px 2px;
+        "
+      >
+        <p>Todos os valores exibidos estão expressos em reais (R$)</p>
+        <div style="display: flex; justify-content: space-around">
+          <p>Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+
+          <p style="margin-left: 50px">Página 1 de 9</p>
+        </div>
+      </div>
+      <span></span>
+    </footer>
     <div class="quebraPag"></div>
   </div>
 
-  <div>
+  <div name="Relação de Trabalhadores" class="tamanhoPage">
     <header>
       <div class="titulo">
         <img
@@ -978,7 +1044,9 @@ público, sem vínculo de emprego/estatutário
         </div>
 
         <div class="col">
-          <span> KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA </span>
+          <span name="nome_empregador">
+            KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA
+          </span>
         </div>
 
         <div></div>
@@ -1020,7 +1088,7 @@ público, sem vínculo de emprego/estatutário
         </div>
 
         <div class="col">
-          <span> 114</span>
+          <span name="qtd_trabalhadores"> 114</span>
         </div>
 
         <div class="col">
@@ -1114,11 +1182,31 @@ público, sem vínculo de emprego/estatutário
         </tr>
       </table>
     </main>
-    <footer></footer>
+
+    <footer>
+      <hr />
+      <div></div>
+      <div
+        style="
+          display: flex;
+          font-size: 8px;
+          justify-content: space-between;
+          padding: 2px 2px;
+        "
+      >
+        <p>Todos os valores exibidos estão expressos em reais (R$)</p>
+        <div style="display: flex; justify-content: space-around">
+          <p>Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+
+          <p style="margin-left: 50px">Página 1 de 9</p>
+        </div>
+      </div>
+      <span></span>
+    </footer>
     <div class="quebraPag"></div>
   </div>
 
-  <div>
+  <div name="Relação de Tomadores de Serviço" class="tamanhoPage">
     <header>
       <div class="titulo">
         <img
@@ -1152,7 +1240,9 @@ público, sem vínculo de emprego/estatutário
         </div>
 
         <div class="col">
-          <span> KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA </span>
+          <span name="nome_empregador">
+            KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA
+          </span>
         </div>
 
         <div></div>
@@ -1194,181 +1284,7 @@ público, sem vínculo de emprego/estatutário
         </div>
 
         <div class="col">
-          <span> 114</span>
-        </div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador"> Origem:</label>
-        </div>
-
-        <div class="col">
-          <span>Gestão de Guias</span>
-        </div>
-      </div>
-
-      <div class="tituloTabela">
-        <span><b>Relação de Trabalhadores</b></span>
-      </div>
-      <hr />
-    </header>
-    <main>
-      <div class="topoTabela">
-        <div class="infoTabela">
-          <label for="">Estabelecimento:</label>
-          <span>33.780.199/0001-77</span>
-        </div>
-        <div class="infoTabela">
-          <label for="">Tomador:</label>
-          <span>32.855.236/0001-04</span>
-        </div>
-      </div>
-
-      <table
-        style="
-          width: 100%;
-          border-collapse: collapse;
-          text-align: left;
-          background-color: #e4e6d8;
-        "
-      >
-        <tr style="background-color: #ccccbe; height: 25px">
-          <th style="text-align: center">Comp. Apuração</th>
-          <th style="text-align: center">Categoria</th>
-          <th style="max-width: 600px">Qtd. Trabalhadores</th>
-          <th style="width: 125px">
-            Base Remuneração<br />
-            Total
-          </th>
-          <th style="max-width: 150px">FGTS Mensal na Guia</th>
-          <th style="text-align: right; padding-right: 20px">
-            FGTS Rescisório na<br />
-            Guia
-          </th>
-          <th>
-            Ind. Compensatória<br />
-            na Guia
-          </th>
-          <th>Juros</th>
-          <th style="text-align: right; max-width: 50px">Atualiz. Monetária</th>
-          <th style="text-align: right">Multa</th>
-
-          <th style="text-align: right">Total</th>
-        </tr>
-
-        <tr>
-          <td style="text-align: center">09/2023</td>
-          <td style="text-align: center">101</td>
-          <td style="border-right: 3px solid white">114</td>
-          <td style="border-right: 3px solid white">217.348,55</td>
-          <td>17.189,25</td>
-          <td style="text-align: right; padding-right: 20px">99,04</td>
-          <td style="padding-left: 5px">497,32</td>
-          <td>88,07</td>
-          <td style="text-align: right; border-left: 3px solid white">8,51</td>
-          <td style="text-align: right">889,13</td>
-          <td style="text-align: right">18.771,32</td>
-        </tr>
-
-        <tr style="background-color: white">
-          <td style="text-align: center"></td>
-          <td></td>
-          <td style="border-right: 3px solid white">
-            <b>Total da Guia</b>
-          </td>
-          <td style="border-right: 3px solid white"><b>217.348,55</b></td>
-          <td><b>17.189,25</b></td>
-          <td style="text-align: right; padding-right: 20px"><b>99,04</b></td>
-          <td style="padding-left: 5px"><b>497,32</b></td>
-          <td><b>88,07</b></td>
-          <td style="text-align: right; border-left: 3px solid white">
-            <b>8,51</b>
-          </td>
-          <td style="text-align: right"><b>889,13</b></td>
-          <td style="text-align: right"><b>18.771,32</b></td>
-        </tr>
-      </table>
-    </main>
-    <footer></footer>
-    <div class="quebraPag"></div>
-  </div>
-
-  <div>
-    <header>
-      <div class="titulo">
-        <img
-          class="logo"
-          src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
-          width="100" 
-        />
-
-        <span style="transform: translate(-25%)"
-          ><b>Detalhe da Guia a Ser Emitida</b></span
-        >
-
-        <span></span>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <label class="subtitulo" for="Empregador">Empregador: </label>
-          <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-        </div>
-
-        <div class="col-2">
-          <span class="empregadorNum" style="font-size: 0.75rem"
-            >33.780.199</span
-          >
-          <span style="font-size: 0.75rem"> 23/10/2023</span>
-        </div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-        </div>
-
-        <div class="col">
-          <span> KRATUS TECNOLOGIA COMERCIO E SERVICOS LTDA </span>
-        </div>
-
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
-        </div>
-
-        <div class="col">
-          <span> 114</span>
+          <span name="qtd_trabalhadores"> 114</span>
         </div>
 
         <div class="col">
@@ -1393,13 +1309,14 @@ público, sem vínculo de emprego/estatutário
         </div>
       </div>
 
-      <table 
-      style="
+      <table
+        style="
           width: 100%;
           border-collapse: collapse;
           text-align: left;
           background-color: #e4e6d8;
-        ">
+        "
+      >
         <tr>
           <th style="text-align: center">Comp. Apuração</th>
           <th style="text-align: center">Qtd. Trabalhadores</th>
@@ -1428,8 +1345,16 @@ público, sem vínculo de emprego/estatutário
           <td style="text-align: right">921,28</td>
         </tr>
 
-        <tr style="padding: 0; font-weight: bold; border-top: 0.15rem solid black; border-bottom: 0.15rem solid black; background-color: white;">
-          <td style="text-align: center">Total do  Tomador</td>
+        <tr
+          style="
+            padding: 0;
+            font-weight: bold;
+            border-top: 0.15rem solid black;
+            border-bottom: 0.15rem solid black;
+            background-color: white;
+          "
+        >
+          <td style="text-align: center">Total do Tomador</td>
           <td style="text-align: center">Sem Tomador</td>
           <td style="text-align: center">10.079,67</td>
           <td style="text-align: right">214.867,19</td>
@@ -1451,12 +1376,13 @@ público, sem vínculo de emprego/estatutário
       </div>
 
       <table
-      style="
+        style="
           width: 100%;
           border-collapse: collapse;
           text-align: left;
           background-color: #e4e6d8;
-        ">
+        "
+      >
         <tr>
           <th style="text-align: center">Comp. Apuração</th>
           <th style="text-align: center">Qtd. Trabalhadores</th>
@@ -1485,8 +1411,16 @@ público, sem vínculo de emprego/estatutário
           <td style="text-align: right">921,28</td>
         </tr>
 
-        <tr style="padding: 0; font-weight: bold; border-top: 0.15rem solid black; border-bottom: 0.15rem solid black; background-color: white;">
-          <td style="text-align: center">Total do  Tomador</td>
+        <tr
+          style="
+            padding: 0;
+            font-weight: bold;
+            border-top: 0.15rem solid black;
+            border-bottom: 0.15rem solid black;
+            background-color: white;
+          "
+        >
+          <td style="text-align: center">Total do Tomador</td>
           <td style="text-align: center">Sem Tomador</td>
           <td style="text-align: center">10.079,67</td>
           <td style="text-align: right">214.867,19</td>
@@ -1507,12 +1441,14 @@ público, sem vínculo de emprego/estatutário
         </div>
       </div>
 
-      <table style="
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      background-color: #e4e6d8;
-    ">
+      <table
+        style="
+          width: 100%;
+          border-collapse: collapse;
+          text-align: left;
+          background-color: #e4e6d8;
+        "
+      >
         <tr>
           <th style="text-align: center">Comp. Apuração</th>
           <th style="text-align: center">Qtd. Trabalhadores</th>
@@ -1540,8 +1476,16 @@ público, sem vínculo de emprego/estatutário
           <td style="text-align: right">8,25</td>
           <td style="text-align: right">921,28</td>
         </tr>
-        <tr style="padding: 0; font-weight: bold; border-top: 0.15rem solid black; border-bottom: 0.15rem solid black; background-color: white;">
-          <td style="text-align: center">Total do  Tomador</td>
+        <tr
+          style="
+            padding: 0;
+            font-weight: bold;
+            border-top: 0.15rem solid black;
+            border-bottom: 0.15rem solid black;
+            background-color: white;
+          "
+        >
+          <td style="text-align: center">Total do Tomador</td>
           <td style="text-align: center">Sem Tomador</td>
           <td style="text-align: center">10.079,67</td>
           <td style="text-align: right">214.867,19</td>
@@ -1552,7 +1496,14 @@ público, sem vínculo de emprego/estatutário
           <td style="text-align: right">8,25</td>
           <td style="text-align: right">921,28</td>
         </tr>
-        <tr style="padding: 0; font-weight: bold;background-color: white; font-weight: bold;">
+        <tr
+          style="
+            padding: 0;
+            font-weight: bold;
+            background-color: white;
+            font-weight: bold;
+          "
+        >
           <td style="text-align: center"></td>
           <td style="text-align: center">Total da Guia</td>
           <td style="text-align: center">10.079,67</td>
@@ -1568,24 +1519,26 @@ público, sem vínculo de emprego/estatutário
     </main>
 
     <footer>
-      <hr>
-      <div>
+      <hr />
+      <div></div>
+      <div
+        style="
+          display: flex;
+          font-size: 8px;
+          justify-content: space-between;
+          padding: 2px 2px;
+        "
+      >
+        <p>Todos os valores exibidos estão expressos em reais (R$)</p>
+        <div style="display: flex; justify-content: space-around">
+          <p>Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+
+          <p style="margin-left: 50px">Página 1 de 9</p>
+        </div>
       </div>
-      <div style="display:flex; font-size:8px; justify-content:space-between; padding:2px 2px;">
-      <p>Todos os valores exibidos estão expressos em reais (R$)</p>
-      <div style="display:flex; justify-content:space-around;">
-      
-      <p>
-      Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
-      
-      <p style="margin-left: 50px;" >
-      Página 1 de 9
-      </p>
-      </div>
-      </div> 
       <span></span>
-      </footer>
-      <div class="quebraPag"></div>
+    </footer>
+    <div class="quebraPag"></div>
   </div>
   <div>
     <header>
