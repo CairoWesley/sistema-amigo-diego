@@ -1,0 +1,2469 @@
+<!DOCTYPE html>
+
+<html lang="pt_bt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+  </head>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/jquerycsvtotable/jquery.csvToTable.js"></script>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .tamanhoPage {
+      width: 297mm;
+      height: 205mm;
+      position: relative;
+    }
+    body {
+      padding: 10px 10px;
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+    }
+    header {
+      padding: 0 0px;
+    }
+
+    .titulo {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.2rem;
+      align-items: center;
+      padding-bottom: 10px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 0.75rem;
+    }
+    footer {
+    }
+    .col-2 {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      text-align: right;
+    }
+
+    .tituloTabela {
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .tituloTabela hr {
+      border: 2px solid black;
+    }
+    main {
+      padding: 0 2px;
+    }
+    .topoTabela {
+      padding-top: 10px;
+      display: flex;
+      gap: 80px;
+      font-size: 0.75rem;
+      padding-bottom: 10px;
+    }
+    .infoTabela label {
+      padding-right: 10px;
+    }
+    hr {
+      border: 0.1rem solid black;
+      margin: 0 auto;
+      width: 100%;
+    }
+    th {
+      font-size: 0.5rem;
+    }
+
+    td {
+      padding: 5px 2px;
+      font-size: 0.5rem;
+    }
+
+    tr:nth-child(even) {
+      background: white;
+    }
+    tr {
+      padding: 0 10px;
+    }
+
+    .infoTable {
+      text-align: right;
+      font-size: 0.5rem;
+      padding: 2px 3px;
+      font-weight: bold;
+    }
+
+    .categoriaInfo h1 {
+      font-size: 0.35rem;
+    }
+    main {
+      flex: 1;
+    }
+    footer {
+      height: auto;
+      align-items: end;
+      margin-top: auto;
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      justify-content: space-between;
+    }
+    .quebraPag {
+      page-break-after: always;
+    }
+  </style>
+
+  <body id="main">
+    <script async>
+      async function run() {
+
+
+        function sumData(
+          tomador,
+          key,
+          dados,
+          type,
+          condition,
+          value,
+          returnType,
+          condition2,
+          value2
+        ) {
+          let items = dados;
+          if (tomador != undefined) {
+            items = dados.filter((item) => item.Tomador == tomador);
+          }
+
+          if (condition != undefined) {
+            items = dados.filter((item) => item[condition] == value);
+          }
+
+          if (returnType == "Index") {
+            return items.length;
+          }
+
+          if (condition2 != undefined) {
+            items = dados.filter((item) => item[condition2] == value2);
+          }
+          let total = 0;
+          if (type == "int") {
+            items.forEach((item) => (total += parseInt(item[key])));
+          } else {
+            items.forEach((item) => (total += parseFloat(item[key])));
+          }
+          return total;
+        }
+
+        var Empregador;
+        var Nome_empregador;
+        var Vencimento_guia;
+        var qtd_trabalhadores;
+        var Origem;
+        var Estabelecimento;
+        var Tomador;
+        var data = [];
+        var estabelecimentos = [];
+        var categorias = [];
+        let general_data = new Object();
+
+        const myPromise = new Promise((resolve, reject) => {
+          d3.dsv(";")("http://localhost:8000/info_empresa.csv", (items) => {
+            estabelecimentos = items.filter(
+              (estabelecimento) => estabelecimento.Empregador != ""
+            );
+            general_data = estabelecimentos[0];
+          });
+          d3.dsv(";")("http://localhost:8000/categorias.csv", (items) => {
+            categorias = items;
+          });
+
+          d3.dsv(";")("http://localhost:8000/planilha1.csv", (items) => {
+            data = items;
+            resolve();
+          });
+        }).then(() => {
+          let paginasAtual  = 0
+          let paginaFinal = 4
+          const data_atual = new Date().toLocaleString();
+          const companys = [];
+          const tipo_valor = [];
+          const valores_ajustados = [];
+          data.forEach((item) => {
+            if (!companys.includes(item.Tomador)) {
+              companys.push(item.Tomador);
+            }
+            if (!tipo_valor.includes(item["Tipo Depósito"])) {
+              const rel_categoria = categorias.find(
+                (x) => x.Categoria == item["Tipo Depósito"]
+              )["Tipo de Valor"];
+              tipo_valor.push(item["Tipo Depósito"]);
+              valores_ajustados.push(rel_categoria);
+            }
+          });
+          companys.forEach((company) => {
+            const data2 = data.filter((x) => x.Tomador == company);
+
+            sumData(1, "Comp. Apuração", data2, "int");
+            const company_atual = estabelecimentos.filter(
+              (x) => x.Tomador == company
+            )[0];
+            const tamanho_maximo = 28;
+            //
+            const paginas_2 = [];
+            let pagina_atual = [];
+            qtd_trabalhadores = data2.length;
+
+            data2.map((item, i) => {
+              if (pagina_atual.length != tamanho_maximo) {
+                pagina_atual.push(item);
+              } else {
+                paginas_2.push(pagina_atual);
+
+                pagina_atual = [];
+                pagina_atual.push(item);
+              }
+              if (i == data2.length - 1) {
+                paginas_2.push(pagina_atual);
+              }
+            });
+            var body = document.getElementById("main");
+
+            paginaFinal = paginas_2.length + paginaFinal
+            
+
+            paginas_2.map((item, i) => {
+
+              if (paginas_2.length == i + 1) {
+                
+                console.log(item.length);
+
+                if (item.length <= 25) {
+                  paginasAtual +=1
+                  const element = document.createElement("div");
+                  element.className = "tamanhoPage";
+                  element.innerHTML = `
+<header>
+<div class="titulo">
+<img
+class="logo"
+src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
+width="100"
+/>
+
+<span style="transform: translate(-25%)"
+><b>Detalhe da Guia a Ser Emitida</b></span
+>
+
+<span></span>
+</div>
+<div class="row">
+<div class="col">
+<label class="subtitulo" for="Empregador">Empregador: </label>
+<label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+</div>
+
+<div class="col-2">
+<span class="empregadorNum" style="font-size: 0.75rem"
+>${company_atual.Estabelecimento}</span
+>
+<span style="font-size: 0.75rem"> ${company_atual.Vencimento_guia}</span>
+</div>
+<div class="col">
+<label class="subtitulo" for="Empregador">Nome Empregador: </label>
+</div>
+<div class="col">
+<span> ${company_atual.Nome_empregador} </span>
+</div>
+
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
+</div>
+
+<div class="col">
+<span> ${data2.length}</span>
+</div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Origem:</label>
+</div>
+
+<div class="col">
+<span>${company_atual.Origem}</span>
+</div>
+</div>
+
+<div class="tituloTabela">
+<span><b>Relação de Trabalhadores</b></span>
+</div>
+<hr />
+</header>
+<main>
+<div class="topoTabela">
+<div class="infoTabela">
+<label for="">Estabelecimento:</label>
+<span>${company_atual.Estabelecimento}</span>
+</div>
+<div class="infoTabela">
+<label>Tomador:</label>
+<span>${company_atual.Tomador}</span>
+</div>
+</div>
+<table
+style="
+width: 100%;
+border-collapse: collapse;
+text-align: left;
+background-color: #e4e6d8;
+"
+>
+<tr style="background-color: #ccccbe; height: 25px">
+<th style="text-align: center">
+Comp.<br />
+Apuração
+</th>
+<th style="text-align: center">
+Comp.<br />
+Referência
+</th>
+<th style="max-width: 600px">Nome Trabalhador</th>
+<th style="width: 125px">Matrícula</th>
+<th style="max-width: 150px">CPF</th>
+<th style="text-align: right; padding-right: 20px">Categoria</th>
+<th>Vencimento</th>
+<th>Tipo Depósito</th>
+<th style="text-align: right; max-width: 50px">
+Base Remuneração<br />
+Total
+</th>
+<th style="text-align: right">
+Valor FGTS<br />
+na Guia
+</th>
+<th style="width: 80px; text-align: center">Juros</th>
+<th style="text-align: right; width: 10px; padding-right: 20px">
+Atualiz.<br />
+Monetária
+</th>
+<th style="text-align: center">Multa</th>
+<th style="text-align: right">Total</th>
+</tr>
+${item
+  .map((dado) => {
+    return `<tr>
+<td style="text-align: center">
+${dado["Comp. Apuração"]}
+</td>
+<td style="text-align: center">
+${dado["Comp. Referência"]}
+</td>
+<td style="border-right: 3px solid white">
+${dado["Nome Trabalhador"]}
+</td>
+<td style="border-right: 3px solid white">
+${dado["Matrícula"]}
+</td>
+<td>
+${dado["CPF"]}
+</td>
+<td style="text-align: right; padding-right: 20px">
+${dado["Categoria"]}
+</td>
+<td style="padding-left: 5px">      
+${dado["Vencimento"]}
+</td>
+<td>        
+${dado["Tipo Depósito"]}
+</td>
+<td style="text-align: right; border-left: 3px solid white">
+${dado["Base Remuneração Total"]}
+
+</td>
+<td style="text-align: right">          
+${dado["Valor FGTS na Guia"]}
+</td>
+<td style="text-align: center">
+${dado["Juros"]}
+</td>
+<td style="text-align: right; padding-right: 20px">    
+${dado["Atualiz. Monetária"]}
+</td>
+<td style="text-align: center">                        ${dado["Multa"]}
+</td>
+<td style="text-align: right">                        ${dado["Total"]}
+</td>
+</tr>`;
+  })
+  .join("")}
+</table>
+<hr />
+
+<div>
+
+<div class="infoTable">
+  <span style="width:100px;display:inline-block">Total do Tomador</span>
+  <span style="width:100px;display:inline-block">${company_atual.Tomador}</span>
+  <span style="width:95px;display:inline-block">${sumData(
+    undefined,
+    "Base Remuneração Total",
+    data,
+    "float",
+    "Tomador",
+    company_atual.Tomador,
+    "Sum"
+  )}</span>
+  <span style="width:80px;display:inline-block">${sumData(
+    undefined,
+    "Valor FGTS na Guia",
+    data,
+    "float",
+    "Tomador",
+    company_atual.Tomador,
+    "Sum"
+  )}</span>
+  <span style="width:42px;display:inline-block">${sumData(
+    undefined,
+    "Juros",
+    data,
+    "float",
+    "Tomador",
+    company_atual.Tomador,
+    "Sum"
+  )} </span>
+  <span style="width:74px;display:inline-block">${sumData(
+    undefined,
+    "Atualiz. Monetária",
+    data,
+    "float",
+    "Tomador",
+    company_atual.Tomador,
+    "Sum"
+  )}</span>
+  <span style="width:40px;display:inline-block">${sumData(
+    undefined,
+    "Multa",
+    data,
+    "float",
+    "Tomador",
+    company_atual.Tomador,
+    "Sum"
+  )}</span>
+  <span style="width:48px;display:inline-block" >${sumData(
+    undefined,
+    "Total",
+    data,
+    "float",
+    "Tomador",
+    company_atual.Tomador,
+    "Sum"
+  )}</span>
+</div>
+<div class="infoTable">
+  <span style="width:100px;display:inline-block">Total do Estabelecimento</span>
+  <span style="width:100px;display:inline-block">${
+    company_atual.Estabelecimento
+  }</span>
+  <span style="width:95px;display:inline-block">${sumData(
+    undefined,
+    "Base Remuneração Total",
+    data,
+    "float"
+  )}</span>
+  <span style="width:80px;display:inline-block">${sumData(
+    undefined,
+    "Valor FGTS na Guia",
+    data,
+    "float"
+  )}</span>
+  <span style="width:42px;display:inline-block">${sumData(
+    undefined,
+    "Juros",
+    data,
+    "float"
+  )} </span>
+  <span style="width:74px;display:inline-block">${sumData(
+    undefined,
+    "Atualiz. Monetária",
+    data,
+    "float"
+  )}</span>
+  <span style="width:40px;display:inline-block">${sumData(
+    undefined,
+    "Multa",
+    data,
+    "float"
+  )}</span>
+  <span style="width:48px;display:inline-block" >${sumData(
+    undefined,
+    "Total",
+    data,
+    "float"
+  )}</span>
+</div>
+<div class="infoTable">
+  <span style="width:100px;display:inline-block"></span>
+  <span style="width:100px;display:inline-block">Total da Guia</span>
+  <span style="width:95px;display:inline-block">${sumData(
+    undefined,
+    "Base Remuneração Total",
+    data,
+    "float"
+  )}</span>
+  <span style="width:80px;display:inline-block">${sumData(
+    undefined,
+    "Valor FGTS na Guia",
+    data,
+    "float"
+  )}</span>
+  <span style="width:42px;display:inline-block">${sumData(
+    undefined,
+    "Juros",
+    data,
+    "float"
+  )} </span>
+  <span style="width:74px;display:inline-block">${sumData(
+    undefined,
+    "Atualiz. Monetária",
+    data,
+    "float"
+  )}</span>
+  <span style="width:40px;display:inline-block">${sumData(
+    undefined,
+    "Multa",
+    data,
+    "float"
+  )}</span>
+  <span style="width:48px;display:inline-block" >${sumData(
+    undefined,
+    "Total",
+    data,
+    "float"
+  )}</span>
+</div>
+</div>
+</main>
+
+
+<footer>
+<hr>
+<div>
+</div>
+<div style="display:flex; font-size:8px; justify-content:space-between; padding:2px 2px;">
+<p>Todos os valores exibidos estão expressos em reais (R$)</p>
+<div style="display:flex; justify-content:space-around;">
+
+<p>
+Relatório Emitido em: ${data_atual} (Brasília).</p>
+
+<p style="margin-left: 50px;" >
+Página ${paginasAtual} de ${paginaFinal}
+</p>
+</div>
+</div> 
+<span style=""></span>
+</footer>
+<div class="quebraPag"></div>
+`;
+
+                  body.appendChild(element);
+                }
+                if (item.length >= 26) {
+                  paginasAtual +=1
+
+                  console.log("aqui");
+                  const element = document.createElement("div");
+                  element.className = "tamanhoPage";
+                  element.innerHTML = `
+<header>
+<div class="titulo">
+<img
+class="logo"
+src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
+width="100"
+/>
+
+<span style="transform: translate(-25%)"
+><b>Detalhe da Guia a Ser Emitida</b></span
+>
+
+<span></span>
+</div>
+<div class="row">
+<div class="col">
+<label class="subtitulo" for="Empregador">Empregador: </label>
+<label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+</div>
+
+<div class="col-2">
+<span class="empregadorNum" style="font-size: 0.75rem"
+>${company_atual.Estabelecimento}</span
+>
+<span style="font-size: 0.75rem"> ${company_atual.Vencimento_guia}</span>
+</div>
+<div class="col">
+<label class="subtitulo" for="Empregador">Nome Empregador: </label>
+</div>
+<div class="col">
+<span> ${company_atual.Nome_empregador} </span>
+</div>
+
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
+</div>
+
+<div class="col">
+<span> ${data2.length}</span>
+</div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Origem:</label>
+</div>
+
+<div class="col">
+<span>${company_atual.Origem}</span>
+</div>
+</div>
+
+<div class="tituloTabela">
+<span><b>Relação de Trabalhadores</b></span>
+</div>
+<hr />
+</header>
+<main>
+<div class="topoTabela">
+<div class="infoTabela">
+<label for="">Estabelecimento:</label>
+<span>${company_atual.Estabelecimento}</span>
+</div>
+<div class="infoTabela">
+<label>Tomador:</label>
+<span>${company_atual.Tomador}</span>
+</div>
+</div>
+<table
+style="
+width: 100%;
+border-collapse: collapse;
+text-align: left;
+background-color: #e4e6d8;
+"
+>
+<tr style="background-color: #ccccbe; height: 25px">
+<th style="text-align: center">
+Comp.<br />
+Apuração
+</th>
+<th style="text-align: center">
+Comp.<br />
+Referência
+</th>
+<th style="max-width: 600px">Nome Trabalhador</th>
+<th style="width: 125px">Matrícula</th>
+<th style="max-width: 150px">CPF</th>
+<th style="text-align: right; padding-right: 20px">Categoria</th>
+<th>Vencimento</th>
+<th>Tipo Depósito</th>
+<th style="text-align: right; max-width: 50px">
+Base Remuneração<br />
+Total
+</th>
+<th style="text-align: right">
+Valor FGTS<br />
+na Guia
+</th>
+<th style="width: 80px; text-align: center">Juros</th>
+<th style="text-align: right; width: 10px; padding-right: 20px">
+Atualiz.<br />
+Monetária
+</th>
+<th style="text-align: center">Multa</th>
+<th style="text-align: right">Total</th>
+</tr>
+${item
+  .map((dado) => {
+    return `<tr>
+<td style="text-align: center">
+${dado["Comp. Apuração"]}
+</td>
+<td style="text-align: center">
+${dado["Comp. Referência"]}
+</td>
+<td style="border-right: 3px solid white">
+${dado["Nome Trabalhador"]}
+</td>
+<td style="border-right: 3px solid white">
+${dado["Matrícula"]}
+</td>
+<td>
+${dado["CPF"]}
+</td>
+<td style="text-align: right; padding-right: 20px">
+${dado["Categoria"]}
+</td>
+<td style="padding-left: 5px">      
+${dado["Vencimento"]}
+</td>
+<td>        
+${dado["Tipo Depósito"]}
+</td>
+<td style="text-align: right; border-left: 3px solid white">
+${dado["Base Remuneração Total"]}
+
+</td>
+<td style="text-align: right">          
+${dado["Valor FGTS na Guia"]}
+</td>
+<td style="text-align: center">
+${dado["Juros"]}
+</td>
+<td style="text-align: right; padding-right: 20px">    
+${dado["Atualiz. Monetária"]}
+</td>
+<td style="text-align: center">                        ${dado["Multa"]}
+</td>
+<td style="text-align: right">                        ${dado["Total"]}
+</td>
+</tr>`;
+  })
+  .join("")}
+</table>
+<hr />
+
+<div>
+
+<div class="infoTable">
+  <span style="width:100px;display:inline-block">Total do Tomador</span>
+  <span style="width:100px;display:inline-block">Sem Tomador</span>
+  <span style="width:100px;display:inline-block">1111111</span>
+  <span style="width:70px;display:inline-block">00000</span>
+  <span style="width:40px;display:inline-block">00000 </span>
+  <span style="width:74px;display:inline-block">0000</span>
+  <span style="width:38px;display:inline-block">0000</span>
+  <span style="width:40px;display:inline-block" >851,05</span>
+</div>
+<div class="infoTable">
+  <span style="width:100px;display:inline-block">Total do Estabelecimento</span>
+  <span style="width:100px;display:inline-block">32.780.199/0001-77</span>
+  <span style="width:100px;display:inline-block">1111111</span>
+  <span style="width:70px;display:inline-block">00000</span>
+  <span style="width:40px;display:inline-block">00000 </span>
+  <span style="width:74px;display:inline-block">0000</span>
+  <span style="width:38px;display:inline-block">0000</span>
+  <span style="width:40px;display:inline-block" >851,05</span>
+</div>
+<div class="infoTable">
+  <span style="width:100px;display:inline-block"></span>
+  <span style="width:100px;display:inline-block">Total da Guia</span>
+  <span style="width:100px;display:inline-block">1111111</span>
+  <span style="width:70px;display:inline-block">00000</span>
+  <span style="width:40px;display:inline-block">00000 </span>
+  <span style="width:74px;display:inline-block">0000</span>
+  <span style="width:38px;display:inline-block">0000</span>
+  <span style="width:40px;display:inline-block" >851,05</span>
+</div>
+</div>
+</main>
+
+
+<footer>
+<hr>
+<div>
+</div>
+<div style="display:flex; font-size:8px; justify-content:space-between; padding:2px 2px;">
+<p>Todos os valores exibidos estão expressos em reais (R$)</p>
+<div style="display:flex; justify-content:space-around;">
+
+<p>
+Relatório Emitido em: ${data_atual} (Brasília).</p>
+
+<p style="margin-left: 50px;" >
+  Página ${paginasAtual} de ${paginaFinal}
+</p>
+</div>
+</div> 
+<span style=""></span>
+</footer>
+<div class="quebraPag"></div>
+`;
+
+                  const pagina2 = document.createElement("div");
+                  pagina2.className = "tamanhoPage";
+                  pagina2.innerHTML = `
+<header>
+<div class="titulo">
+<img
+class="logo"
+src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
+width="100"
+/>
+
+<span style="transform: translate(-25%)"
+><b>Detalhe da Guia a Ser Emitida</b></span
+>
+
+<span></span>
+</div>
+<div class="row">
+<div class="col">
+<label class="subtitulo" for="Empregador">Empregador: </label>
+<label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+</div>
+
+<div class="col-2">
+<span class="empregadorNum" style="font-size: 0.75rem"
+>${company_atual.Estabelecimento}</span
+>
+<span style="font-size: 0.75rem"> ${company_atual.Vencimento_guia}</span>
+</div>
+<div class="col">
+<label class="subtitulo" for="Empregador">Nome Empregador: </label>
+</div>
+<div class="col">
+<span> ${company_atual.Nome_empregador} </span>
+</div>
+
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
+</div>
+
+<div class="col">
+<span> ${data2.length}</span>
+</div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Origem:</label>
+</div>
+
+<div class="col">
+<span>${company_atual.Origem}</span>
+</div>
+</div>
+
+<div class="tituloTabela">
+<span><b>Relação de Trabalhadores</b></span>
+</div>
+<hr />
+</header>
+<main>
+<div class="topoTabela">
+<div class="infoTabela">
+<label for="">Estabelecimento:</label>
+<span>${company_atual.Estabelecimento}</span>
+</div>
+<div class="infoTabela">
+<label>Tomador:</label>
+<span>${company_atual.Tomador}</span>
+</div>
+</div>
+
+<hr />
+<div>
+
+<div class="infoTable">
+  <span style="width:100px;display:inline-block">Total do Tomador</span>
+  <span style="width:100px;display:inline-block">Sem Tomador</span>
+  <span style="width:100px;display:inline-block">1111111</span>
+  <span style="width:70px;display:inline-block">00000</span>
+  <span style="width:40px;display:inline-block">00000 </span>
+  <span style="width:74px;display:inline-block">0000</span>
+  <span style="width:38px;display:inline-block">0000</span>
+  <span style="width:40px;display:inline-block" >851,05</span>
+</div>
+<div class="infoTable">
+  <span style="width:100px;display:inline-block">Total do Estabelecimento</span>
+  <span style="width:100px;display:inline-block">32.780.199/0001-77</span>
+  <span style="width:100px;display:inline-block">1111111</span>
+  <span style="width:70px;display:inline-block">00000</span>
+  <span style="width:40px;display:inline-block">00000 </span>
+  <span style="width:74px;display:inline-block">0000</span>
+  <span style="width:38px;display:inline-block">0000</span>
+  <span style="width:40px;display:inline-block" >851,05</span>
+</div>
+<div class="infoTable">
+  <span style="width:100px;display:inline-block"></span>
+  <span style="width:100px;display:inline-block">Total da Guia</span>
+  <span style="width:100px;display:inline-block">1111111</span>
+  <span style="width:70px;display:inline-block">00000</span>
+  <span style="width:40px;display:inline-block">00000 </span>
+  <span style="width:74px;display:inline-block">0000</span>
+  <span style="width:38px;display:inline-block">0000</span>
+  <span style="width:40px;display:inline-block" >851,05</span>
+</div>
+</div>
+</main>
+
+
+<footer>
+<hr>
+<div>
+</div>
+<div style="display:flex; font-size:8px; justify-content:space-between; padding:2px 2px;">
+<p>Todos os valores exibidos estão expressos em reais (R$)</p>
+<div style="display:flex; justify-content:space-around;">
+
+<p>
+Relatório Emitido em: ${data_atual} (Brasília).</p>
+
+<p style="margin-left: 50px;" >
+  Página ${paginasAtual} de ${paginaFinal}
+</p>
+</div>
+</div> 
+<span style=""></span>
+</footer>
+<div class="quebraPag"></div>
+`;
+
+                  body.appendChild(element);
+                  body.appendChild(pagina2);
+                }
+              } else {
+                paginasAtual +=1
+
+                const element = document.createElement("div");
+                element.className = "tamanhoPage";
+                element.innerHTML = `
+<header>
+<div class="titulo">
+<img
+class="logo"
+src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
+width="100"
+/>
+
+<span style="transform: translate(-25%)"
+><b>Detalhe da Guia a Ser Emitida</b></span
+>
+
+<span></span>
+</div>
+<div class="row">
+<div class="col">
+<label class="subtitulo" for="Empregador">Empregador: </label>
+<label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+</div>
+
+<div class="col-2">
+<span class="empregadorNum" style="font-size: 0.75rem"
+>${company_atual.Estabelecimento}</span
+>
+<span style="font-size: 0.75rem"> ${company_atual.Vencimento_guia}</span>
+</div>
+<div class="col">
+<label class="subtitulo" for="Empregador">Nome Empregador: </label>
+</div>
+<div class="col">
+<span> ${company_atual.Nome_empregador} </span>
+</div>
+
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
+</div>
+
+<div class="col">
+<span> ${data2.length}</span>
+</div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Origem:</label>
+</div>
+
+<div class="col">
+<span>${company_atual.Origem}</span>
+</div>
+</div>
+
+<div class="tituloTabela">
+<span><b>Relação de Trabalhadores</b></span>
+</div>
+<hr />
+</header>
+<main>
+<div class="topoTabela">
+<div class="infoTabela">
+<label for="">Estabelecimento:</label>
+<span>${company_atual.Estabelecimento}</span>
+</div>
+<div class="infoTabela">
+<label>Tomador:</label>
+<span>${company_atual.Tomador}</span>
+</div>
+</div>
+<table
+style="
+width: 100%;
+border-collapse: collapse;
+text-align: left;
+background-color: #e4e6d8;
+"
+>
+<tr style="background-color: #ccccbe; height: 25px">
+<th style="text-align: center">
+Comp.<br />
+Apuração
+</th>
+<th style="text-align: center">
+Comp.<br />
+Referência
+</th>
+<th style="max-width: 600px">Nome Trabalhador</th>
+<th style="width: 125px">Matrícula</th>
+<th style="max-width: 150px">CPF</th>
+<th style="text-align: right; padding-right: 20px">Categoria</th>
+<th>Vencimento</th>
+<th>Tipo Depósito</th>
+<th style="text-align: right; max-width: 50px">
+Base Remuneração<br />
+Total
+</th>
+<th style="text-align: right">
+Valor FGTS<br />
+na Guia
+</th>
+<th style="width: 80px; text-align: center">Juros</th>
+<th style="text-align: right; width: 10px; padding-right: 20px">
+Atualiz.<br />
+Monetária
+</th>
+<th style="text-align: center">Multa</th>
+<th style="text-align: right">Total</th>
+</tr>
+${item
+  .map((dado) => {
+    return `<tr>
+<td style="text-align: center">
+${dado["Comp. Apuração"]}
+</td>
+<td style="text-align: center">
+${dado["Comp. Referência"]}
+</td>
+<td style="border-right: 3px solid white">
+${dado["Nome Trabalhador"]}
+</td>
+<td style="border-right: 3px solid white">
+${dado["Matrícula"]}
+</td>
+<td>
+${dado["CPF"]}
+</td>
+<td style="text-align: right; padding-right: 20px">
+${dado["Categoria"]}
+</td>
+<td style="padding-left: 5px">      
+${dado["Vencimento"]}
+</td>
+<td>        
+${dado["Tipo Depósito"]}
+</td>
+<td style="text-align: right; border-left: 3px solid white">
+${dado["Base Remuneração Total"]}
+
+</td>
+<td style="text-align: right">          
+${dado["Valor FGTS na Guia"]}
+</td>
+<td style="text-align: center">
+${dado["Juros"]}
+</td>
+<td style="text-align: right; padding-right: 20px">    
+${dado["Atualiz. Monetária"]}
+</td>
+<td style="text-align: center">                        ${dado["Multa"]}
+</td>
+<td style="text-align: right">                        ${dado["Total"]}
+</td>
+</tr>`;
+  })
+  .join("")}
+</table>
+</main>
+
+
+<footer>
+<hr>
+<div>
+</div>
+<div style="display:flex; font-size:8px; justify-content:space-between; padding:2px 2px;">
+<p>Todos os valores exibidos estão expressos em reais (R$)</p>
+<div style="display:flex; justify-content:space-around;">
+
+<p>
+Relatório Emitido em: ${data_atual} (Brasília).</p>
+
+<p style="margin-left: 50px;" >
+  Página ${paginasAtual} de ${paginaFinal}
+</p>
+</div>
+</div> 
+<span style=""></span>
+</footer>
+<div class="quebraPag"></div>
+`;
+                
+
+body.appendChild(element);
+              }
+            });
+          });
+
+          const body = document.getElementById("main");
+          const element = document.createElement("div");
+          element.className = "tamanhoPage";
+          element.innerHTML = `
+<header>
+<div class="titulo">
+<img
+class="logo"
+src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
+width="100"
+/>
+
+<span style="transform: translate(-25%)"
+><b>Detalhe da Guia a Ser Emitida</b></span
+>
+
+<span></span>
+</div>
+
+<div class="row">
+<div class="col">
+<label class="subtitulo" for="Empregador">Empregador: </label>
+<label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+</div>
+
+<div class="col-2">
+<span class="empregadorNum" style="font-size: 0.75rem"
+  >${general_data.Empregador}</span
+>
+<span style="font-size: 0.75rem"> ${general_data.Vencimento_guia}</span>
+</div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador">Nome Empregador: </label>
+</div>
+
+<div class="col">
+<span> ${general_data.Nome_empregador}</span>
+</div>
+
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
+</div>
+
+<div class="col">
+<span> ${data.length}</span>
+</div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Origem:</label>
+</div>
+
+<div class="col">
+<span>${general_data.Origem}</span>
+</div>
+</div>
+
+<div class="tituloTabela">
+<span><b>Relação de Trabalhadores</b></span>
+</div>
+<hr />
+</header>
+<main>
+<div class="topoTabela">
+<div class="infoTabela">
+<label for="">Estabelecimento:</label>
+<span>${general_data.Estabelecimento}</span>
+</div>
+
+</div>
+
+<table
+style="
+width: 100%;
+border-collapse: collapse;
+text-align: left;
+background-color: #e4e6d8;
+"
+>
+<tr style="background-color: #ccccbe; height: 25px">
+<th style="text-align: center">Comp. Apuração</th>
+<th style="text-align: center">Categoria</th>
+<th style="max-width: 600px">Qtd. Trabalhadores</th>
+<th style="width: 125px">
+  Base Remuneração<br />
+  Total
+</th>
+<th style="max-width: 150px">FGTS Mensal na Guia</th>
+<th style="text-align: right; padding-right: 20px">
+  FGTS Rescisório na<br />
+  Guia
+</th>
+<th>
+  Ind. Compensatória<br />
+  na Guia
+</th>
+<th>Juros</th>
+<th style="text-align: right; max-width: 50px">
+   Atualiz. Monetária
+</th>
+<th style="text-align: right">Multa</th>
+
+<th style="text-align: right">Total</th>
+</tr>
+
+<tr>
+<td style="text-align: center">${data[0]["Comp. Apuração"]}</td>
+<td style="text-align: center;">${data[0]["Categoria"]}</td>
+<td style="border-right: 3px solid white">${data.length}</td>
+<td style="border-right: 3px solid white">${sumData(
+            undefined,
+            "Base Remuneração Total",
+            data,
+            "float"
+          )}</td>
+<td>${sumData(undefined, "Valor FGTS na Guia", data, "float")}</td>
+<td style="text-align: right; padding-right: 20px">${
+            //FGTS RESCISÒRIO NA GUIA
+            sumData(
+              undefined,
+              "Base Remuneração Total",
+              data,
+              "float",
+              "Tipo Depósito",
+              "Verba Indenizatória"
+            )
+          }</td>
+<td style="padding-left: 5px">${
+            //IND COMPESATORIA NA GUIA
+            sumData(
+              undefined,
+              "Valor FGTS na Guia",
+              data,
+              "float",
+              "Tipo Depósito",
+              "Multa Rescisória"
+            )
+          }</td>
+<td>${
+            //JUROS
+            sumData(undefined, "Juros", data, "float")
+          }</td>
+<td style="text-align: right; border-left: 3px solid white">${
+            //ATT MONETÀRIA
+            sumData(undefined, "Atualiz. Monetária", data, "float")
+          }</td>
+<td style="text-align: right">${sumData(undefined, "Multa", data, "float")}</td>
+<td style="text-align: right">${sumData(undefined, "Total", data, "Float")}</td>
+</tr>
+
+<tr style="background-color: white">
+<td style="text-align: center"></td>
+<td></td>
+<td style="border-right: 3px solid white">
+  <b>Total da Guia</b>
+</td>
+<td style="border-right: 3px solid white"><b>${
+            //BASE REMUNERAÇÃO TOTAL
+            sumData(undefined, "Base Remuneração Total", data, "float")
+          }</b></td>
+<td><b>${
+            //FGTS NA GUIA
+            sumData(
+              undefined,
+              "Valor FGTS na Guia",
+              data,
+              "float",
+              "Tipo Depósito",
+              "Multa Rescisória"
+            )
+          }</b></td>
+<td style="text-align: right; padding-right: 20px"><b>${
+            //
+            sumData(
+              undefined,
+              "Base Remuneração Total",
+              data,
+              "float",
+              "Tipo Depósito",
+              "Verba Indenizatória"
+            )
+          }</b></td>
+<td style="padding-left: 5px"><b>${sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Multa Rescisória"
+          )}</b></td>
+<td><b>${sumData(undefined, "Juros", data, "float")}</b></td>
+<td style="text-align: right; border-left: 3px solid white">
+  <b>${sumData(undefined, "Atualiz. Monetária", data, "float")}</b>
+</td>
+<td style="text-align: right"><b>${sumData(
+            undefined,
+            "Multa",
+            data,
+            "float"
+          )}</b></td>
+<td style="text-align: right"><b>${sumData(
+            undefined,
+            "Total",
+            data,
+            "float"
+          )}</b></td>
+</tr>
+</table>
+
+<div class="categoriaInfo">
+<h1>Descrição das categorias:</h1>
+<br />
+<h1>
+101 - Empregado - Geral, inclusive o empregado público da
+administração direta ou indireta contratado pela CLT
+</h1>
+<h1>
+102 - Empregado - Trabalhador rural por pequeno prazo da Lei
+11.718/2008
+</h1>
+<h1>103 - Empregado - Aprendiz</h1>
+<h1>104 - Empregado - Doméstico</h1>
+<h1>
+105 - Empregado - Contrato a termo firmado nos termos da Lei
+9.601/1998
+</h1>
+<h1>
+106 - Trabalhador temporário - Contrato nos termos da Lei 6.019/1974
+</h1>
+<h1>
+107 - Empregado - Contrato de trabalho Verde e Amarelo - sem acordo
+para antecipação mensal da multa rescisória do FGTS
+</h1>
+<h1>
+108 - Empregado - Contrato de trabalho Verde e Amarelo - com acordo
+para antecipação mensal da multa rescisória do FGTS
+</h1>
+<h1>111 - Empregado - Contrato de trabalho intermitente</h1>
+<h1>201 - Trabalhador avulso portuário</h1>
+<h1>202 - Trabalhador avulso não portuário</h1>
+<h1>
+301 - Servidor público titular de cargo efetivo, magistrado, ministro
+de Tribunal de Contas, conselheiro de Tribunal de Contas e membro do
+Ministério Público
+</h1>
+<h1>302 - Servidor público ocupante de cargo exclusivo em comissão</h1>
+<h1>303 - Exercente de mandato eletivo</h1>
+<h1>
+304 - Servidor público exercente de mandato eletivo, inclusive com
+exercício de cargo em comissão
+</h1>
+<h1>
+305 - Servidor público indicado para conselho ou órgão deliberativo,
+na condição de representante do governo, órgão ou entidade da
+administração pública
+</h1>
+<h1>
+306 - Servidor público contratado por tempo determinado, sujeito a
+regime administrativo especial definido em lei própria
+</h1>
+<h1>307 - Militar</h1>
+<h1>308 - Conscrito</h1>
+<h1>309 - Agente público - Outros</h1>
+<h1>310 - Servidor público eventual</h1>
+<h1>
+311 - Ministros, juízes, procuradores, promotores ou oficiais de
+justiça à disposição da Justiça Eleitoral
+</h1>
+<h1>312 - Auxiliar local</h1>
+<h1>401 - Dirigente Sindical - informação prestada pelo sindicato</h1>
+<h1>
+410 - Trabalhador cedido/exercício em outro órgão/juiz auxiliar -
+Informação prestada pelo cessionário/destino
+</h1>
+<h1>
+701 - Contribuinte individual - Autônomo em geral, exceto se
+enquadrado em uma das demais categorias de contribuinte individual
+</h1>
+<h1>
+711 - Contribuinte individual - Transportador autônomo de passageiros
+</h1>
+<h1>712 - Contribuinte individual - Transportador autônomo de carga</h1>
+<h1>721 - Contribuinte individual - Diretor não empregado, com FGTS</h1>
+<h1>722 - Contribuinte individual - Diretor não empregado, sem FGTS</h1>
+<h1>
+723 - Contribuinte individual - Empresário, sócio e membro de conselho
+de administração ou fiscal
+</h1>
+<h1>
+731 - Contribuinte individual - Cooperado que presta serviços por
+intermédio de cooperativa de trabalho
+</h1>
+<h1>
+734 - Contribuinte individual - Transportador cooperado que presta
+serviços por intermédio de cooperativa de trabalho
+</h1>
+<h1>
+738 - Contribuinte individual - Cooperado filiado a cooperativa de
+produção
+</h1>
+<h1>741 - Contribuinte individual - Microempreendedor individual</h1>
+<h1>
+751 - Contribuinte individual - Magistrado classista temporário da
+Justiça do Trabalho ou da Justiça Eleitoral que seja aposentado de
+qualquer regime previdenciário
+</h1>
+<h1>
+761 - Contribuinte individual - Associado eleito para direção de
+cooperativa, associação ou entidade de classe de qualquer natureza ou
+finalidade, bem como o síndico ou administrador eleito para exercer
+atividade de direção condominial, desde que recebam remuneração
+</h1>
+<h1>
+771 - Contribuinte individual - Membro de conselho tutelar, nos termos
+da Lei 8.069/1990
+</h1>
+<h1>
+781 - Ministro de confissão religiosa ou membro de vida consagrada, de
+congregação ou de ordem religiosa
+</h1>
+<h1>901 - Estagiário</h1>
+<h1>902 - Médico residente</h1>
+<h1>903 - Bolsista, nos termos da Lei 8.958/1994</h1>
+<h1>
+904 - Participante de curso de formação, como etapa de concurso
+público, sem vínculo de emprego/estatutário
+</h1>
+<h1>905 - Atleta não profissional em formação que receba bolsa</h1>
+</div>
+</main>
+
+<footer>
+      <hr>
+      <div>
+      </div>
+      <div style="display:flex; font-size:8px; justify-content:space-between; padding:2px 2px;">
+      <p>Todos os valores exibidos estão expressos em reais (R$)</p>
+      <div style="display:flex; justify-content:space-around;">
+      
+      <p>
+      Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+      
+      <p style="margin-left: 50px;" >
+        Página Página ${paginaFinal-3} de ${paginaFinal}
+      </p>
+      </div>
+      </div> 
+      <span></span>
+      </footer>
+      <div class="quebraPag"></div>
+`;
+
+          body.append(element);
+
+          const relacao_tipo_valor = document.createElement("div");
+          relacao_tipo_valor.className = "tamanhoPage";
+          relacao_tipo_valor.name = "Relação de Tipos de Valor";
+          relacao_tipo_valor.innerHTML = `
+     
+    <header>
+      <div class="titulo">
+        <img
+          class="logo"
+          src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
+          width="100"
+        />
+
+        <span style="transform: translate(-25%)"
+          ><b>Detalhe da Guia a Ser Emitida</b></span
+        >
+
+        <span></span>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label class="subtitulo" for="Empregador">Empregador: </label>
+          <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+        </div>
+
+        <div class="col-2">
+          <span
+            class="empregadorNum"
+            name="n_empregador"
+            style="font-size: 0.75rem"
+            >${general_data.Empregador}</span
+          >
+          <span style="font-size: 0.75rem" name="vencimento_guia">
+            ${general_data.Vencimento_guia}</span
+          >
+        </div>
+
+        <div class="col">
+          <label class="subtitulo" for="Empregador">Nome Empregador: </label>
+        </div>
+
+        <div class="col">
+          <span name="nome_empregador">
+            ${general_data.Nome_empregador}
+          </span>
+        </div>
+
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <div class="col">
+          <label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
+        </div>
+
+        <div class="col">
+          <span name="qtd_trabalhadores"> ${data.length}</span>
+        </div>
+
+        <div class="col">
+          <label class="subtitulo" for="Empregador"> Origem:</label>
+        </div>
+
+        <div class="col">
+          <span> ${general_data.Origem} </span>
+        </div>
+      </div>
+
+      <div class="tituloTabela">
+        <span><b>Relação de Tipos de Valor</b></span>
+      </div>
+      <hr />
+    </header>
+    <main>
+      <div class="topoTabela">
+        <div class="infoTabela">
+          <label for="">Estabelecimento:</label>
+          <span name="estabelecimento">${general_data.Estabelecimento}</span>
+        </div>
+      </div>
+
+      <table
+        style="
+          width: 100%;
+          border-collapse: collapse;
+          text-align: left;
+          background-color: #e4e6d8;
+        "
+      >
+        <tr style="background-color: #ccccbe; height: 25px">
+          <th style="text-align: center; width: 100px">
+            Comp.<br />
+            Apuração
+          </th>
+          <th style="text-align: center; width: 400px">Tipo de valor</th>
+          <th style="text-align: center">Qtd.<br />Trabalhadores</th>
+          <th style="text-align: right">Base Remuneração<br />Total</th>
+          <th style="text-align: right">FGTS mensal<br />na guia</th>
+          <th style="text-align: right">FGTS Rescisório<br />na Guia</th>
+          <th style="text-align: right">Ind. Compensatória<br />na Guia</th>
+          <th style="text-align: center; max-width: 50px; width: 50">Juros</th>
+          <th style="text-align: right; max-width: 50px">
+            Atualiz.<br />Monetária
+          </th>
+          <th style="text-align: right; max-width: 50px">Multa</th>
+          <th style="text-align: right; width: 80px">Total</th>
+        </tr>
+${valores_ajustados.map((item, i) => {
+  let dados = data.filter((x) => x["Tipo Depósito"] == tipo_valor[i]);
+
+  return `<tr style="padding: 0">
+          <td style="text-align: center">${data[0]["Comp. Apuração"]}</td>
+          <td style="text-align: center">${item}</td>
+          <td style="text-align: center">${sumData(
+            undefined,
+            "Total",
+            data,
+            "int",
+            "Tipo Depósito",
+            tipo_valor[i],
+            "Index"
+          )}</td>
+          <td style="text-align: right">${sumData(
+            undefined,
+            "Base Remuneração Total",
+            data,
+            "float",
+            "Tipo Depósito",
+            tipo_valor[i],
+            "Sum"
+          )}</td>
+          <td style="text-align: right">${sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            tipo_valor[i],
+            "Sum"
+          )}</td>
+          <td style="text-align: right">${
+            tipo_valor[i] != "Verba Indenizatória"
+              ? 0
+              : sumData(
+                  undefined,
+                  "Valor FGTS na Guia",
+                  data,
+                  "float",
+                  "Tipo Depósito",
+                  tipo_valor[i],
+                  "Sum"
+                )
+          }</td>
+          <td style="text-align: right">${
+            tipo_valor[i] != "Multa Rescisória"
+              ? 0
+              : sumData(
+                  undefined,
+                  "Valor FGTS na Guia",
+                  data,
+                  "float",
+                  "Tipo Depósito",
+                  tipo_valor[i],
+                  "Sum"
+                )
+          }</td>
+          <td style="text-align: center">${sumData(
+            undefined,
+            "Juros",
+            data,
+            "float",
+            "Tipo Depósito",
+            tipo_valor[i],
+            "Sum"
+          )}</td>
+          <td style="text-align: right">${sumData(
+            undefined,
+            "Atualiz. Monetária",
+            data,
+            "float",
+            "Tipo Depósito",
+            tipo_valor[i],
+            "Sum"
+          )}</td>
+          <td style="text-align: right">${sumData(
+            undefined,
+            "Multa",
+            data,
+            "float",
+            "Tipo Depósito",
+            tipo_valor[i],
+            "Sum"
+          )}</td>
+          <td style="text-align: right">${sumData(
+            undefined,
+            "Total",
+            data,
+            "float",
+            "Tipo Depósito",
+            tipo_valor[i],
+            "Sum"
+          )}</td>
+        </tr>`;
+}).join("")}
+
+
+       <tr style="padding: 0; font-weight: bold; background: white">
+          <td style="text-align: center"></td>
+          <td style="text-align: center"></td>
+          <td style="text-align: center"><b>Total da Guia</b></td>
+          <td style="text-align: right"><b>${sumData(
+            undefined,
+            "Base Remuneração Total",
+            data,
+            "float"
+          )}</b></td>
+          <td style="text-align: right"><b>${sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Mensal",
+            "Sum"
+          )}</b></td>
+          <td style="text-align: right"><b>${sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Verba Indenizatória",
+            "Sum"
+          )}</b></td>
+          <td style="text-align: right"><b>${sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Multa Rescisória",
+            "Sum"
+          )}</b></td>
+          <td style="text-align: center"><b>${sumData(
+            undefined,
+            "Juros",
+            data,
+            "float"
+          )}</b></td>
+          <td style="text-align: right"><b>${sumData(
+            undefined,
+            "Atualiz. Monetária",
+            data,
+            "float"
+          )}</b></td>
+          <td style="text-align: right"><b>${sumData(
+            undefined,
+            "Multa",
+            data,
+            "float"
+          )}</b></td>
+          <td style="text-align: right"><b>${sumData(
+            undefined,
+            "Total",
+            data,
+            "float"
+          )}</b></td>
+        </tr>
+      </table>
+    </main>
+
+    <footer>
+      <hr />
+      <div></div>
+      <div
+        style="
+          display: flex;
+          font-size: 8px;
+          justify-content: space-between;
+          padding: 2px 2px;
+        "
+      >
+        <p>Todos os valores exibidos estão expressos em reais (R$)</p>
+        <div style="display: flex; justify-content: space-around">
+          <p>Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+
+          <p style="margin-left: 50px">Página ${paginaFinal-2} de ${paginaFinal}</p>
+        </div>
+      </div>
+      <span></span>
+    </footer>
+    <div class="quebraPag"></div>
+`;
+
+          body.append(relacao_tipo_valor);
+
+          const relacao_trabalhadores = document.createElement("div");
+          relacao_trabalhadores.className = "tamanhoPage";
+          relacao_trabalhadores.name = "Relação de Tipos de Valor";
+          relacao_trabalhadores.innerHTML = `
+
+    <header>
+      <div class="titulo">
+        <img
+          class="logo"
+          src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
+          width="100"
+        />
+
+        <span style="transform: translate(-25%)"
+          ><b>Detalhe da Guia a Ser Emitida</b></span
+        >
+
+        <span></span>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label class="subtitulo" for="Empregador">Empregador:</label>
+          <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+        </div>
+
+        <div class="col-2">
+          <span class="empregadorNum" style="font-size: 0.75rem"
+            >${general_data.Empregador}</span
+          >
+          <span style="font-size: 0.75rem"> ${
+            general_data.Vencimento_guia
+          }</span>
+        </div>
+
+        <div class="col">
+          <label class="subtitulo" for="Empregador">Nome Empregador: </label>
+        </div>
+
+        <div class="col">
+          <span name="nome_empregador">
+            ${general_data.Nome_empregador}
+          </span>
+        </div>
+
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+        <div class="col">
+          <label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
+        </div>
+
+        <div class="col">
+          <span name="qtd_trabalhadores"> ${data.length}</span>
+        </div>
+
+        <div class="col">
+          <label class="subtitulo" for="Empregador"> Origem:</label>
+        </div>
+
+        <div class="col">
+          <span>${general_data.Origem}</span>
+        </div>
+      </div>
+
+      <div class="tituloTabela">
+        <span><b>Relação de Estabelecimentos</b></span>
+      </div>
+      <hr />
+    </header>
+    <main>
+      <div class="topoTabela">
+        <div class="infoTabela">
+          <label for="">Estabelecimento:</label>
+          <span>${general_data.Estabelecimento}</span>
+        </div>
+
+      </div>
+
+      <table
+        style="
+          width: 100%;
+          border-collapse: collapse;
+          text-align: left;
+          background-color: #e4e6d8;
+        "
+      >
+        <tr style="background-color: #ccccbe; height: 25px">
+          <th style="text-align: center">Comp. Apuração</th>
+          <th style="text-align: center">Categoria</th>
+          <th style="max-width: 600px">Qtd. Trabalhadores</th>
+          <th style="width: 125px">
+            Base Remuneração<br />
+            Total
+          </th>
+          <th style="max-width: 150px">FGTS Mensal na Guia</th>
+          <th style="text-align: right; padding-right: 20px">
+            FGTS Rescisório na<br />
+            Guia
+          </th>
+          <th>
+            Ind. Compensatória<br />
+            na Guia
+          </th>
+          <th>Juros</th>
+          <th style="text-align: right; max-width: 50px">Atualiz. Monetária</th>
+          <th style="text-align: right">Multa</th>
+
+          <th style="text-align: right">Total</th>
+        </tr>
+
+        <tr>
+          <td style="text-align: center">${data[0]["Comp. Apuração"]}</td> 
+          <td style="text-align: center">${data[0]["Categoria"]}</td>
+          <td style="border-right: 3px solid white">${data.length}</td>
+          <td style="border-right: 3px solid white">${sumData(
+            undefined,
+            "Base Remuneração Total",
+            data,
+            "float"
+          )}</td>
+          <td>${sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Mensal"
+          )}</td>
+          <td style="text-align: right; padding-right: 20px">${sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Verba Indenizatória",
+            "Sum"
+          )}</td>
+          <td style="padding-left: 5px">${sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Multa Rescisória",
+            "Sum"
+          )}</td>
+          <td>${sumData(undefined, "Juros", data, "float")}</td>
+          <td style="text-align: right; border-left: 3px solid white">${sumData(
+            undefined,
+            "Atualiz. Monetária",
+            data,
+            "float"
+          )}</td>
+          <td style="text-align: right">${sumData(
+            undefined,
+            "Multa",
+            data,
+            "float"
+          )}</td>
+          <td style="text-align: right">${sumData(
+            undefined,
+            "Total",
+            data,
+            "float"
+          )}</td>
+        </tr>
+
+        <tr style="background-color: white">
+          <td style="text-align: center"></td>
+          <td></td>
+          <td style="border-right: 3px solid white">
+            <b>Total da Guia</b>
+          </td>
+          <td style="border-right: 3px solid white"><b>${sumData(
+            undefined,
+            "Base Remuneração Total",
+            data,
+            "float"
+          )}
+            </b></td>
+          <td><b>${sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Mensal"
+          )}</b></td>
+          <td style="text-align: right; padding-right: 20px"><b>${sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Verba Indenizatória",
+            "Sum"
+          )}</b></td>
+          <td style="padding-left: 5px"><b>${sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Multa Rescisória",
+            "Sum"
+          )}</b></td>
+          <td><b>${sumData(undefined, "Juros", data, "float")}</b></td>
+          <td style="text-align: right; border-left: 3px solid white">
+            <b>${sumData(undefined, "Atualiz. Monetária", data, "float")}</b>
+          </td>
+          <td style="text-align: right"><b>${sumData(
+            undefined,
+            "Multa",
+            data,
+            "float"
+          )}</b></td>
+          <td style="text-align: right"><b>${sumData(
+            undefined,
+            "Total",
+            data,
+            "float"
+          )}</b></td>
+        </tr>
+      </table>
+    </main>
+
+    <footer>
+      <hr />
+      <div></div>
+      <div
+        style="
+          display: flex;
+          font-size: 8px;
+          justify-content: space-between;
+          padding: 2px 2px;
+        "
+      >
+        <p>Todos os valores exibidos estão expressos em reais (R$)</p>
+        <div style="display: flex; justify-content: space-around">
+          <p>Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+
+          <p style="margin-left: 50px">Página ${paginaFinal-1} de ${paginaFinal}</p>
+        </div>
+      </div>
+      <span></span>
+    </footer>
+    <div class="quebraPag"></div>
+
+
+`;
+
+          body.append(relacao_trabalhadores);
+
+          const relacao_tomadores_servico = document.createElement("div");
+          relacao_tomadores_servico.className = "tamanhoPage";
+          relacao_tomadores_servico.innerHTML = `
+         
+          <header>
+<div class="titulo">
+<img
+class="logo"
+src="https://www.serpro.gov.br/menu/noticias/noticias-2022/fgts-digital/fgts-digital.png/@@images/44b54d11-be40-4df7-870f-2cdb5ff19982.png"
+width="100"
+/>
+
+<span style="transform: translate(-25%)"
+><b>Detalhe da Guia a Ser Emitida</b></span
+>
+
+<span></span>
+</div>
+<div class="row">
+<div class="col">
+<label class="subtitulo" for="Empregador">Empregador: </label>
+<label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+</div>
+
+<div class="col-2">
+<span class="empregadorNum" style="font-size: 0.75rem"
+>${general_data.Estabelecimento}
+</span
+>
+<span style="font-size: 0.75rem"> ${general_data.Vencimento_guia}</span>
+</div>
+<div class="col">
+<label class="subtitulo" for="Empregador">Nome Empregador: </label>
+</div>
+<div class="col">
+<span> ${general_data.Nome_empregador} </span>
+</div>
+
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
+</div>
+
+<div class="col">
+<span> ${data.length} </span>
+</div>
+
+<div class="col">
+<label class="subtitulo" for="Empregador"> Origem:</label>
+</div>
+
+<div class="col">
+<span>${general_data.Origem} </span>
+</div>
+</div>
+
+<div class="tituloTabela">
+<span><b>Relação de Trabalhadores</b></span>
+</div>
+<hr />
+</header>
+  ${companys.map((company)=>{ 
+    console.log(company)
+
+
+    return (`
+    
+    
+    <main>
+      <div class="topoTabela">
+        <div class="infoTabela">
+          <label for="">Tomador:</label>
+          <span>${company}</span>
+        </div>
+      </div>
+
+      <table
+        style="
+          width: 100%;
+          border-collapse: collapse;
+          text-align: left;
+          background-color: #e4e6d8;
+        "
+      >
+        <tr style="background-color: #ccccbe; height: 25px">
+          <th style="text-align: center">Comp. Apuração</th>
+          <th style="text-align: center">Qtd. Trabalhadores</th>
+          <th style="text-align: center">Base Remuneração Total</th>
+          <th style="text-align: right">FGTS Mensal na Guia</th>
+          <th style="text-align: right">FGTS Rescisório na<br />Guia</th>
+          <th style="text-align: right">Ind. Compensatória na Guia</th>
+          <th style="text-align: right">Juros</th>
+          <th style="text-align: center; max-width: 50px; width: 50">
+            Atualiz. Monetária
+          </th>
+          <th style="text-align: right; max-width: 50px">Multa</th>
+          <th style="text-align: right; max-width: 50px">Total</th>
+        </tr>
+
+        <tr style="padding: 0">
+          <td style="text-align: center">${data[0]["Comp. Apuração"]}</td>
+          <td style="text-align: center">${sumData(company,"Total",data,"Int","Tomador",company,"Index")}</td>
+          <td style="text-align: center">${sumData(company,"Base Remuneração Total",data,"Float","Tomador",company,"Sum")}</td>
+          <td style="text-align: right">${sumData(company,"Valor FGTS na Guia",data,"Float","Tomador",company,"Sum")}</td>
+          <td style="text-align: right">${sumData(company,"Valor FGTS na Guia",data,"Float","Tipo Depósito","Verba Indenizatória","Sum")}</td>
+          <td style="text-align: right">${sumData(company,"Valor FGTS na Guia",data,"Float","Tipo Depósito","Multa Rescisória","Sum")}</td>
+          <td style="text-align: right">${sumData(company,"Juros",data,"Float")}</td>
+          <td style="text-align: center">${sumData(company,"Atualiz. Monetária",data,"Float")}</td>
+          <td style="text-align: right">${sumData(company,"Multa",data,"Float")}</td>
+          <td style="text-align: right">${sumData(company,"Total",data,"Float")}</td>
+        </tr>
+
+        <tr
+          style="
+            padding: 0;
+            font-weight: bold;
+            border-top: 0.15rem solid black;
+            border-bottom: 0.15rem solid black;
+            background-color: white;
+          "
+        >
+          <td style="text-align: center">Total do Tomador</td>
+          <td style="text-align: center">${company}</td>
+          <td style="text-align: center">${sumData(company,"Base Remuneração Total",data,"Float","Tomador",company,"Sum")}</td>
+          <td style="text-align: right">${sumData(company,"Valor FGTS na Guia",data,"Float","Tomador",company,"Sum")}</td>
+          <td style="text-align: right">${sumData(company,"Valor FGTS na Guia",data,"Float","Tipo Depósito","Verba Indenizatória","Sum")}</td>
+          <td style="text-align: right">${sumData(company,"Valor FGTS na Guia",data,"Float","Tipo Depósito","Multa Rescisória","Sum")}</td>
+          <td style="text-align: right">${sumData(company,"Juros",data,"Float")}</td>
+          <td style="text-align: center">${sumData(company,"Atualiz. Monetária",data,"Float")}</td>
+          <td style="text-align: right">${sumData(company,"Multa",data,"Float")}</td>
+          <td style="text-align: right">${sumData(company,"Total",data,"Float")}</td>
+        </tr>
+      </table>
+    </main>
+    `)
+
+  })}
+  
+
+    <footer>
+      <hr />
+      <div></div>
+      <div
+        style="
+          display: flex;
+          font-size: 8px;
+          justify-content: space-between;
+          padding: 2px 2px;
+        "
+      >
+        <p>Todos os valores exibidos estão expressos em reais (R$)</p>
+        <div style="display: flex; justify-content: space-around">
+          <p>Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+
+          <p style="margin-left: 50px">Página ${paginaFinal} de ${paginaFinal}</p>
+        </div>
+      </div>
+      <span></span>
+    </footer>
+    <div class="quebraPag"></div>
+
+
+`;
+
+          body.append(relacao_tomadores_servico);
+        });
+      }
+      run();
+    </script>
+  </body>
+</html>
