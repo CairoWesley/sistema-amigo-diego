@@ -215,6 +215,8 @@
           );
           general_data = estabelecimentos[0];
 
+          console.log(estabelecimentos)
+
 
         });
         d3.dsv(";")("http://localhost:8000/categorias.csv", (items) => {
@@ -238,7 +240,6 @@
         const tipo_valor = [];
         const valores_ajustados = [];
         data.forEach((item) => {
-          console.log(item)
           if (!companys.includes(item.Tomador)) {
             companys.push(item.Tomador);
           }
@@ -467,9 +468,9 @@
               
               <div style="display: flex;">
                   <label for="">Número da Guia:</label>
-                  <span style="padding: 0 15px;">0124031500455085-0</span>
+                  <span style="padding: 0 15px;">${company_atual.EmitidaPor}</span>
                   <label for="">Emitida por:</label>
-                  <span style="padding: 0 15px;">0124031500455085-0</span>
+                  <span style="padding: 0 15px;">${company_atual.NumeroGuia}</span>
               </div>  
               
           </div>
