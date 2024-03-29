@@ -607,8 +607,8 @@ ${dado["Atualiz. Monetária"]}
 
 <div class="infoTable">
   <span style="width:100px;display:inline-block">Total do Tomador</span>
-  <span style="width:100px;display:inline-block">${company_atual.Tomador}</span>
-  <span style="width:95px;display:inline-block">${sumData(
+  <span style="width:160px;display:inline-block">${company_atual.Tomador}</span>
+  <span style="width:120px;display:inline-block">${sumData(
                       undefined,
                       "Base Remuneração Total",
                       data,
@@ -617,7 +617,7 @@ ${dado["Atualiz. Monetária"]}
                       company_atual.Tomador,
                       "Sum"
                     )}</span>
-  <span style="width:80px;display:inline-block">${sumData(
+  <span style="width:60px;display:inline-block">${sumData(
                       undefined,
                       "Valor FGTS na Guia",
                       data,
@@ -644,7 +644,7 @@ ${dado["Atualiz. Monetária"]}
                       company_atual.Tomador,
                       "Sum"
                     )}</span>
-  <span style="width:40px;display:inline-block">${sumData(
+  <span style="width:34px;display:inline-block">${sumData(
                       undefined,
                       "Multa",
                       data,
@@ -653,7 +653,7 @@ ${dado["Atualiz. Monetária"]}
                       company_atual.Tomador,
                       "Sum"
                     )}</span>
-  <span style="width:48px;display:inline-block" >${sumData(
+  <span style="width:34px;display:inline-block" >${sumData(
                       undefined,
                       "Total",
                       data,
@@ -664,16 +664,16 @@ ${dado["Atualiz. Monetária"]}
                     )}</span>
 </div>
 <div class="infoTable">
-  <span style="width:120px;display:inline-block">Total do Estabelecimento</span>
-  <span style="width:100px;display:inline-block">${company_atual.Estabelecimento
+  <span style="width:132px;display:inline-block">Total do Estabelecimento</span>
+  <span style="width:160px;display:inline-block">${company_atual.Estabelecimento
                   }</span>
-  <span style="width:95px;display:inline-block">${sumData(
+  <span style="width:120px;display:inline-block">${sumData(
                     undefined,
                     "Base Remuneração Total",
                     data,
                     "float"
                   )}</span>
-  <span style="width:80px;display:inline-block">${sumData(
+  <span style="width:60px;display:inline-block">${sumData(
                     undefined,
                     "Valor FGTS na Guia",
                     data,
@@ -691,13 +691,13 @@ ${dado["Atualiz. Monetária"]}
                     data,
                     "float"
                   )}</span>
-  <span style="width:40px;display:inline-block">${sumData(
+  <span style="width:34px;display:inline-block">${sumData(
                     undefined,
                     "Multa",
                     data,
                     "float"
                   )}</span>
-  <span style="width:48px;display:inline-block" >${sumData(
+  <span style="width:34px;display:inline-block" >${sumData(
                     undefined,
                     "Total",
                     data,
@@ -706,14 +706,14 @@ ${dado["Atualiz. Monetária"]}
 </div>
 <div class="infoTable">
   <span style="width:100px;display:inline-block"></span>
-  <span style="width:100px;display:inline-block">Total da Guia</span>
-  <span style="width:95px;display:inline-block">${sumData(
+  <span style="width:160px;display:inline-block">Total da Guia</span>
+  <span style="width:120px;display:inline-block">${sumData(
                     undefined,
                     "Base Remuneração Total",
                     data,
                     "float"
                   )}</span>
-  <span style="width:80px;display:inline-block">${sumData(
+  <span style="width:60px;display:inline-block">${sumData(
                     undefined,
                     "Valor FGTS na Guia",
                     data,
@@ -731,13 +731,13 @@ ${dado["Atualiz. Monetária"]}
                     data,
                     "float"
                   )}</span>
-  <span style="width:40px;display:inline-block">${sumData(
+  <span style="width:34px;display:inline-block;">${sumData(
                     undefined,
                     "Multa",
                     data,
                     "float"
                   )}</span>
-  <span style="width:48px;display:inline-block" >${sumData(
+  <span style="width:34px;display:inline-block" >${sumData(
                     undefined,
                     "Total",
                     data,
@@ -778,77 +778,68 @@ Página ${paginasAtual} de ${paginaFinal}
                 const element = document.createElement("div");
                 element.className = "tamanhoPage";
                 element.innerHTML = `
-                  <header>
-                    <div class="titulo">
-                        <img class="logo" src="http://localhost:8000/logofgts.png" width="100" />
+                <header>
+                  <div class="titulo">
+                      <img class="logo" src="http://localhost:8000/logofgts.png" width="100" />
             
-                        <span style="transform: translate(-25%)"><b>Detalhe da Guia a Ser Emitida</b></span>
+                      <span style="transform: translate(-25%)"><b>Detalhe da Guia a Ser Emitida</b></span>
             
-                        <span></span>
-                    </div>
-                    <div class="row">
-                        <div class="col" >
-                            <div class="flex">
-                                <label class="subtitulo" for="Empregador">Empregador: </label>
-                                <span class="empregadorNum">${company_atual.Estabelecimento}</span>
-                            </div>
-                            
-                            <div class="flex">
-                                <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-                                <span> ${company_atual.Vencimento_guia}</span>
-                            </div>
-                            
-                        </div>
-                        <div class="col">
-                            <div class="flex">
-                                <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-                                <span style="padding: 0 15px;"> ${company_atual.Nome_empregador} </span>
-                            </div>
-                            
-                            <div style="display: flex;">
-                                <label for="">Número da Guia:</label>
-                                <span style="padding: 0 15px;">0124031500455085-0</span>
-                                <label for="">Emitida por:</label>
-                                <span style="padding: 0 15px;">0124031500455085-0</span>
-                            </div>  
-                            
-                        </div>
+                      <span></span>
+                  </div>
+                  <div class="row">
+                      <div class="col" >
+                          <div class="flex">
+                              <label class="subtitulo" for="Empregador">Empregador: </label>
+                              <span class="empregadorNum">${company_atual.Estabelecimento}</span>
+                          </div>
+                          
+                          <div class="flex">
+                              <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+                              <span> ${company_atual.Vencimento_guia}</span>
+                          </div>
+                          
+                      </div>
+                      <div class="col">
+                          <div class="flex">
+                              <label class="subtitulo" for="Empregador">Nome Empregador: </label>
+                              <span style="padding: 0 15px;"> ${company_atual.Nome_empregador} </span>
+                          </div>
+                          
+                          <div style="display: flex;">
+                              <label for="">Número da Guia:</label>
+                              <span style="padding: 0 15px;">0124031500455085-0</span>
+                              <label for="">Emitida por:</label>
+                              <span style="padding: 0 15px;">0124031500455085-0</span>
+                          </div>  
+                          
+                      </div>
             
             
-                        
+                      
             
-                        <div class="col">
-                            <div class="flex">
-                                <label class="subtitulo" for="Empregador" style=" font-weight: bold;" > Qtd. Trabalhadores:</label>
-                                <span style="text-align: right;"> ${data2.length}</span>
-                            </div>
-                            
-                            <div class="flex" style="border: 1px solid red;">
-                                <label for="" class="subtitulo" style=" font-weight: bold;">Data Emissão: </label>
-                                <span>15/03/2024 10:54:21 (Brasília)</span>
-                            </div>
-                            
-                        </div>
+                      <div class="col">
+                          <div class="flex" >
+                              <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                              <span style="text-align: right;"> ${data2.length}</span>
+                              <label class="subtitulo" for="Empregador"> Origem:</label>
+                              <span>${company_atual.Origem}</span>
+                          </div>
+                          
+                          <div class="flex">
+                              <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
+                              padding-right:15px;">Data Emissão: </label>
+                              <span>15/03/2024 10:54:21 (Brasília)</span>
+                          </div>
+                          
+                      </div>
             
-                        <div class="col">
-                            
+                  </div>
             
-                        </div>
-            
-                        <div class="col">
-                            <label class="subtitulo" for="Empregador"> Origem:</label>
-                        </div>
-            
-                        <div class="col" style="border: 1px solid red;">
-                            <span>${company_atual.Origem}</span>
-                        </div>
-                    </div>
-            
-                    <div class="tituloTabela">
-                        <span><b>Relação de Trabalhadores</b></span>
-                    </div>
-                    <hr />
-                </header>
+                  <div class="tituloTabela">
+                      <span><b>Relação de Trabalhadores</b></span>
+                  </div>
+                  <hr />
+              </header>
 <main>
 <div class="topoTabela">
 <div class="infoTabela">
@@ -1009,95 +1000,68 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
                 const pagina2 = document.createElement("div");
                 pagina2.className = "tamanhoPage";
                 pagina2.innerHTML = `
-<header>
-<div class="titulo">
-<img
-class="logo"
-src="http://localhost:8000/logofgts.png"
-width="100"
-/>
-
-<span style="transform: translate(-25%)"
-><b>Detalhe da Guia a Ser Emitida</b></span
->
-
-<span></span>
-</div>
-<div class="row">
-<div class="col">
-<label class="subtitulo" for="Empregador">Empregador: </label>
-<label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-</div>
-
-<div class="col-2">
-<span class="empregadorNum" style="font-size: 0.75rem"
->${company_atual.Estabelecimento}</span
->
-<span style="font-size: 0.75rem"> ${company_atual.Vencimento_guia}</span>
-</div>
-<div class="col">
-<label class="subtitulo" for="Empregador">Nome Empregador: </label>
-</div>
-<div class="col">
-<span> ${company_atual.Nome_empregador} </span>
-</div>
-
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-
-<div class="col">
-<label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
-</div>
-
-<div class="col">
-<span> ${data2.length}</span>
-</div>
-
-<div class="col">
-<label class="subtitulo" for="Empregador"> Origem:</label>
-</div>
-
-<div class="col">
-<span>${company_atual.Origem}</span>
-</div>
-</div>
-
-<div class="tituloTabela">
-<span><b>Relação de Trabalhadores</b></span>
-</div>
-<hr />
-</header>
+                <header>
+                  <div class="titulo">
+                      <img class="logo" src="http://localhost:8000/logofgts.png" width="100" />
+            
+                      <span style="transform: translate(-25%)"><b>Detalhe da Guia a Ser Emitida</b></span>
+            
+                      <span></span>
+                  </div>
+                  <div class="row">
+                      <div class="col" >
+                          <div class="flex">
+                              <label class="subtitulo" for="Empregador">Empregador: </label>
+                              <span class="empregadorNum">${company_atual.Estabelecimento}</span>
+                          </div>
+                          
+                          <div class="flex">
+                              <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+                              <span> ${company_atual.Vencimento_guia}</span>
+                          </div>
+                          
+                      </div>
+                      <div class="col">
+                          <div class="flex">
+                              <label class="subtitulo" for="Empregador">Nome Empregador: </label>
+                              <span style="padding: 0 15px;"> ${company_atual.Nome_empregador} </span>
+                          </div>
+                          
+                          <div style="display: flex;">
+                              <label for="">Número da Guia:</label>
+                              <span style="padding: 0 15px;">0124031500455085-0</span>
+                              <label for="">Emitida por:</label>
+                              <span style="padding: 0 15px;">0124031500455085-0</span>
+                          </div>  
+                          
+                      </div>
+            
+            
+                      
+            
+                      <div class="col">
+                          <div class="flex" >
+                              <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                              <span style="text-align: right;"> ${data2.length}</span>
+                              <label class="subtitulo" for="Empregador"> Origem:</label>
+                              <span>${company_atual.Origem}</span>
+                          </div>
+                          
+                          <div class="flex">
+                              <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
+                              padding-right:15px;">Data Emissão: </label>
+                              <span>15/03/2024 10:54:21 (Brasília)</span>
+                          </div>
+                          
+                      </div>
+            
+                  </div>
+            
+                  <div class="tituloTabela">
+                      <span><b>Relação de Trabalhadores</b></span>
+                  </div>
+                  <hr />
+              </header>
 <main>
 <div class="topoTabela">
 <div class="infoTabela">
@@ -1177,95 +1141,68 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
               const element = document.createElement("div");
               element.className = "tamanhoPage";
               element.innerHTML = `
-<header>
-<div class="titulo">
-<img
-class="logo"
-src="http://localhost:8000/logofgts.png"
-width="100"
-/>
-
-<span style="transform: translate(-25%)"
-><b>Detalhe da Guia a Ser Emitida</b></span
->
-
-<span></span>
-</div>
-<div class="row">
-<div class="col">
-<label class="subtitulo" for="Empregador">Empregador: </label>
-<label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-</div>
-
-<div class="col-2">
-<span class="empregadorNum" style="font-size: 0.76rem"
->${company_atual.Estabelecimento}</span
->
-<span style="font-size: 0.75rem"> ${company_atual.Vencimento_guia}</span>
-</div>
-<div class="col">
-<label class="subtitulo" for="Empregador">Nome Empregador: </label>
-</div>
-<div class="col">
-<span> ${company_atual.Nome_empregador} </span>
-</div>
-
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-
-<div class="col">
-<label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
-</div>
-
-<div class="col">
-<span> ${data2.length}</span>
-</div>
-
-<div class="col">
-<label class="subtitulo" for="Empregador"> Origem:</label>
-</div>
-
-<div class="col">
-<span>${company_atual.Origem}</span>
-</div>
-</div>
-
-<div class="tituloTabela">
-<span><b>Relação de Trabalhadores</b></span>
-</div>
-<hr />
-</header>
+              <header>
+                <div class="titulo">
+                    <img class="logo" src="http://localhost:8000/logofgts.png" width="100" />
+          
+                    <span style="transform: translate(-25%)"><b>Detalhe da Guia a Ser Emitida</b></span>
+          
+                    <span></span>
+                </div>
+                <div class="row">
+                    <div class="col" >
+                        <div class="flex">
+                            <label class="subtitulo" for="Empregador">Empregador: </label>
+                            <span class="empregadorNum">${company_atual.Estabelecimento}</span>
+                        </div>
+                        
+                        <div class="flex">
+                            <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+                            <span> ${company_atual.Vencimento_guia}</span>
+                        </div>
+                        
+                    </div>
+                    <div class="col">
+                        <div class="flex">
+                            <label class="subtitulo" for="Empregador">Nome Empregador: </label>
+                            <span style="padding: 0 15px;"> ${company_atual.Nome_empregador} </span>
+                        </div>
+                        
+                        <div style="display: flex;">
+                            <label for="">Número da Guia:</label>
+                            <span style="padding: 0 15px;">0124031500455085-0</span>
+                            <label for="">Emitida por:</label>
+                            <span style="padding: 0 15px;">0124031500455085-0</span>
+                        </div>  
+                        
+                    </div>
+          
+          
+                    
+          
+                    <div class="col">
+                        <div class="flex" >
+                            <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                            <span style="text-align: right;"> ${data2.length}</span>
+                            <label class="subtitulo" for="Empregador"> Origem:</label>
+                            <span>${company_atual.Origem}</span>
+                        </div>
+                        
+                        <div class="flex">
+                            <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
+                            padding-right:15px;">Data Emissão: </label>
+                            <span>15/03/2024 10:54:21 (Brasília)</span>
+                        </div>
+                        
+                    </div>
+          
+                </div>
+          
+                <div class="tituloTabela">
+                    <span><b>Relação de Trabalhadores</b></span>
+                </div>
+                <hr />
+            </header>
 <main>
 <div class="topoTabela">
 <div class="infoTabela">
@@ -1398,98 +1335,68 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
         const element = document.createElement("div");
         element.className = "tamanhoPage";
         element.innerHTML = `
-<header>
-<div class="titulo">
-<img
-class="logo"
-src="http://localhost:8000/logofgts.png"
-width="100"
-/>
-
-<span style="transform: translate(-25%)"
-><b>Detalhe da Guia a Ser Emitida</b></span
->
-
-<span></span>
-</div>
-
-<div class="row">
-<div class="col">
-<label class="subtitulo" for="Empregador">Empregador: </label>
-<label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-</div>
-
-<div class="col-2">
-<span class="empregadorNum" style="font-size: 0.75rem"
-  >${general_data.Empregador}</span
->
-<span style="font-size: 0.75rem"> ${general_data.Vencimento_guia}</span>
-</div>
-
-<div class="col">
-<label class="subtitulo" for="Empregador">Nome Empregador: </label>
-</div>
-
-<div class="col">
-<span> ${general_data.Nome_empregador}</span>
-</div>
-
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-
-<div class="col">
-<label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
-</div>
-
-<div class="col">
-<span> ${data.length}</span>
-</div>
-
-<div class="col">
-<label class="subtitulo" for="Empregador"> Origem:</label>
-</div>
-
-<div class="col">
-<span>${general_data.Origem}</span>
-</div>
-</div>
-
-<div class="tituloTabela">
-<span><b>Relação de Trabalhadores</b></span>
-</div>
-<hr />
-</header>
+        <header>
+          <div class="titulo">
+              <img class="logo" src="http://localhost:8000/logofgts.png" width="100" />
+    
+              <span style="transform: translate(-25%)"><b>Detalhe da Guia a Ser Emitida</b></span>
+    
+              <span></span>
+          </div>
+          <div class="row">
+              <div class="col" >
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Empregador: </label>
+                      <span class="empregadorNum">${company_atual.Estabelecimento}</span>
+                  </div>
+                  
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+                      <span> ${company_atual.Vencimento_guia}</span>
+                  </div>
+                  
+              </div>
+              <div class="col">
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Nome Empregador: </label>
+                      <span style="padding: 0 15px;"> ${company_atual.Nome_empregador} </span>
+                  </div>
+                  
+                  <div style="display: flex;">
+                      <label for="">Número da Guia:</label>
+                      <span style="padding: 0 15px;">0124031500455085-0</span>
+                      <label for="">Emitida por:</label>
+                      <span style="padding: 0 15px;">0124031500455085-0</span>
+                  </div>  
+                  
+              </div>
+    
+    
+              
+    
+              <div class="col">
+                  <div class="flex" >
+                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                      <span style="text-align: right;"> ${data2.length}</span>
+                      <label class="subtitulo" for="Empregador"> Origem:</label>
+                      <span>${company_atual.Origem}</span>
+                  </div>
+                  
+                  <div class="flex">
+                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
+                      padding-right:15px;">Data Emissão: </label>
+                      <span>15/03/2024 10:54:21 (Brasília)</span>
+                  </div>
+                  
+              </div>
+    
+          </div>
+    
+          <div class="tituloTabela">
+              <span><b>Relação de Trabalhadores</b></span>
+          </div>
+          <hr />
+      </header>
 <main>
 <div class="topoTabela">
 <div class="infoTabela">
@@ -1787,105 +1694,68 @@ público, sem vínculo de emprego/estatutário
         relacao_tipo_valor.name = "Relação de Tipos de Valor";
         relacao_tipo_valor.innerHTML = `
      
-    <header>
-      <div class="titulo">
-        <img
-          class="logo"
-          src="http://localhost:8000/logofgts.png"
-          width="100"
-        />
-
-        <span style="transform: translate(-25%)"
-          ><b>Detalhe da Guia a Ser Emitida</b></span
-        >
-
-        <span></span>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <label class="subtitulo" for="Empregador">Empregador: </label>
-          <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-        </div>
-
-        <div class="col-2">
-          <span
-            class="empregadorNum"
-            name="n_empregador"
-            style="font-size: 0.75rem"
-            >${general_data.Empregador}</span
-          >
-          <span style="font-size: 0.75rem" name="vencimento_guia">
-            ${general_data.Vencimento_guia}</span
-          >
-        </div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-        </div>
-
-        <div class="col">
-          <span name="nome_empregador">
-            ${general_data.Nome_empregador}
-          </span>
-        </div>
-
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
-        </div>
-
-        <div class="col">
-          <span name="qtd_trabalhadores"> ${data.length}</span>
-        </div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador"> Origem:</label>
-        </div>
-
-        <div class="col">
-          <span> ${general_data.Origem} </span>
-        </div>
-      </div>
-
-      <div class="tituloTabela">
-        <span><b>Relação de Tipos de Valor</b></span>
-      </div>
-      <hr />
-    </header>
+        <header>
+          <div class="titulo">
+              <img class="logo" src="http://localhost:8000/logofgts.png" width="100" />
+    
+              <span style="transform: translate(-25%)"><b>Detalhe da Guia a Ser Emitida</b></span>
+    
+              <span></span>
+          </div>
+          <div class="row">
+              <div class="col" >
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Empregador: </label>
+                      <span class="empregadorNum">${company_atual.Estabelecimento}</span>
+                  </div>
+                  
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+                      <span> ${company_atual.Vencimento_guia}</span>
+                  </div>
+                  
+              </div>
+              <div class="col">
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Nome Empregador: </label>
+                      <span style="padding: 0 15px;"> ${company_atual.Nome_empregador} </span>
+                  </div>
+                  
+                  <div style="display: flex;">
+                      <label for="">Número da Guia:</label>
+                      <span style="padding: 0 15px;">0124031500455085-0</span>
+                      <label for="">Emitida por:</label>
+                      <span style="padding: 0 15px;">0124031500455085-0</span>
+                  </div>  
+                  
+              </div>
+    
+    
+              
+    
+              <div class="col">
+                  <div class="flex" >
+                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                      <span style="text-align: right;"> ${data2.length}</span>
+                      <label class="subtitulo" for="Empregador"> Origem:</label>
+                      <span>${company_atual.Origem}</span>
+                  </div>
+                  
+                  <div class="flex">
+                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
+                      padding-right:15px;">Data Emissão: </label>
+                      <span>15/03/2024 10:54:21 (Brasília)</span>
+                  </div>
+                  
+              </div>
+    
+          </div>
+    
+          <div class="tituloTabela">
+              <span><b>Relação de Trabalhadores</b></span>
+          </div>
+          <hr />
+      </header>
     <main>
       <div class="topoTabela">
         <div class="infoTabela">
@@ -2112,101 +1982,68 @@ ${valores_ajustados.map((item, i) => {
         relacao_trabalhadores.name = "Relação de Tipos de Valor";
         relacao_trabalhadores.innerHTML = `
 
-    <header>
-      <div class="titulo">
-        <img
-          class="logo"
-          src="http://localhost:8000/logofgts.png"
-          width="100"
-        />
-
-        <span style="transform: translate(-25%)"
-          ><b>Detalhe da Guia a Ser Emitida</b></span
-        >
-
-        <span></span>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <label class="subtitulo" for="Empregador">Empregador:</label>
-          <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-        </div>
-
-        <div class="col-2">
-          <span class="empregadorNum" style="font-size: 0.75rem"
-            >${general_data.Empregador}</span
-          >
-          <span style="font-size: 0.75rem"> ${general_data.Vencimento_guia
-          }</span>
-        </div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-        </div>
-
-        <div class="col">
-          <span name="nome_empregador">
-            ${general_data.Nome_empregador}
-          </span>
-        </div>
-
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
-        </div>
-
-        <div class="col">
-          <span name="qtd_trabalhadores"> ${data.length}</span>
-        </div>
-
-        <div class="col">
-          <label class="subtitulo" for="Empregador"> Origem:</label>
-        </div>
-
-        <div class="col">
-          <span>${general_data.Origem}</span>
-        </div>
-      </div>
-
-      <div class="tituloTabela">
-        <span><b>Relação de Estabelecimentos</b></span>
-      </div>
-      <hr />
-    </header>
+        <header>
+          <div class="titulo">
+              <img class="logo" src="http://localhost:8000/logofgts.png" width="100" />
+    
+              <span style="transform: translate(-25%)"><b>Detalhe da Guia a Ser Emitida</b></span>
+    
+              <span></span>
+          </div>
+          <div class="row">
+              <div class="col" >
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Empregador: </label>
+                      <span class="empregadorNum">${company_atual.Estabelecimento}</span>
+                  </div>
+                  
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+                      <span> ${company_atual.Vencimento_guia}</span>
+                  </div>
+                  
+              </div>
+              <div class="col">
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Nome Empregador: </label>
+                      <span style="padding: 0 15px;"> ${company_atual.Nome_empregador} </span>
+                  </div>
+                  
+                  <div style="display: flex;">
+                      <label for="">Número da Guia:</label>
+                      <span style="padding: 0 15px;">0124031500455085-0</span>
+                      <label for="">Emitida por:</label>
+                      <span style="padding: 0 15px;">0124031500455085-0</span>
+                  </div>  
+                  
+              </div>
+    
+    
+              
+    
+              <div class="col">
+                  <div class="flex" >
+                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                      <span style="text-align: right;"> ${data2.length}</span>
+                      <label class="subtitulo" for="Empregador"> Origem:</label>
+                      <span>${company_atual.Origem}</span>
+                  </div>
+                  
+                  <div class="flex">
+                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
+                      padding-right:15px;">Data Emissão: </label>
+                      <span>15/03/2024 10:54:21 (Brasília)</span>
+                  </div>
+                  
+              </div>
+    
+          </div>
+    
+          <div class="tituloTabela">
+              <span><b>Relação de Trabalhadores</b></span>
+          </div>
+          <hr />
+      </header>
     <main>
       <div class="topoTabela">
         <div class="infoTabela">
@@ -2395,96 +2232,68 @@ ${valores_ajustados.map((item, i) => {
         relacao_tomadores_servico.className = "tamanhoPage";
         relacao_tomadores_servico.innerHTML = `
          
-          <header>
-<div class="titulo">
-<img
-class="logo"
-src="http://localhost:8000/logofgts.png"
-width="100"
-/>
-
-<span style="transform: translate(-25%)"
-><b>Detalhe da Guia a Ser Emitida</b></span
->
-
-<span></span>
-</div>
-<div class="row">
-<div class="col">
-<label class="subtitulo" for="Empregador">Empregador: </label>
-<label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-</div>
-
-<div class="col-2">
-<span class="empregadorNum" style="font-size: 0.75rem"
->${general_data.Estabelecimento}
-</span
->
-<span style="font-size: 0.76rem"> ${general_data.Vencimento_guia}</span>
-</div>
-<div class="col">
-<label class="subtitulo" for="Empregador">Nome Empregador: </label>
-</div>
-<div class="col">
-<span> ${general_data.Nome_empregador} </span>
-</div>
-
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-
-<div class="col">
-<label class="subtitulo" for="Empregador"> Qtd. Trabalhadores:</label>
-</div>
-
-<div class="col">
-<span> ${data.length} </span>
-</div>
-
-<div class="col">
-<label class="subtitulo" for="Empregador"> Origem:</label>
-</div>
-
-<div class="col">
-<span>${general_data.Origem} </span>
-</div>
-</div>
-
-<div class="tituloTabela">
-<span><b>Relação de Trabalhadores</b></span>
-</div>
-<hr />
-</header>
+        <header>
+          <div class="titulo">
+              <img class="logo" src="http://localhost:8000/logofgts.png" width="100" />
+    
+              <span style="transform: translate(-25%)"><b>Detalhe da Guia a Ser Emitida</b></span>
+    
+              <span></span>
+          </div>
+          <div class="row">
+              <div class="col" >
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Empregador: </label>
+                      <span class="empregadorNum">${company_atual.Estabelecimento}</span>
+                  </div>
+                  
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+                      <span> ${company_atual.Vencimento_guia}</span>
+                  </div>
+                  
+              </div>
+              <div class="col">
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Nome Empregador: </label>
+                      <span style="padding: 0 15px;"> ${company_atual.Nome_empregador} </span>
+                  </div>
+                  
+                  <div style="display: flex;">
+                      <label for="">Número da Guia:</label>
+                      <span style="padding: 0 15px;">0124031500455085-0</span>
+                      <label for="">Emitida por:</label>
+                      <span style="padding: 0 15px;">0124031500455085-0</span>
+                  </div>  
+                  
+              </div>
+    
+    
+              
+    
+              <div class="col">
+                  <div class="flex" >
+                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                      <span style="text-align: right;"> ${data2.length}</span>
+                      <label class="subtitulo" for="Empregador"> Origem:</label>
+                      <span>${company_atual.Origem}</span>
+                  </div>
+                  
+                  <div class="flex">
+                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
+                      padding-right:15px;">Data Emissão: </label>
+                      <span>15/03/2024 10:54:21 (Brasília)</span>
+                  </div>
+                  
+              </div>
+    
+          </div>
+    
+          <div class="tituloTabela">
+              <span><b>Relação de Trabalhadores</b></span>
+          </div>
+          <hr />
+      </header>
   ${companys.map((company) => {
           console.log(company)
 
