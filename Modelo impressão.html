@@ -13,146 +13,148 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script
   src="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/jquerycsvtotable/jquery.csvToTable.js"></script>
-  <style type="text/css">
-    * {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        max-width: 297mm ;
+<style type="text/css">
+  * {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 297mm;
 
-    }
+  }
 
-    .tamanhoPage {
-        width: 297mm;
-        height: 205mm;
-        position: relative;
-    }
+  .tamanhoPage {
+    width: 297mm;
+    height: 205mm;
+    position: relative;
+  }
 
-    body {
-        padding: 10px 10px;
-        display: flex;
-        flex-direction: column;
-        margin: 0 auto;
-    }
+  body {
+    padding: 10px 10px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+  }
 
-    header {
-        padding: 0 0px;
-        
-    }
+  header {
+    padding: 0 0px;
 
-    .titulo {
-        display: flex;
-        justify-content: space-between;
-        font-size: 1rem;
-        align-items: center;
-        padding-bottom: 10px;
-    }
+  }
 
-    .row {
-        display: flex;
-        justify-content: space-between;
-        padding-bottom: 20px;
-        white-space: nowrap;
-    }
+  .titulo {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    align-items: center;
+    padding-bottom: 10px;
+  }
 
-    label {
-        font-weight: bold;
-    }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    white-space: nowrap;
+  }
 
-    .col {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        font-size: 0.76rem;
-    }
-    span, label{
-        font-size: 0.76rem;
-    }
+  label {
+    font-weight: bold;
+  }
 
-    .col-2 {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        text-align: right;
-    }
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.76rem;
+  }
 
-    .tituloTabela {
-        text-align: center;
-        font-size: 1rem;
-    }
+  span,
+  label {
+    font-size: 0.76rem;
+  }
 
-    .tituloTabela hr {
-        border: 2px solid black;
-    }
+  .col-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: right;
+  }
 
-    main {
-        padding: 0 2px;
-    }
+  .tituloTabela {
+    text-align: center;
+    font-size: 1rem;
+  }
 
-    .topoTabela {
-        padding-top: 10px;
-        display: flex;
-        gap: 80px;
-        font-size: 0.76rem;
-        padding-bottom: 10px;
-    }
+  .tituloTabela hr {
+    border: 2px solid black;
+  }
 
-    .infoTabela label {
-        padding-right: 10px;
-    }
+  main {
+    padding: 0 2px;
+  }
 
-    hr {
-        border: 0.1rem solid black;
-        margin: 0 auto;
-        width: 100%;
-    }
+  .topoTabela {
+    padding-top: 10px;
+    display: flex;
+    gap: 80px;
+    font-size: 0.76rem;
+    padding-bottom: 10px;
+  }
 
-    th {
-        font-size: 0.5rem;
-    }
+  .infoTabela label {
+    padding-right: 10px;
+  }
 
-    td {
-        padding: 5px 2px;
-        font-size: 0.5rem;
-    }
+  hr {
+    border: 0.1rem solid black;
+    margin: 0 auto;
+    width: 100%;
+  }
 
-    tr:nth-child(even) {
-        background: white;
-    }
+  th {
+    font-size: 0.5rem;
+  }
 
-    tr {
-        padding: 0 10px;
-    }
+  td {
+    padding: 5px 2px;
+    font-size: 0.5rem;
+  }
 
-    .infoTable {
-        text-align: right;
-        font-size: 0.5rem;
-        padding: 2px 3px;
-        font-weight: bold;
-        white-space: nowrap;
-    }
+  tr:nth-child(even) {
+    background: white;
+  }
 
-    .categoriaInfo h1 {
-        font-size: 0.35rem;
-    }
+  tr {
+    padding: 0 10px;
+  }
 
-    main {
-        flex: 1;
-    }
+  .infoTable {
+    text-align: right;
+    font-size: 0.5rem;
+    padding: 2px 3px;
+    font-weight: bold;
+    white-space: nowrap;
+  }
 
-    footer {
-        height: auto;
-        align-items: end;
-        margin-top: auto;
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-        justify-content: space-between;
-    }
+  .categoriaInfo h1 {
+    font-size: 0.35rem;
+  }
 
-    .quebraPag {
-        page-break-after: always;
-    }
+  main {
+    flex: 1;
+  }
+
+  footer {
+    height: auto;
+    align-items: end;
+    margin-top: auto;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    justify-content: space-between;
+  }
+
+  .quebraPag {
+    page-break-after: always;
+  }
 </style>
 
 <body id="main">
@@ -235,7 +237,7 @@
 
         let paginasAtual = 0
         let paginaFinal = 4
-        const data_atual = new Date().toLocaleString().replace(",","")
+        const data_atual = new Date().toLocaleString().replace(",", "")
         const companys = [];
         const tipo_valor = [];
         const valores_ajustados = [];
@@ -259,7 +261,7 @@
           const company_atual = estabelecimentos.filter(
             (x) => x.Tomador == company
           )[0];
-          console.log(company,company_atual)
+          console.log(company, company_atual)
 
           const tamanho_maximo = 28;
           //
@@ -488,8 +490,8 @@
               </div>
               
               <div class="flex">
-                  <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
-                  padding-right:15px;">Data Emissão: </label>
+                  <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
+                  padding-right:25px;">Data Emissão:</label>
                   <span>${data_atual} (Brasília)</span>
               </div>
               
@@ -828,8 +830,8 @@ Página ${paginasAtual} de ${paginaFinal}
                           </div>
                           
                           <div class="flex">
-                              <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
-                              padding-right:15px;">Data Emissão: </label>
+                              <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
+                              padding-right:25px;">Data Emissão: </label>
                               <span>${data_atual} (Brasília)</span>
                           </div>
                           
@@ -1050,8 +1052,8 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
                           </div>
                           
                           <div class="flex">
-                              <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
-                              padding-right:15px;">Data Emissão: </label>
+                              <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px ;
+                              padding-right:25px;">Data Emissão: </label>
                               <span>${data_atual} (Brasília)</span>
                           </div>
                           
@@ -1191,8 +1193,8 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
                         </div>
                         
                         <div class="flex">
-                            <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
-                            padding-right:15px;">Data Emissão: </label>
+                            <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left:31px;
+                            padding-right:25px;">Data Emissão: </label>
                             <span>${data_atual} (Brasília)</span>
                         </div>
                         
@@ -1386,8 +1388,8 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
                   </div>
                   
                   <div class="flex">
-                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
-                      padding-right:15px;">Data Emissão: </label>
+                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
+                      padding-right:25px;">Data Emissão: </label>
                       <span>${data_atual} (Brasília)</span>
                   </div>
                   
@@ -1745,8 +1747,8 @@ público, sem vínculo de emprego/estatutário
                   </div>
                   
                   <div class="flex">
-                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
-                      padding-right:15px;">Data Emissão: </label>
+                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
+                      padding-right:25px;">Data Emissão: </label>
                       <span>${data_atual} (Brasília)</span>
                   </div>
                   
@@ -2033,8 +2035,8 @@ ${valores_ajustados.map((item, i) => {
                   </div>
                   
                   <div class="flex">
-                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
-                      padding-right:15px;">Data Emissão: </label>
+                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
+                      padding-right:25px;">Data Emissão: </label>
                       <span>${new Date().toLocaleString()} (Brasília)</span>
                   </div>
                   
@@ -2093,56 +2095,56 @@ ${valores_ajustados.map((item, i) => {
           <td style="text-align: center">${data[0]["Categoria"]}</td>
           <td style="border-right: 3px solid white">${data.length}</td>
           <td style="border-right: 3px solid white">${sumData(
-            undefined,
-            "Base Remuneração Total",
-            data,
-            "float"
-          )}</td>
+          undefined,
+          "Base Remuneração Total",
+          data,
+          "float"
+        )}</td>
           <td>${sumData(
-            undefined,
-            "Valor FGTS na Guia",
-            data,
-            "float",
-            "Tipo Depósito",
-            "Mensal"
-          )}</td>
+          undefined,
+          "Valor FGTS na Guia",
+          data,
+          "float",
+          "Tipo Depósito",
+          "Mensal"
+        )}</td>
           <td style="text-align: right; padding-right: 20px">${sumData(
-            undefined,
-            "Valor FGTS na Guia",
-            data,
-            "float",
-            "Tipo Depósito",
-            "Verba Indenizatória",
-            "Sum"
-          )}</td>
+          undefined,
+          "Valor FGTS na Guia",
+          data,
+          "float",
+          "Tipo Depósito",
+          "Verba Indenizatória",
+          "Sum"
+        )}</td>
           <td style="padding-left: 5px">${sumData(
-            undefined,
-            "Valor FGTS na Guia",
-            data,
-            "float",
-            "Tipo Depósito",
-            "Multa Rescisória",
-            "Sum"
-          )}</td>
+          undefined,
+          "Valor FGTS na Guia",
+          data,
+          "float",
+          "Tipo Depósito",
+          "Multa Rescisória",
+          "Sum"
+        )}</td>
           <td>${sumData(undefined, "Juros", data, "float")}</td>
           <td style="text-align: right; border-left: 3px solid white">${sumData(
-            undefined,
-            "Atualiz. Monetária",
-            data,
-            "float"
-          )}</td>
+          undefined,
+          "Atualiz. Monetária",
+          data,
+          "float"
+        )}</td>
           <td style="text-align: right">${sumData(
-            undefined,
-            "Multa",
-            data,
-            "float"
-          )}</td>
+          undefined,
+          "Multa",
+          data,
+          "float"
+        )}</td>
           <td style="text-align: right">${sumData(
-            undefined,
-            "Total",
-            data,
-            "float"
-          )}</td>
+          undefined,
+          "Total",
+          data,
+          "float"
+        )}</td>
         </tr>
 
         <tr style="background-color: white">
@@ -2152,54 +2154,54 @@ ${valores_ajustados.map((item, i) => {
             <b>Total da Guia</b>
           </td>
           <td style="border-right: 3px solid white"><b>${sumData(
-            undefined,
-            "Base Remuneração Total",
-            data,
-            "float"
-          )}
+          undefined,
+          "Base Remuneração Total",
+          data,
+          "float"
+        )}
             </b></td>
           <td><b>${sumData(
-            undefined,
-            "Valor FGTS na Guia",
-            data,
-            "float",
-            "Tipo Depósito",
-            "Mensal"
-          )}</b></td>
+          undefined,
+          "Valor FGTS na Guia",
+          data,
+          "float",
+          "Tipo Depósito",
+          "Mensal"
+        )}</b></td>
           <td style="text-align: right; padding-right: 20px"><b>${sumData(
-            undefined,
-            "Valor FGTS na Guia",
-            data,
-            "float",
-            "Tipo Depósito",
-            "Verba Indenizatória",
-            "Sum"
-          )}</b></td>
+          undefined,
+          "Valor FGTS na Guia",
+          data,
+          "float",
+          "Tipo Depósito",
+          "Verba Indenizatória",
+          "Sum"
+        )}</b></td>
           <td style="padding-left: 5px"><b>${sumData(
-            undefined,
-            "Valor FGTS na Guia",
-            data,
-            "float",
-            "Tipo Depósito",
-            "Multa Rescisória",
-            "Sum"
-          )}</b></td>
+          undefined,
+          "Valor FGTS na Guia",
+          data,
+          "float",
+          "Tipo Depósito",
+          "Multa Rescisória",
+          "Sum"
+        )}</b></td>
           <td><b>${sumData(undefined, "Juros", data, "float")}</b></td>
           <td style="text-align: right; border-left: 3px solid white">
             <b>${sumData(undefined, "Atualiz. Monetária", data, "float")}</b>
           </td>
           <td style="text-align: right"><b>${sumData(
-            undefined,
-            "Multa",
-            data,
-            "float"
-          )}</b></td>
+          undefined,
+          "Multa",
+          data,
+          "float"
+        )}</b></td>
           <td style="text-align: right"><b>${sumData(
-            undefined,
-            "Total",
-            data,
-            "float"
-          )}</b></td>
+          undefined,
+          "Total",
+          data,
+          "float"
+        )}</b></td>
         </tr>
       </table>
     </main>
@@ -2283,8 +2285,8 @@ ${valores_ajustados.map((item, i) => {
                   </div>
                   
                   <div class="flex">
-                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 26px;
-                      padding-right:15px;">Data Emissão: </label>
+                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
+                      padding-right:25px;">Data Emissão: </label>
                       <span>${data_atual} (Brasília)</span>
                   </div>
                   
