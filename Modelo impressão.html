@@ -157,9 +157,23 @@
     <script async>
       async function run() {
         function numberToReal(numero) {
-          var numero = numero.toFixed(2).split(".");
+          try{
+            // let numero1  = numero
+            // if(typeof numero == "string"){ 
+            //   numero = numero.replace(",",".")
+            // }
+            // // if(numero == NaN){ 
+            // //   console.log(numero1)
+            // // }
+          numero = parseFloat(numero)
+          numero = numero.toFixed(2).split(".");
           numero[0] = numero[0].split(/(?=(?:...)*$)/).join(".");
           return numero.join(",");
+          }catch(err){ 
+            console.log(numero, typeof numero, {err})
+
+          }
+         
         }
         function sumData(
           tomador,
@@ -583,21 +597,21 @@ ${dado["Vencimento"]}
 ${dado["Tipo Depósito"]}
 </td>
 <td style="text-align: right; border-left: 3px solid white">
-${dado["Base Remuneração Total"]}
+${numberToReal(dado["Base Remuneração Total"])}
 
 </td>
 <td style="text-align: right">          
-${dado["Valor FGTS na Guia"]}
+${numberToReal(dado["Valor FGTS na Guia"])}
 </td>
 <td style="text-align: center">
-${dado["Juros"]}
+${numberToReal(dado["Juros"])}
 </td>
 <td style="text-align: right; padding-right: 20px">    
-${dado["Atualiz. Monetária"]}
+${numberToReal(dado["Atualiz. Monetária"])}
 </td>
-<td style="text-align: center">                        ${dado["Multa"]}
+<td style="text-align: center">                        ${numberToReal(dado["Multa"])}
 </td>
-<td style="text-align: right">                        ${dado["Total"]}
+<td style="text-align: right">                        ${numberToReal(dado["Total"])}
 </td>
 </tr>`;
   })
@@ -765,7 +779,7 @@ ${dado["Atualiz. Monetária"]}
 <p>
 Relatório Emitido em: ${data_atual} (Brasília).</p>
 
-<p style="margin-left: 50px;" >
+<p style="margin-left: 50px;" class=testepagina>
 Página ${paginasAtual} de ${paginaFinal}
 </p>
 </div>
@@ -934,21 +948,21 @@ ${dado["Vencimento"]}
 ${dado["Tipo Depósito"]}
 </td>
 <td style="text-align: right; border-left: 3px solid white">
-${dado["Base Remuneração Total"]}
+${numberToReal(dado["Base Remuneração Total"])}
 
 </td>
 <td style="text-align: right">          
-${dado["Valor FGTS na Guia"]}
+${numberToReal(dado["Valor FGTS na Guia"])}
 </td>
 <td style="text-align: center">
-${dado["Juros"]}
+${numberToReal(dado["Juros"])}
 </td>
 <td style="text-align: right; padding-right: 20px">    
-${dado["Atualiz. Monetária"]}
+${numberToReal(dado["Atualiz. Monetária"])}
 </td>
-<td style="text-align: center">                        ${dado["Multa"]}
+<td style="text-align: center">                        ${numberToReal(dado["Multa"])}
 </td>
-<td style="text-align: right">                        ${dado["Total"]}
+<td style="text-align: right">                        ${numberToReal(dado["Total"])}
 </td>
 </tr>`;
   })
@@ -1003,8 +1017,8 @@ ${dado["Atualiz. Monetária"]}
 <p>
 Relatório Emitido em: ${data_atual} (Brasília).</p>
 
-<p style="margin-left: 50px;" >
-  Página ${paginasAtual} de ${paginaFinal}
+<p style="margin-left: 50px;" class=testepagina>
+  Página ${paginasAtual} de ${paginaFinal} 
 </p>
 </div>
 </div> 
@@ -1138,8 +1152,8 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
 <p>
 Relatório Emitido em: ${data_atual} (Brasília).</p>
 
-<p style="margin-left: 50px;" >
-  Página ${paginasAtual} de ${paginaFinal}
+<p style="margin-left: 50px;"class=testepagina >
+  Página ${paginasAtual} de ${paginaFinal} 
 </p>
 </div>
 </div> 
@@ -1307,21 +1321,21 @@ ${dado["Vencimento"]}
 ${dado["Tipo Depósito"]}
 </td>
 <td style="text-align: right; border-left: 3px solid white">
-${dado["Base Remuneração Total"]}
+${numberToReal(dado["Base Remuneração Total"])}
 
 </td>
 <td style="text-align: right">          
-${dado["Valor FGTS na Guia"]}
+${numberToReal(dado["Valor FGTS na Guia"])}
 </td>
 <td style="text-align: center">
-${dado["Juros"]}
+${numberToReal(dado["Juros"])}
 </td>
 <td style="text-align: right; padding-right: 20px">    
-${dado["Atualiz. Monetária"]}
+${numberToReal(dado["Atualiz. Monetária"])}
 </td>
-<td style="text-align: center">                        ${dado["Multa"]}
+<td style="text-align: center">                        ${numberToReal(dado["Multa"])}
 </td>
-<td style="text-align: right">                        ${dado["Total"]}
+<td style="text-align: right">                        ${numberToReal(dado["Total"])}
 </td>
 </tr>`;
   })
@@ -1341,8 +1355,8 @@ ${dado["Atualiz. Monetária"]}
 <p>
 Relatório Emitido em: ${data_atual} (Brasília).</p>
 
-<p style="margin-left: 50px;" >
-  Página ${paginasAtual} de ${paginaFinal}
+<p style="margin-left: 50px;" class=testepagina>
+  Página ${paginasAtual} de ${paginaFinal + 1} 
 </p>
 </div>
 </div> 
@@ -1484,10 +1498,10 @@ background-color: #e4e6d8;
             data,
             "float"
           ))}</td>
-<td>${sumData(undefined, "Valor FGTS na Guia", data, "float")}</td>
+<td>${numberToReal(sumData(undefined, "Valor FGTS na Guia", data, "float"))}</td>
 <td style="text-align: right; padding-right: 20px">${
             //FGTS RESCISÒRIO NA GUIA
-            sumData(
+            numberToReal(sumData(
               undefined,
               "Base Remuneração Total",
               data,
@@ -1495,10 +1509,10 @@ background-color: #e4e6d8;
               "Tipo Depósito",
               "Verba Indenizatória"
             )
-          }</td>
+        )}</td>
 <td style="padding-left: 5px">${
             //IND COMPESATORIA NA GUIA
-            sumData(
+            numberToReal(sumData(
               undefined,
               "Valor FGTS na Guia",
               data,
@@ -1506,17 +1520,17 @@ background-color: #e4e6d8;
               "Tipo Depósito",
               "Multa Rescisória"
             )
-          }</td>
+        )}</td>
 <td>${
             //JUROS
-            sumData(undefined, "Juros", data, "float")
+            numberToReal(sumData(undefined, "Juros", data, "float"))
           }</td>
 <td style="text-align: right; border-left: 3px solid white">${
             //ATT MONETÀRIA
-            sumData(undefined, "Atualiz. Monetária", data, "float")
+            numberToReal(sumData(undefined, "Atualiz. Monetária", data, "float"))
           }</td>
-<td style="text-align: right">${sumData(undefined, "Multa", data, "float")}</td>
-<td style="text-align: right">${sumData(undefined, "Total", data, "Float")}</td>
+<td style="text-align: right">${numberToReal(sumData(undefined, "Multa", data, "float"))}</td>
+<td style="text-align: right">${numberToReal(sumData(undefined, "Total", data, "Float"))}</td>
 </tr>
 
 <tr style="background-color: white">
@@ -1527,54 +1541,54 @@ background-color: #e4e6d8;
 </td>
 <td style="border-right: 3px solid white"><b>${
             //BASE REMUNERAÇÃO TOTAL
-            sumData(undefined, "Base Remuneração Total", data, "float")
+            numberToReal( sumData(undefined, "Base Remuneração Total", data, "float"))
           }</b></td>
 <td><b>${
             //FGTS NA GUIA
-            sumData(
+            numberToReal( sumData(
               undefined,
               "Valor FGTS na Guia",
               data,
               "float",
               "Tipo Depósito",
               "Multa Rescisória"
-            )
+            ))
           }</b></td>
 <td style="text-align: right; padding-right: 20px"><b>${
             //
-            sumData(
+            numberToReal( sumData(
               undefined,
               "Base Remuneração Total",
               data,
               "float",
               "Tipo Depósito",
               "Verba Indenizatória"
-            )
+            ))
           }</b></td>
-<td style="padding-left: 5px"><b>${sumData(
+<td style="padding-left: 5px"><b>${numberToReal(sumData(
             undefined,
             "Valor FGTS na Guia",
             data,
             "float",
             "Tipo Depósito",
             "Multa Rescisória"
-          )}</b></td>
-<td><b>${sumData(undefined, "Juros", data, "float")}</b></td>
+          ))}</b></td>
+<td><b>${numberToReal(sumData(undefined, "Juros", data, "float"))}</b></td>
 <td style="text-align: right; border-left: 3px solid white">
-  <b>${sumData(undefined, "Atualiz. Monetária", data, "float")}</b>
+  <b>${numberToReal(sumData(undefined, "Atualiz. Monetária", data, "float"))}</b>
 </td>
-<td style="text-align: right"><b>${sumData(
+<td style="text-align: right"><b>${numberToReal(sumData(
             undefined,
             "Multa",
             data,
             "float"
-          )}</b></td>
-<td style="text-align: right"><b>${sumData(
+          ))}</b></td>
+<td style="text-align: right"><b>${numberToReal(sumData(
             undefined,
             "Total",
             data,
             "float"
-          )}</b></td>
+          ))}</b></td>
 </tr>
 </table>
 
@@ -1711,8 +1725,8 @@ público, sem vínculo de emprego/estatutário
       <p>
       Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
       
-      <p style="margin-left: 50px;" >
-        Página Página ${paginaFinal - 3} de ${paginaFinal}
+      <p style="margin-left: 50px;" class=testepagina>
+        Página Página ${paginaFinal - 3} de ${paginaFinal} 
       </p>
       </div>
       </div> 
@@ -1839,7 +1853,7 @@ ${valores_ajustados
     return `<tr style="padding: 0">
           <td style="text-align: center">${data[0]["Comp. Apuração"]}</td>
           <td style="text-align: center">${item}</td>
-          <td style="text-align: center">${sumData(
+          <td style="text-align: center">${numberToReal(sumData(
             undefined,
             "Total",
             data,
@@ -1847,8 +1861,8 @@ ${valores_ajustados
             "Tipo Depósito",
             tipo_valor[i],
             "Index"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             undefined,
             "Base Remuneração Total",
             data,
@@ -1856,8 +1870,8 @@ ${valores_ajustados
             "Tipo Depósito",
             tipo_valor[i],
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             undefined,
             "Valor FGTS na Guia",
             data,
@@ -1865,11 +1879,11 @@ ${valores_ajustados
             "Tipo Depósito",
             tipo_valor[i],
             "Sum"
-          )}</td>
+          ))}</td>
           <td style="text-align: right">${
             tipo_valor[i] != "Verba Indenizatória"
               ? 0
-              : sumData(
+              : numberToReal(sumData(
                   undefined,
                   "Valor FGTS na Guia",
                   data,
@@ -1877,12 +1891,12 @@ ${valores_ajustados
                   "Tipo Depósito",
                   tipo_valor[i],
                   "Sum"
-                )
+              ))
           }</td>
           <td style="text-align: right">${
             tipo_valor[i] != "Multa Rescisória"
               ? 0
-              : sumData(
+              : numberToReal(sumData(
                   undefined,
                   "Valor FGTS na Guia",
                   data,
@@ -1890,9 +1904,9 @@ ${valores_ajustados
                   "Tipo Depósito",
                   tipo_valor[i],
                   "Sum"
-                )
+               ) )
           }</td>
-          <td style="text-align: center">${sumData(
+          <td style="text-align: center">${numberToReal(sumData(
             undefined,
             "Juros",
             data,
@@ -1900,8 +1914,8 @@ ${valores_ajustados
             "Tipo Depósito",
             tipo_valor[i],
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             undefined,
             "Atualiz. Monetária",
             data,
@@ -1909,8 +1923,8 @@ ${valores_ajustados
             "Tipo Depósito",
             tipo_valor[i],
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             undefined,
             "Multa",
             data,
@@ -1918,8 +1932,8 @@ ${valores_ajustados
             "Tipo Depósito",
             tipo_valor[i],
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             undefined,
             "Total",
             data,
@@ -1927,7 +1941,7 @@ ${valores_ajustados
             "Tipo Depósito",
             tipo_valor[i],
             "Sum"
-          )}</td>
+          ))}</td>
         </tr>`;
   })
   .join("")}
@@ -1937,13 +1951,13 @@ ${valores_ajustados
           <td style="text-align: center"></td>
           <td style="text-align: center"></td>
           <td style="text-align: center"><b>Total da Guia</b></td>
-          <td style="text-align: right"><b>${sumData(
+          <td style="text-align: right"><b>${numberToReal(sumData(
             undefined,
             "Base Remuneração Total",
             data,
             "float"
-          )}</b></td>
-          <td style="text-align: right"><b>${sumData(
+          ))}</b></td>
+          <td style="text-align: right"><b>${numberToReal(sumData(
             undefined,
             "Valor FGTS na Guia",
             data,
@@ -1951,8 +1965,8 @@ ${valores_ajustados
             "Tipo Depósito",
             "Mensal",
             "Sum"
-          )}</b></td>
-          <td style="text-align: right"><b>${sumData(
+          ))}</b></td>
+          <td style="text-align: right"><b>${numberToReal(sumData(
             undefined,
             "Valor FGTS na Guia",
             data,
@@ -1960,8 +1974,8 @@ ${valores_ajustados
             "Tipo Depósito",
             "Verba Indenizatória",
             "Sum"
-          )}</b></td>
-          <td style="text-align: right"><b>${sumData(
+          ))}</b></td>
+          <td style="text-align: right"><b>${numberToReal(sumData(
             undefined,
             "Valor FGTS na Guia",
             data,
@@ -1969,31 +1983,31 @@ ${valores_ajustados
             "Tipo Depósito",
             "Multa Rescisória",
             "Sum"
-          )}</b></td>
-          <td style="text-align: center"><b>${sumData(
+          ))}</b></td>
+          <td style="text-align: center"><b>${numberToReal(sumData(
             undefined,
             "Juros",
             data,
             "float"
-          )}</b></td>
-          <td style="text-align: right"><b>${sumData(
+        ))}</b></td>
+          <td style="text-align: right"><b>${numberToReal(sumData(
             undefined,
             "Atualiz. Monetária",
             data,
             "float"
-          )}</b></td>
-          <td style="text-align: right"><b>${sumData(
+          ))}</b></td>
+          <td style="text-align: right"><b>${numberToReal(sumData(
             undefined,
             "Multa",
             data,
             "float"
-          )}</b></td>
-          <td style="text-align: right"><b>${sumData(
+        ))}</b></td>
+          <td style="text-align: right"><b>${numberToReal(sumData(
             undefined,
             "Total",
             data,
             "float"
-          )}</b></td>
+        ))}</b></td>
         </tr>
       </table>
     </main>
@@ -2013,7 +2027,7 @@ ${valores_ajustados
         <div style="display: flex; justify-content: space-around">
           <p>Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
 
-          <p style="margin-left: 50px">Página ${
+          <p style="margin-left: 50px" class=testepagina>Página ${
             paginaFinal - 2
           } de ${paginaFinal}</p>
         </div>
@@ -2145,21 +2159,21 @@ ${valores_ajustados
           <td style="text-align: center">${data[0]["Comp. Apuração"]}</td> 
           <td style="text-align: center">${data[0]["Categoria"]}</td>
           <td style="border-right: 3px solid white">${data.length}</td>
-          <td style="border-right: 3px solid white">${sumData(
+          <td style="border-right: 3px solid white">${numberToReal(sumData(
             undefined,
             "Base Remuneração Total",
             data,
             "float"
-          )}</td>
-          <td>${sumData(
+        ))}</td>
+          <td>${numberToReal(sumData(
             undefined,
             "Valor FGTS na Guia",
             data,
             "float",
             "Tipo Depósito",
             "Mensal"
-          )}</td>
-          <td style="text-align: right; padding-right: 20px">${sumData(
+        ))}</td>
+          <td style="text-align: right; padding-right: 20px">${numberToReal(sumData(
             undefined,
             "Valor FGTS na Guia",
             data,
@@ -2167,8 +2181,8 @@ ${valores_ajustados
             "Tipo Depósito",
             "Verba Indenizatória",
             "Sum"
-          )}</td>
-          <td style="padding-left: 5px">${sumData(
+          ))}</td>
+          <td style="padding-left: 5px">${numberToReal(sumData(
             undefined,
             "Valor FGTS na Guia",
             data,
@@ -2176,26 +2190,26 @@ ${valores_ajustados
             "Tipo Depósito",
             "Multa Rescisória",
             "Sum"
-          )}</td>
-          <td>${sumData(undefined, "Juros", data, "float")}</td>
-          <td style="text-align: right; border-left: 3px solid white">${sumData(
+        ))}</td>
+          <td>${numberToReal(sumData(undefined, "Juros", data, "float"))}</td>
+          <td style="text-align: right; border-left: 3px solid white">${numberToReal(sumData(
             undefined,
             "Atualiz. Monetária",
             data,
             "float"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             undefined,
             "Multa",
             data,
             "float"
-          )}</td>
-          <td style="text-align: right">${sumData(
+        ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             undefined,
             "Total",
             data,
             "float"
-          )}</td>
+        ))}</td>
         </tr>
 
         <tr style="background-color: white">
@@ -2204,22 +2218,22 @@ ${valores_ajustados
           <td style="border-right: 3px solid white">
             <b>Total da Guia</b>
           </td>
-          <td style="border-right: 3px solid white"><b>${sumData(
+          <td style="border-right: 3px solid white"><b>${numberToReal(sumData(
             undefined,
             "Base Remuneração Total",
             data,
             "float"
-          )}
+          ))}
             </b></td>
-          <td><b>${sumData(
+          <td><b>${numberToReal(sumData(
             undefined,
             "Valor FGTS na Guia",
             data,
             "float",
             "Tipo Depósito",
             "Mensal"
-          )}</b></td>
-          <td style="text-align: right; padding-right: 20px"><b>${sumData(
+          ))}</b></td>
+          <td style="text-align: right; padding-right: 20px"><b>${numberToReal(sumData(
             undefined,
             "Valor FGTS na Guia",
             data,
@@ -2227,8 +2241,8 @@ ${valores_ajustados
             "Tipo Depósito",
             "Verba Indenizatória",
             "Sum"
-          )}</b></td>
-          <td style="padding-left: 5px"><b>${sumData(
+          ))}</b></td>
+          <td style="padding-left: 5px"><b>${numberToReal(sumData(
             undefined,
             "Valor FGTS na Guia",
             data,
@@ -2236,23 +2250,23 @@ ${valores_ajustados
             "Tipo Depósito",
             "Multa Rescisória",
             "Sum"
-          )}</b></td>
-          <td><b>${sumData(undefined, "Juros", data, "float")}</b></td>
+        ))}</b></td>
+          <td><b>${numberToReal(sumData(undefined, "Juros", data, "float"))}</b></td>
           <td style="text-align: right; border-left: 3px solid white">
-            <b>${sumData(undefined, "Atualiz. Monetária", data, "float")}</b>
+            <b>${numberToReal(sumData(undefined, "Atualiz. Monetária", data, "float"))}</b>
           </td>
-          <td style="text-align: right"><b>${sumData(
+          <td style="text-align: right"><b>${numberToReal(sumData(
             undefined,
             "Multa",
             data,
             "float"
-          )}</b></td>
-          <td style="text-align: right"><b>${sumData(
+          ))}</b></td>
+          <td style="text-align: right"><b>${numberToReal(sumData(
             undefined,
             "Total",
             data,
             "float"
-          )}</b></td>
+        ))}</b></td>
         </tr>
       </table>
     </main>
@@ -2272,7 +2286,7 @@ ${valores_ajustados
         <div style="display: flex; justify-content: space-around">
           <p>Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
 
-          <p style="margin-left: 50px">Página ${
+          <p style="margin-left: 50px" class=testepagina>Página ${
             paginaFinal - 1
           } de ${paginaFinal}</p>
         </div>
@@ -2399,7 +2413,7 @@ ${valores_ajustados
 
         <tr style="padding: 0">
           <td style="text-align: center">${data[0]["Comp. Apuração"]}</td>
-          <td style="text-align: center">${sumData(
+          <td style="text-align: center">${numberToReal(sumData(
             company,
             "Total",
             data,
@@ -2407,8 +2421,8 @@ ${valores_ajustados
             "Tomador",
             company,
             "Index"
-          )}</td>
-          <td style="text-align: center">${sumData(
+          ))}</td>
+          <td style="text-align: center">${numberToReal(sumData(
             company,
             "Base Remuneração Total",
             data,
@@ -2416,8 +2430,8 @@ ${valores_ajustados
             "Tomador",
             company,
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Valor FGTS na Guia",
             data,
@@ -2425,8 +2439,8 @@ ${valores_ajustados
             "Tomador",
             company,
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Valor FGTS na Guia",
             data,
@@ -2434,8 +2448,8 @@ ${valores_ajustados
             "Tipo Depósito",
             "Verba Indenizatória",
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Valor FGTS na Guia",
             data,
@@ -2443,31 +2457,31 @@ ${valores_ajustados
             "Tipo Depósito",
             "Multa Rescisória",
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Juros",
             data,
             "Float"
-          )}</td>
-          <td style="text-align: center">${sumData(
+          ))}</td>
+          <td style="text-align: center">${numberToReal(sumData(
             company,
             "Atualiz. Monetária",
             data,
             "Float"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Multa",
             data,
             "Float"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Total",
             data,
             "Float"
-          )}</td>
+          ))}</td>
         </tr>
 
         <tr
@@ -2481,7 +2495,7 @@ ${valores_ajustados
         >
           <td style="text-align: center">Total do Tomador</td>
           <td style="text-align: center">${company}</td>
-          <td style="text-align: center">${sumData(
+          <td style="text-align: center">${numberToReal(sumData(
             company,
             "Base Remuneração Total",
             data,
@@ -2489,8 +2503,8 @@ ${valores_ajustados
             "Tomador",
             company,
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Valor FGTS na Guia",
             data,
@@ -2498,8 +2512,8 @@ ${valores_ajustados
             "Tomador",
             company,
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Valor FGTS na Guia",
             data,
@@ -2507,8 +2521,8 @@ ${valores_ajustados
             "Tipo Depósito",
             "Verba Indenizatória",
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Valor FGTS na Guia",
             data,
@@ -2516,36 +2530,36 @@ ${valores_ajustados
             "Tipo Depósito",
             "Multa Rescisória",
             "Sum"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Juros",
             data,
             "Float"
-          )}</td>
-          <td style="text-align: center">${sumData(
+          ))}</td>
+          <td style="text-align: center">${numberToReal(sumData(
             company,
             "Atualiz. Monetária",
             data,
             "Float"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Multa",
             data,
             "Float"
-          )}</td>
-          <td style="text-align: right">${sumData(
+          ))}</td>
+          <td style="text-align: right">${numberToReal(sumData(
             company,
             "Total",
             data,
             "Float"
-          )}</td>
+          ))}</td>
         </tr>
       </table>
     </main>
     `;
-  })}
+  }).join("")}
   
 
     <footer>
@@ -2561,9 +2575,9 @@ ${valores_ajustados
       >
         <p>Todos os valores exibidos estão expressos em reais (R$)</p>
         <div style="display: flex; justify-content: space-around">
-          <p>Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+          <p>Relatório Emitido em: ${data_atual} (Brasília).</p>
 
-          <p style="margin-left: 50px">Página ${paginaFinal} de ${paginaFinal}</p>
+          <p style="margin-left: 50px" class=testepagina>Página ${paginaFinal} de ${paginaFinal}</p>
         </div>
       </div>
       <span></span>
@@ -2574,9 +2588,18 @@ ${valores_ajustados
 `;
 
           body.append(relacao_tomadores_servico);
+          fixPages()
         });
       }
-      run();
+      run()
+      function fixPages(){
+        const pages = document.querySelectorAll(".testepagina")
+        pages.forEach((page,i)=> { 
+          page.innerHTML = `Página ${i+1} de ${pages.length}`
+        })
+        console.log({pages})
+        return;
+      }
     </script>
   </body>
 </html>
