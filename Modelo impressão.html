@@ -64,7 +64,7 @@
 
     span,
     label {
-      font-size: 0.76rem;
+      font-size: 0.56rem;
     }
 
     .col-2 {
@@ -622,9 +622,9 @@ ${numberToReal(dado["Atualiz. Monetária"])}
 <div>
 
 <div class="infoTable">
-  <span style="width:100px;display:inline-block">Total do Tomador</span>
-  <span style="width:160px;display:inline-block">${company_atual.Tomador}</span>
-  <span style="width:120px;display:inline-block">${numberToReal(
+  <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Tomador</span>
+  <span style="width:160px;display:inline-block; margin-right: -8px;">${company_atual.Tomador}</span>
+  <span style="width:120px;display:inline-block; margin-right: -3px;">${numberToReal(
     sumData(
       undefined,
       "Base Remuneração Total",
@@ -636,7 +636,7 @@ ${numberToReal(dado["Atualiz. Monetária"])}
     )
   )
   }</span>
-  <span style="width:60px;display:inline-block">${numberToReal(sumData(
+  <span style="width:60px;display:inline-block; margin-right: 7px ;">${numberToReal(sumData(
     undefined,
     "Valor FGTS na Guia",
     data,
@@ -645,7 +645,7 @@ ${numberToReal(dado["Atualiz. Monetária"])}
     company_atual.Tomador,
     "Sum"
   ))}</span>
-  <span style="width:42px;display:inline-block">${numberToReal(sumData(
+  <span style="width:42px;display:inline-block; margin-right: 31px ;">${numberToReal(sumData(
     undefined,
     "Juros",
     data,
@@ -654,7 +654,7 @@ ${numberToReal(dado["Atualiz. Monetária"])}
     company_atual.Tomador,
     "Sum"
   ))} </span>
-  <span style="width:74px;display:inline-block">${numberToReal(sumData(
+  <span style="width:40px;display:inline-block; margin-right: 20px ; ">${numberToReal(sumData(
     undefined,
     "Atualiz. Monetária",
     data,
@@ -663,7 +663,7 @@ ${numberToReal(dado["Atualiz. Monetária"])}
     company_atual.Tomador,
     "Sum"
   ))}</span>
-  <span style="width:34px;display:inline-block">${numberToReal(sumData(
+  <span style="display:inline-block; width: 20px; margin-right:5px;">${numberToReal(sumData(
     undefined,
     "Multa",
     data,
@@ -672,7 +672,7 @@ ${numberToReal(dado["Atualiz. Monetária"])}
     company_atual.Tomador,
     "Sum"
   ))}</span>
-  <span style="width:34px;display:inline-block" >${numberToReal(sumData(
+  <span style="display:inline-block" >${numberToReal(sumData(
     undefined,
     "Total",
     data,
@@ -682,42 +682,43 @@ ${numberToReal(dado["Atualiz. Monetária"])}
     "Sum"
   ))}</span>
 </div>
+
 <div class="infoTable">
-  <span style="width:132px;display:inline-block">Total do Estabelecimento</span>
-  <span style="width:160px;display:inline-block">${
+  <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Estabelecimento</span>
+  <span style="width:160px;display:inline-block; margin-right: -8px;">${
     company_atual.Estabelecimento
   }</span>
-  <span style="width:120px;display:inline-block">${numberToReal(sumData(
+  <span style="width:120px;display:inline-block; margin-right: -3px;">${numberToReal(sumData(
     undefined,
     "Base Remuneração Total",
     data,
     "float"
   ))}</span>
-  <span style="width:60px;display:inline-block">${numberToReal(sumData(
+  <span style="width:60px;display:inline-block; margin-right: 7px ;">${numberToReal(sumData(
     undefined,
     "Valor FGTS na Guia",
     data,
     "float"
   ))}</span>
-  <span style="width:42px;display:inline-block">${numberToReal(sumData(
+  <span style="width:42px;display:inline-block; margin-right: 31px ;">${numberToReal(sumData(
     undefined,
     "Juros",
     data,
     "float"
             ))} </span>
-  <span style="width:74px;display:inline-block">${numberToReal(sumData(
+  <span style="width:40px;display:inline-block; margin-right: 20px ;">${numberToReal(sumData(
     undefined,
     "Atualiz. Monetária",
     data,
     "float"
   ))}</span>
-  <span style="width:34px;display:inline-block">${numberToReal(sumData(
+  <span style="display:inline-block; width: 20px; margin-right:5px;">${numberToReal(sumData(
     undefined,
     "Multa",
     data,
     "float"
   ))}</span>
-  <span style="width:34px;display:inline-block" >${numberToReal(sumData(
+  <span style="display:inline-block" >${numberToReal(sumData(
     undefined,
     "Total",
     data,
@@ -725,39 +726,39 @@ ${numberToReal(dado["Atualiz. Monetária"])}
   ))}</span>
 </div>
 <div class="infoTable">
-  <span style="width:100px;display:inline-block"></span>
-  <span style="width:160px;display:inline-block">Total da Guia</span>
-  <span style="width:120px;display:inline-block">${numberToReal(sumData(
+  <span style="width:100px;display:inline-block; margin-right: -45px;"></span>
+  <span style="width:160px;display:inline-block; margin-right: -8px;">Total da Guia</span>
+  <span style="width:120px;display:inline-block; margin-right: -3px;">${numberToReal(sumData(
     undefined,
     "Base Remuneração Total",
     data,
     "float"
   ))}</span>
-  <span style="width:60px;display:inline-block">${numberToReal(sumData(
+  <span style="width:60px;display:inline-block; margin-right: 7px ;">${numberToReal(sumData(
     undefined,
     "Valor FGTS na Guia",
     data,
     "float"
   ))}</span>
-  <span style="width:42px;display:inline-block">${numberToReal(sumData(
+  <span style="width:42px;display:inline-block; margin-right: 31px ;">${numberToReal(sumData(
     undefined,
     "Juros",
     data,
     "float"
   ))} </span>
-  <span style="width:74px;display:inline-block">${numberToReal(sumData(
+  <span style="width:40px;display:inline-block; margin-right: 20px ;">${numberToReal(sumData(
     undefined,
     "Atualiz. Monetária",
     data,
     "float"
   ))}</span>
-  <span style="width:34px;display:inline-block;">${numberToReal(sumData(
+  <span style="display:inline-block; width: 20px; margin-right:5px;">${numberToReal(sumData(
     undefined,
     "Multa",
     data,
     "float"
   ))}</span>
-  <span style="width:34px;display:inline-block" >${numberToReal(sumData(
+  <span style="display:inline-block" >${numberToReal(sumData(
     undefined,
     "Total",
     data,
@@ -972,37 +973,151 @@ ${numberToReal(dado["Atualiz. Monetária"])}
 
 <div>
 
-<div class="infoTable">
-  <span style="width:100px;display:inline-block">Total do Tomador</span>
-  <span style="width:100px;display:inline-block">Sem Tomador</span>
-  <span style="width:100px;display:inline-block">1111111</span>
-  <span style="width:70px;display:inline-block">00000</span>
-  <span style="width:40px;display:inline-block">00000 </span>
-  <span style="width:74px;display:inline-block">0000</span>
-  <span style="width:38px;display:inline-block">0000</span>
-  <span style="width:40px;display:inline-block" >851,05</span>
-</div>
-<div class="infoTable">
-  <span style="width:100px;display:inline-block">Total do Estabelecimento</span>
-  <span style="width:100px;display:inline-block">32.780.199/0001-77</span>
-  <span style="width:100px;display:inline-block">1111111</span>
-  <span style="width:70px;display:inline-block">00000</span>
-  <span style="width:40px;display:inline-block">00000 </span>
-  <span style="width:74px;display:inline-block">0000</span>
-  <span style="width:38px;display:inline-block">0000</span>
-  <span style="width:40px;display:inline-block" >851,05</span>
-</div>
-<div class="infoTable">
-  <span style="width:100px;display:inline-block"></span>
-  <span style="width:100px;display:inline-block">Total da Guia</span>
-  <span style="width:100px;display:inline-block">1111111</span>
-  <span style="width:70px;display:inline-block">00000</span>
-  <span style="width:40px;display:inline-block">00000 </span>
-  <span style="width:74px;display:inline-block">0000</span>
-  <span style="width:38px;display:inline-block">0000</span>
-  <span style="width:40px;display:inline-block" >851,05</span>
-</div>
-</div>
+  <div class="infoTable">
+    <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Tomador</span>
+    <span style="width:160px;display:inline-block; margin-right: -8px;">${company_atual.Tomador}</span>
+    <span style="width:120px;display:inline-block; margin-right: -3px;">${numberToReal(
+      sumData(
+        undefined,
+        "Base Remuneração Total",
+        data,
+        "float",
+        "Tomador",
+        company_atual.Tomador,
+        "Sum"
+      )
+    )
+    }</span>
+    <span style="width:60px;display:inline-block; margin-right: 7px ;">${numberToReal(sumData(
+      undefined,
+      "Valor FGTS na Guia",
+      data,
+      "float",
+      "Tomador",
+      company_atual.Tomador,
+      "Sum"
+    ))}</span>
+    <span style="width:42px;display:inline-block; margin-right: 31px ;">${numberToReal(sumData(
+      undefined,
+      "Juros",
+      data,
+      "float",
+      "Tomador",
+      company_atual.Tomador,
+      "Sum"
+    ))} </span>
+    <span style="width:40px;display:inline-block; margin-right: 20px ; ">${numberToReal(sumData(
+      undefined,
+      "Atualiz. Monetária",
+      data,
+      "float",
+      "Tomador",
+      company_atual.Tomador,
+      "Sum"
+    ))}</span>
+    <span style="display:inline-block; width: 20px; margin-right:5px;">${numberToReal(sumData(
+      undefined,
+      "Multa",
+      data,
+      "float",
+      "Tomador",
+      company_atual.Tomador,
+      "Sum"
+    ))}</span>
+    <span style="display:inline-block" >${numberToReal(sumData(
+      undefined,
+      "Total",
+      data,
+      "float",
+      "Tomador",
+      company_atual.Tomador,
+      "Sum"
+    ))}</span>
+  </div>
+  
+  <div class="infoTable">
+    <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Estabelecimento</span>
+    <span style="width:160px;display:inline-block; margin-right: -8px;">${
+      company_atual.Estabelecimento
+    }</span>
+    <span style="width:120px;display:inline-block; margin-right: -3px;">${numberToReal(sumData(
+      undefined,
+      "Base Remuneração Total",
+      data,
+      "float"
+    ))}</span>
+    <span style="width:60px;display:inline-block; margin-right: 7px ;">${numberToReal(sumData(
+      undefined,
+      "Valor FGTS na Guia",
+      data,
+      "float"
+    ))}</span>
+    <span style="width:42px;display:inline-block; margin-right: 31px ;">${numberToReal(sumData(
+      undefined,
+      "Juros",
+      data,
+      "float"
+              ))} </span>
+    <span style="width:40px;display:inline-block; margin-right: 20px ;">${numberToReal(sumData(
+      undefined,
+      "Atualiz. Monetária",
+      data,
+      "float"
+    ))}</span>
+    <span style="display:inline-block; width: 20px; margin-right:5px;">${numberToReal(sumData(
+      undefined,
+      "Multa",
+      data,
+      "float"
+    ))}</span>
+    <span style="display:inline-block" >${numberToReal(sumData(
+      undefined,
+      "Total",
+      data,
+      "float"
+    ))}</span>
+  </div>
+  <div class="infoTable">
+    <span style="width:100px;display:inline-block; margin-right: -45px;"></span>
+    <span style="width:160px;display:inline-block; margin-right: -8px;">Total da Guia</span>
+    <span style="width:120px;display:inline-block; margin-right: -3px;">${numberToReal(sumData(
+      undefined,
+      "Base Remuneração Total",
+      data,
+      "float"
+    ))}</span>
+    <span style="width:60px;display:inline-block; margin-right: 7px ;">${numberToReal(sumData(
+      undefined,
+      "Valor FGTS na Guia",
+      data,
+      "float"
+    ))}</span>
+    <span style="width:42px;display:inline-block; margin-right: 31px ;">${numberToReal(sumData(
+      undefined,
+      "Juros",
+      data,
+      "float"
+    ))} </span>
+    <span style="width:40px;display:inline-block; margin-right: 20px ;">${numberToReal(sumData(
+      undefined,
+      "Atualiz. Monetária",
+      data,
+      "float"
+    ))}</span>
+    <span style="display:inline-block; width: 20px; margin-right:5px;">${numberToReal(sumData(
+      undefined,
+      "Multa",
+      data,
+      "float"
+    ))}</span>
+    <span style="display:inline-block" >${numberToReal(sumData(
+      undefined,
+      "Total",
+      data,
+      "float"
+    ))}</span>
+  </div>
+  </div>
 </main>
 
 
@@ -1107,37 +1222,151 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
 <hr />
 <div>
 
-<div class="infoTable">
-  <span style="width:100px;display:inline-block">Total do Tomador</span>
-  <span style="width:100px;display:inline-block">Sem Tomador</span>
-  <span style="width:100px;display:inline-block">1111111</span>
-  <span style="width:70px;display:inline-block">00000</span>
-  <span style="width:40px;display:inline-block">00000 </span>
-  <span style="width:74px;display:inline-block">0000</span>
-  <span style="width:38px;display:inline-block">0000</span>
-  <span style="width:40px;display:inline-block" >851,05</span>
-</div>
-<div class="infoTable">
-  <span style="width:100px;display:inline-block">Total do Estabelecimento</span>
-  <span style="width:100px;display:inline-block">32.780.199/0001-77</span>
-  <span style="width:100px;display:inline-block">1111111</span>
-  <span style="width:70px;display:inline-block">00000</span>
-  <span style="width:40px;display:inline-block">00000 </span>
-  <span style="width:74px;display:inline-block">0000</span>
-  <span style="width:38px;display:inline-block">0000</span>
-  <span style="width:40px;display:inline-block" >851,05</span>
-</div>
-<div class="infoTable">
-  <span style="width:100px;display:inline-block"></span>
-  <span style="width:100px;display:inline-block">Total da Guia</span>
-  <span style="width:100px;display:inline-block">1111111</span>
-  <span style="width:70px;display:inline-block">00000</span>
-  <span style="width:40px;display:inline-block">00000 </span>
-  <span style="width:74px;display:inline-block">0000</span>
-  <span style="width:38px;display:inline-block">0000</span>
-  <span style="width:40px;display:inline-block" >851,05</span>
-</div>
-</div>
+  <div class="infoTable">
+    <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Tomador</span>
+    <span style="width:160px;display:inline-block; margin-right: -8px;">${company_atual.Tomador}</span>
+    <span style="width:120px;display:inline-block; margin-right: -3px;">${numberToReal(
+      sumData(
+        undefined,
+        "Base Remuneração Total",
+        data,
+        "float",
+        "Tomador",
+        company_atual.Tomador,
+        "Sum"
+      )
+    )
+    }</span>
+    <span style="width:60px;display:inline-block; margin-right: 7px ;">${numberToReal(sumData(
+      undefined,
+      "Valor FGTS na Guia",
+      data,
+      "float",
+      "Tomador",
+      company_atual.Tomador,
+      "Sum"
+    ))}</span>
+    <span style="width:42px;display:inline-block; margin-right: 31px ;">${numberToReal(sumData(
+      undefined,
+      "Juros",
+      data,
+      "float",
+      "Tomador",
+      company_atual.Tomador,
+      "Sum"
+    ))} </span>
+    <span style="width:40px;display:inline-block; margin-right: 20px ; ">${numberToReal(sumData(
+      undefined,
+      "Atualiz. Monetária",
+      data,
+      "float",
+      "Tomador",
+      company_atual.Tomador,
+      "Sum"
+    ))}</span>
+    <span style="display:inline-block; width: 20px; margin-right:5px;">${numberToReal(sumData(
+      undefined,
+      "Multa",
+      data,
+      "float",
+      "Tomador",
+      company_atual.Tomador,
+      "Sum"
+    ))}</span>
+    <span style="display:inline-block" >${numberToReal(sumData(
+      undefined,
+      "Total",
+      data,
+      "float",
+      "Tomador",
+      company_atual.Tomador,
+      "Sum"
+    ))}</span>
+  </div>
+  
+  <div class="infoTable">
+    <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Estabelecimento</span>
+    <span style="width:160px;display:inline-block; margin-right: -8px;">${
+      company_atual.Estabelecimento
+    }</span>
+    <span style="width:120px;display:inline-block; margin-right: -3px;">${numberToReal(sumData(
+      undefined,
+      "Base Remuneração Total",
+      data,
+      "float"
+    ))}</span>
+    <span style="width:60px;display:inline-block; margin-right: 7px ;">${numberToReal(sumData(
+      undefined,
+      "Valor FGTS na Guia",
+      data,
+      "float"
+    ))}</span>
+    <span style="width:42px;display:inline-block; margin-right: 31px ;">${numberToReal(sumData(
+      undefined,
+      "Juros",
+      data,
+      "float"
+              ))} </span>
+    <span style="width:40px;display:inline-block; margin-right: 20px ;">${numberToReal(sumData(
+      undefined,
+      "Atualiz. Monetária",
+      data,
+      "float"
+    ))}</span>
+    <span style="display:inline-block; width: 20px; margin-right:5px;">${numberToReal(sumData(
+      undefined,
+      "Multa",
+      data,
+      "float"
+    ))}</span>
+    <span style="display:inline-block" >${numberToReal(sumData(
+      undefined,
+      "Total",
+      data,
+      "float"
+    ))}</span>
+  </div>
+  <div class="infoTable">
+    <span style="width:100px;display:inline-block; margin-right: -45px;"></span>
+    <span style="width:160px;display:inline-block; margin-right: -8px;">Total da Guia</span>
+    <span style="width:120px;display:inline-block; margin-right: -3px;">${numberToReal(sumData(
+      undefined,
+      "Base Remuneração Total",
+      data,
+      "float"
+    ))}</span>
+    <span style="width:60px;display:inline-block; margin-right: 7px ;">${numberToReal(sumData(
+      undefined,
+      "Valor FGTS na Guia",
+      data,
+      "float"
+    ))}</span>
+    <span style="width:42px;display:inline-block; margin-right: 31px ;">${numberToReal(sumData(
+      undefined,
+      "Juros",
+      data,
+      "float"
+    ))} </span>
+    <span style="width:40px;display:inline-block; margin-right: 20px ;">${numberToReal(sumData(
+      undefined,
+      "Atualiz. Monetária",
+      data,
+      "float"
+    ))}</span>
+    <span style="display:inline-block; width: 20px; margin-right:5px;">${numberToReal(sumData(
+      undefined,
+      "Multa",
+      data,
+      "float"
+    ))}</span>
+    <span style="display:inline-block" >${numberToReal(sumData(
+      undefined,
+      "Total",
+      data,
+      "float"
+    ))}</span>
+  </div>
+  </div>
 </main>
 
 
