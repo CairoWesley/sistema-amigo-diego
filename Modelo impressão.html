@@ -495,16 +495,16 @@
 
           <div class="col">
               <div class="flex" >
-                  <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
-                  <span style="text-align: right;"> ${data2.length}</span>
+                  <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
+                  <span style="text-align: right"> ${data2.length}</span>
                   <label class="subtitulo" for="Empregador"> Origem:</label>
                   <span>${company_atual.Origem}</span>
               </div>
               
               <div class="flex">
-                  <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
-                  padding-right:25px;">Data Emissão:</label>
-                  <span>${data_atual} (Brasília)</span>
+                  <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; ;
+                  padding-right:42px;">Data Emissão:</label>
+                  <span >${data_atual} (Brasília)</span>
               </div>
               
           </div>
@@ -672,7 +672,7 @@ ${numberToReal(dado["Atualiz. Monetária"])}
     company_atual.Tomador,
     "Sum"
   ))}</span>
-  <span style="display:inline-block" >${numberToReal(sumData(
+  <span style="display:inline-block; width: 44px" >${numberToReal(sumData(
     undefined,
     "Total",
     data,
@@ -680,12 +680,13 @@ ${numberToReal(dado["Atualiz. Monetária"])}
     "Tomador",
     company_atual.Tomador,
     "Sum"
-  ))}</span>
+  ))}
+  </span>
 </div>
 
 <div class="infoTable">
   <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Estabelecimento</span>
-  <span style="width:160px;display:inline-block; margin-right: -8px;">${
+  <span style="width:160px;display:inline-block; margin-right: -8px;"> ${
     company_atual.Estabelecimento
   }</span>
   <span style="width:120px;display:inline-block; margin-right: -3px;">${numberToReal(sumData(
@@ -705,7 +706,10 @@ ${numberToReal(dado["Atualiz. Monetária"])}
     "Juros",
     data,
     "float"
-            ))} </span>
+            ))} 
+            
+            
+            </span>
   <span style="width:40px;display:inline-block; margin-right: 20px ;">${numberToReal(sumData(
     undefined,
     "Atualiz. Monetária",
@@ -848,7 +852,7 @@ Página ${paginasAtual} de ${paginaFinal}
             
                       <div class="col">
                           <div class="flex" >
-                              <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                              <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
                               <span style="text-align: right;"> ${
                                 data2.length
                               }</span>
@@ -856,10 +860,10 @@ Página ${paginasAtual} de ${paginaFinal}
                               <span>${company_atual.Origem}</span>
                           </div>
                           
-                          <div class="flex">
-                              <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
-                              padding-right:25px;">Data Emissão: </label>
-                              <span>${data_atual} (Brasília)</span>
+                          <div class="flex" style="">
+                            <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; ;
+                  padding-right:42px;">Data Emissão:</label>
+                  <span >${data_atual} (Brasília)</span>
                           </div>
                           
                       </div>
@@ -1186,16 +1190,16 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
             
                       <div class="col">
                           <div class="flex" >
-                              <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                              <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
                               <span style="text-align: right;"> ${data2.length}</span>
                               <label class="subtitulo" for="Empregador"> Origem:</label>
                               <span>${company_atual.Origem}</span>
                           </div>
                           
                           <div class="flex">
-                              <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px ;
-                              padding-right:25px;">Data Emissão: </label>
-                              <span>${data_atual} (Brasília)</span>
+                            <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; ;
+                  padding-right:42px;">Data Emissão:</label>
+                  <span >${data_atual} (Brasília)</span>
                           </div>
                           
                       </div>
@@ -1449,7 +1453,7 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
           
                     <div class="col">
                         <div class="flex" >
-                            <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                            <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
                             <span style="text-align: right;"> ${
                               data2.length
                             }</span>
@@ -1458,9 +1462,9 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
                         </div>
                         
                         <div class="flex">
-                            <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left:31px;
-                            padding-right:25px;">Data Emissão: </label>
-                            <span>${data_atual} (Brasília)</span>
+                          <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; ;
+                  padding-right:42px;">Data Emissão:</label>
+                  <span >${data_atual} (Brasília)</span>
                         </div>
                         
                     </div>
@@ -1653,16 +1657,16 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
     
               <div class="col">
                   <div class="flex" >
-                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
                       <span style="text-align: right;"> ${data.length}</span>
                       <label class="subtitulo" for="Empregador"> Origem:</label>
                       <span>${general_data.Origem}</span>
                   </div>
                   
                   <div class="flex">
-                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
-                      padding-right:25px;">Data Emissão: </label>
-                      <span>${data_atual} (Brasília)</span>
+                    <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; ;
+                  padding-right:42px;">Data Emissão:</label>
+                  <span >${data_atual} (Brasília)</span>
                   </div>
                   
               </div>
@@ -2020,16 +2024,16 @@ público, sem vínculo de emprego/estatutário
     
               <div class="col">
                   <div class="flex" >
-                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
                       <span style="text-align: right;"> ${data.length}</span>
                       <label class="subtitulo" for="Empregador"> Origem:</label>
                       <span>${general_data.Origem}</span>
                   </div>
                   
                   <div class="flex">
-                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
-                      padding-right:25px;">Data Emissão: </label>
-                      <span>${data_atual} (Brasília)</span>
+                    <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; ;
+                  padding-right:42px;">Data Emissão:</label>
+                  <span >${data_atual} (Brasília)</span>
                   </div>
                   
               </div>
@@ -2322,16 +2326,16 @@ ${valores_ajustados
     
               <div class="col">
                   <div class="flex" >
-                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
+                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
                       <span style="text-align: right;"> ${data.length}</span>
                       <label class="subtitulo" for="Empregador"> Origem:</label>
                       <span>${general_data.Origem}</span>
                   </div>
                   
                   <div class="flex">
-                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
-                      padding-right:25px;">Data Emissão: </label>
-                      <span>${new Date().toLocaleString()} (Brasília)</span>
+                    <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; ;
+                  padding-right:42px;">Data Emissão:</label>
+                  <span >${new Date().toLocaleString()} (Brasília)</span>
                   </div>
                   
               </div>
@@ -2582,16 +2586,16 @@ ${valores_ajustados
     
               <div class="col">
                   <div class="flex" >
-                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:20px;" > Qtd. Trabalhadores:</label>
-                      <span style="text-align: right;"> ${data.length}</span>
+                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
+                      <span style="text-align: right;">${data.length}</span>
                       <label class="subtitulo" for="Empregador"> Origem:</label>
                       <span>${general_data.Origem}</span>
                   </div>
                   
                   <div class="flex">
-                      <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; margin-left: 31px;
-                      padding-right:25px;">Data Emissão: </label>
-                      <span>${data_atual} (Brasília)</span>
+                    <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; ;
+                  padding-right:42px;">Data Emissão:</label>
+                  <span >${new Date().toLocaleString()} (Brasília)</span>
                   </div>
                   
               </div>
