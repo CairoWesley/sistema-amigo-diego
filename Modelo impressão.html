@@ -87,6 +87,7 @@
       var estabelecimentos = [];
       var categorias = [];
       let general_data = new Object();
+      const tamanho_maximo = 38;
 
       const myPromise = new Promise((resolve, reject) => {
         d3.dsv(";")("http://localhost:8000/info_empresa.csv", (items) => {
@@ -137,7 +138,7 @@
           )[0];
           console.log(company, company_atual);
 
-          const tamanho_maximo = 38;
+
           //
           const paginas_2 = [];
           let pagina_atual = [];
@@ -164,20 +165,20 @@
             if (paginas_2.length == i + 1) {
               console.log(item.length);
 
-              if (item.length <= 25) {
+              if (item.length <= (tamanho_maximo - 1)) {
                 paginasAtual += 1;
                 const element = document.createElement("div");
                 element.className = "tamanhoPage";
                 element.innerHTML = `
-                  <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+  <html lang="en">
 
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-</head>
+  </head>
 
 <body>
     
@@ -336,8 +337,11 @@ ${numberToReal(dado["Valor FGTS na Guia"])}
 <td style="text-align: center">
 ${numberToReal(dado["Juros"])}
 </td>
-<td style="text-align: right; padding-right: 20px">    
-${numberToReal(dado["Atualiz. Monetária"])}
+<td>  
+  <p style="padding-left:20px;">
+    ${numberToReal(dado["Atualiz. Monetária"])}
+  </p>  
+
 </td>
 <td style="text-align: center">                        ${numberToReal(dado["Multa"])}
 </td>
@@ -525,7 +529,7 @@ Página ${paginasAtual} de ${paginaFinal}
 
                 body.appendChild(element);
               }
-              if (item.length >= 26) {
+              if (item.length >= tamanho_maximo) {
                 paginasAtual += 1;
 
                 console.log("aqui");
@@ -686,8 +690,10 @@ ${numberToReal(dado["Valor FGTS na Guia"])}
 <td style="text-align: center">
 ${numberToReal(dado["Juros"])}
 </td>
-<td style="text-align: right; padding-right: 20px">    
+<td>  
+  <p style="padding-left:20px;">  
 ${numberToReal(dado["Atualiz. Monetária"])}
+</p> 
 </td>
 <td style="text-align: center">                        ${numberToReal(dado["Multa"])}
 </td>
@@ -1280,8 +1286,10 @@ ${numberToReal(dado["Valor FGTS na Guia"])}
 <td style="text-align: center">
 ${numberToReal(dado["Juros"])}
 </td>
-<td style="text-align: right; padding-right: 20px">    
+<td>
+  <p style="padding-left:20px;">    
 ${numberToReal(dado["Atualiz. Monetária"])}
+  </p>
 </td>
 <td style="text-align: center">                        ${numberToReal(dado["Multa"])}
 </td>
