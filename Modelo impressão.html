@@ -166,7 +166,8 @@
             // //   console.log(numero1)
             // // }
             console.log(numero)
-
+           numero =  `${numero}`
+          numero= numero.replace(",",".")
           numero = parseFloat(numero)
           numero = numero.toFixed(2).split(".");
           numero[0] = numero[0].split(/(?=(?:...)*$)/).join(".");
@@ -206,10 +207,11 @@
           }
           let total = 0;
           if (type == "int") {
-            items.forEach((item) => (total += parseInt(item[key])));
-          } else {
             items.forEach((item) => (total += parseFloat(item[key])));
+          } else {
+            items.forEach((item) => (total += parseFloat(`${item[key]}`.replace(",","."))));
           }
+          console.log(total)
           return total;
         }
 
@@ -1958,7 +1960,7 @@ público, sem vínculo de emprego/estatutário
       <div style="display:flex; justify-content:space-around;">
       
       <p>
-      Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+      Relatório Emitido em: ${new Date().toLocaleString()}.</p>
       
       <p style="margin-left: 50px;" class=testepagina>
         Página Página ${paginaFinal - 3} de ${paginaFinal} 
@@ -2088,7 +2090,7 @@ ${valores_ajustados
     return `<tr style="padding: 0">
           <td style="text-align: center">${data[0]["Comp. Apuração"]}</td>
           <td style="text-align: center">${item}</td>
-          <td style="text-align: center">${numberToReal(sumData(
+          <td style="text-align: center">${sumData(
             undefined,
             "Total",
             data,
@@ -2096,7 +2098,7 @@ ${valores_ajustados
             "Tipo Depósito",
             tipo_valor[i],
             "Index"
-          ))}</td>
+          )}</td>
           <td style="text-align: right">${numberToReal(sumData(
             undefined,
             "Base Remuneração Total",
@@ -2260,7 +2262,7 @@ ${valores_ajustados
       >
         <p>Todos os valores exibidos estão expressos em reais (R$)</p>
         <div style="display: flex; justify-content: space-around">
-          <p>Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+          <p>Relatório Emitido em: ${new Date().toLocaleString()}.</p>
 
           <p style="margin-left: 50px" class=testepagina>Página ${
             paginaFinal - 2
@@ -2519,7 +2521,7 @@ ${valores_ajustados
       >
         <p>Todos os valores exibidos estão expressos em reais (R$)</p>
         <div style="display: flex; justify-content: space-around">
-          <p>Relatório Emitido em: 23/10/2023 10:03:51 (Brasília).</p>
+          <p>Relatório Emitido em: ${new Date().toLocaleString()}.</p>
 
           <p style="margin-left: 50px" class=testepagina>Página ${
             paginaFinal - 1
@@ -2648,7 +2650,7 @@ ${valores_ajustados
 
         <tr style="padding: 0">
           <td style="text-align: center">${data[0]["Comp. Apuração"]}</td>
-          <td style="text-align: center">${numberToReal(sumData(
+          <td style="text-align: center">${sumData(
             company,
             "Total",
             data,
@@ -2656,7 +2658,7 @@ ${valores_ajustados
             "Tomador",
             company,
             "Index"
-          ))}</td>
+          )}</td>
           <td style="text-align: center">${numberToReal(sumData(
             company,
             "Base Remuneração Total",
