@@ -92,7 +92,7 @@ th {
 }
 
 td {
-  padding: 5px 2px;
+  padding: 0.35px 2px;
 }
 
 tr:nth-child(even) {
@@ -101,8 +101,8 @@ tr:nth-child(even) {
 
 tr {
   padding: 0 10px;
-  height: 5px !important;
-  font-size: 5px !important;
+  height: 6px !important;
+  font-size: 12px !important;
 }
 
 .infoTable {
