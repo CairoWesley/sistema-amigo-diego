@@ -1,0 +1,140 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: 297mm;
+}
+
+.tamanhoPage {
+  width: 297mm;
+  height: 205mm;
+  position: relative;
+}
+
+body {
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+header {
+  padding: 0 0px;
+}
+
+.titulo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  white-space: nowrap;
+}
+
+label {
+  font-weight: bold;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.76rem;
+}
+
+span,
+label {
+  font-size: 0.5rem;
+}
+
+.col-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: right;
+}
+
+.tituloTabela {
+  text-align: center;
+  font-size: 1rem;
+}
+
+.tituloTabela hr {
+  border: 2px solid black;
+}
+
+main {
+  padding: 0 2px;
+}
+
+.topoTabela {
+  padding-top: 10px;
+  display: flex;
+  gap: 80px;
+  font-size: 0.76rem;
+  padding-bottom: 10px;
+}
+
+.infoTabela label {
+  padding-right: 10px;
+}
+
+hr {
+  border: 0.1rem solid black;
+  margin: 0 auto;
+  width: 100%;
+}
+
+th {
+  font-size: 0.5rem;
+}
+
+td {
+  padding: 5px 2px;
+}
+
+tr:nth-child(even) {
+  background: white;
+}
+
+tr {
+  padding: 0 10px;
+  height: 14px;
+  font-size: 6px !important;
+}
+
+.infoTable {
+  text-align: right;
+  font-size: 6px;
+  padding: 2px 3px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.categoriaInfo h1 {
+  font-size: 0.35rem;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+  height: auto;
+  align-items: end;
+  margin-top: auto;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  justify-content: space-between;
+}
+
+.quebraPag {
+  page-break-after: always;
+}
