@@ -27,13 +27,11 @@ header {
   justify-content: space-between;
   font-size: 1rem;
   align-items: center;
-  padding-bottom: 10px;
 }
 
 .row {
   display: flex;
   justify-content: space-between;
-  padding-bottom: 20px;
   white-space: nowrap;
 }
 
@@ -74,11 +72,9 @@ main {
 }
 
 .topoTabela {
-  padding-top: 10px;
   display: flex;
   gap: 80px;
   font-size: 0.76rem;
-  padding-bottom: 10px;
 }
 
 .infoTabela label {
@@ -105,8 +101,8 @@ tr:nth-child(even) {
 
 tr {
   padding: 0 10px;
-  height: 14px;
-  font-size: 6px !important;
+  height: 5px !important;
+  font-size: 5px !important;
 }
 
 .infoTable {
