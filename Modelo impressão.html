@@ -1832,7 +1832,7 @@ ${valores_ajustados
                 "Sum"
               ))}</td>
           <td style="text-align: right">${tipo_valor[i] != "Verba Indenizatória"
-                  ? 0
+                  ? "0,00"
                   : numberToReal(sumData(
                     undefined,
                     "Valor FGTS na Guia",
@@ -1844,7 +1844,7 @@ ${valores_ajustados
                   ))
                 }</td>
           <td style="text-align: right">${tipo_valor[i] != "Multa Rescisória"
-                  ? 0
+                  ? "0,00"
                   : numberToReal(sumData(
                     undefined,
                     "Valor FGTS na Guia",
