@@ -1,176 +1,192 @@
 <!DOCTYPE html>
 
 <html lang="pt_bt">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-  </head>
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script src="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/jquerycsvtotable/jquery.csvToTable.js"></script>
 
-  <body id="main">
-    <script async>
-      async function run() {
-        function numberToReal(numero) {
-          try {
-            if (numero == 0) {
-              return "0,00";
-            }
-            numero = `${numero}`;
-            numero = numero.replace(",", ".");
-            numero = parseFloat(numero);
-            numero = numero.toFixed(2).split(".");
-            numero[0] = numero[0].split(/(?=(?:...)*$)/).join(".");
-            return numero.join(",");
-          } catch (err) {}
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script
+  src="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/jquerycsvtotable/jquery.csvToTable.js"></script>
+
+<body id="main">
+  <script async>
+    async function run() {
+
+      //Variaveis
+      var Empregador;
+      var Nome_empregador;
+      var Vencimento_guia;
+      var qtd_trabalhadores;
+      var Origem;
+      var Estabelecimento;
+      var Tomador;
+      var data = [];
+      var estabelecimentos = [];
+      var categorias = [];
+      let general_data = new Object();
+      const tamanho_maximo = 44;
+      let paginasAtual = 0;
+      let paginaFinal = 4;
+      const queryParams = new URLSearchParams(window.location.search);
+      let data_atual;
+      const companys = [];
+      const tipo_valor = [];
+      const valores_ajustados = [];
+      const body = document.getElementById("main");
+      const element = document.createElement("div");
+      const relacao_tipo_valor = document.createElement("div");
+      const relacao_trabalhadores = document.createElement("div");
+      const pagina2 = document.createElement("div");
+      const relacao_tomadores_servico = document.createElement("div");
+
+
+      //Conversão Real
+      function numberToReal(numero) {
+        try {
+          if (numero == 0) {
+            return "0,00";
+          }
+          numero = `${numero}`;
+          numero = numero.replace(",", ".");
+          numero = parseFloat(numero);
+          numero = numero.toFixed(2).split(".");
+          numero[0] = numero[0].split(/(?=(?:...)*$)/).join(".");
+          return numero.join(",");
+        } catch (err) { }
+      }
+      //Req de dados
+      function sumData(
+        tomador,
+        key,
+        dados,
+        type,
+        condition,
+        value,
+        returnType,
+        condition2,
+        value2
+      ) {
+        let items = dados;
+        if (tomador != undefined) {
+          items = dados.filter((item) => item.Tomador == tomador);
         }
-        function sumData(
-          tomador,
-          key,
-          dados,
-          type,
-          condition,
-          value,
-          returnType,
-          condition2,
-          value2
-        ) {
-          let items = dados;
-          if (tomador != undefined) {
-            items = dados.filter((item) => item.Tomador == tomador);
-          }
 
-          if (condition != undefined) {
-            items = dados.filter((item) => item[condition] == value);
-          }
-
-          if (returnType == "Index") {
-            return items.length;
-          }
-
-          if (condition2 != undefined) {
-            items = dados.filter((item) => item[condition2] == value2);
-          }
-          let total = 0;
-          if (type == "int") {
-            items.forEach((item) => (total += parseFloat(item[key])));
-          } else {
-            items.forEach(
-              (item) => (total += parseFloat(`${item[key]}`.replace(",", ".")))
-            );
-          }
-          return total;
+        if (condition != undefined) {
+          items = dados.filter((item) => item[condition] == value);
         }
 
-        var Empregador;
-        var Nome_empregador;
-        var Vencimento_guia;
-        var qtd_trabalhadores;
-        var Origem;
-        var Estabelecimento;
-        var Tomador;
-        var data = [];
-        var estabelecimentos = [];
-        var categorias = [];
-        let general_data = new Object();
-        const tamanho_maximo = 44;
+        if (returnType == "Index") {
+          return items.length;1
+        }
 
-        const myPromise = new Promise((resolve, reject) => {
-          d3.dsv(";")("http://localhost:8000/info_empresa.csv", (items) => {
-            console.log(items);
-            estabelecimentos = items.filter(
-              (estabelecimento) => estabelecimento.Empregador != ""
-            );
-            console.log({ estabelecimentos });
+        if (condition2 != undefined) {
+          items = dados.filter((item) => item[condition2] == value2);
+        }
+        let total = 0;
+        if (type == "int") {
+          items.forEach((item) => (total += parseFloat(item[key])));
+        } else {
+          items.forEach(
+            (item) => (total += parseFloat(`${item[key]}`.replace(",", ".")))
+          );
+        }
+        return total;
+      }
 
-            general_data = estabelecimentos[0];
-          });
-          d3.dsv(";")("http://localhost:8000/categorias.csv", (items) => {
-            categorias = items;
-          });
+      //Rotas planilha etc      
+      const myPromise = new Promise((resolve, reject) => {
+        d3.dsv(";")("http://localhost:8000/info_empresa.csv", (items) => {
+          console.log(items);
+          estabelecimentos = items.filter(
+            (estabelecimento) => estabelecimento.Empregador != ""
+          );
+          console.log({ estabelecimentos });
 
-          d3.dsv(";")("http://localhost:8000/planilha1.csv", (items) => {
-            data = items;
+          general_data = estabelecimentos[0];
+        });
+        d3.dsv(";")("http://localhost:8000/categorias.csv", (items) => {
+          categorias = items;
+        });
 
-            resolve();
-          });
-        }).then(() => {
-          let paginasAtual = 0;
-          let paginaFinal = 4;
+        d3.dsv(";")("http://localhost:8000/planilha1.csv", (items) => {
+          data = items;
 
-          const queryParams = new URLSearchParams(window.location.search);
-          let data_atual;
-          if (queryParams.has("date")) {
-            data_atual = `${queryParams.get("date")} ${queryParams.get(
-              "time"
-            )}`;
-          } else {
-            data_atual = new Date().toLocaleString().replace(",", "");
+          resolve();
+        });
+      }).then(() => {
+
+        //Formtação hórario
+        if (queryParams.has("date")) {
+          data_atual = `${queryParams.get("date")} ${queryParams.get(
+            "time"
+          )}`;
+        } else {
+          data_atual = new Date().toLocaleString().replace(",", "");
+        }
+
+        console.log(queryParams, data_atual);
+        //ForEach dos Dados
+        data.forEach((item) => {
+          if (!companys.includes(item.Tomador)) {
+            companys.push(item.Tomador);
           }
+          if (!tipo_valor.includes(item["Tipo Depósito"])) {
+            console.log(item["Tipo Depósito"]);
+            console.log(categorias);
+            let rel_categoria = categorias.find(
+              (x) => x["Categoria"] === item["Tipo Depósito"]
+            );
+            console.log(rel_categoria);
+            tipo_valor.push(item["Tipo Depósito"]);
+            valores_ajustados.push(rel_categoria["Tipo de Valor"]);
+            console.log(valores_ajustados);
+          }
+        });
+        companys.forEach((company) => {
+          const data2 = data.filter((x) => x.Tomador == company);
+          console.log({ company });
+          sumData(1, "Comp. Apuração", data2, "int");
+          const company_atual = estabelecimentos.filter(
+            (x) => x.Tomador == company
+          )[0];
 
-          console.log(queryParams, data_atual);
-          const companys = [];
-          const tipo_valor = [];
-          const valores_ajustados = [];
-          data.forEach((item) => {
-            if (!companys.includes(item.Tomador)) {
-              companys.push(item.Tomador);
+          console.log({ company_atual });
+
+          //
+          const paginas_2 = [];
+          let pagina_atual = [];
+          qtd_trabalhadores = data2.length;
+
+          data2.map((item, i) => {
+            if (pagina_atual.length != tamanho_maximo) {
+              pagina_atual.push(item);
+            } else {
+              paginas_2.push(pagina_atual);
+
+              pagina_atual = [];
+              pagina_atual.push(item);
             }
-            if (!tipo_valor.includes(item["Tipo Depósito"])) {
-              console.log(item["Tipo Depósito"]);
-              console.log(categorias);
-              let rel_categoria = categorias.find(
-                (x) => x["Categoria"] === item["Tipo Depósito"]
-              );
-              console.log(rel_categoria);
-              tipo_valor.push(item["Tipo Depósito"]);
-              valores_ajustados.push(rel_categoria["Tipo de Valor"]);
-              console.log(valores_ajustados);
+            if (i == data2.length - 1) {
+              paginas_2.push(pagina_atual);
             }
           });
-          companys.forEach((company) => {
-            const data2 = data.filter((x) => x.Tomador == company);
-            console.log({company});
-            sumData(1, "Comp. Apuração", data2, "int");
-            const company_atual = estabelecimentos.filter(
-              (x) => x.Tomador == company
-            )[0];
+          var body = document.getElementById("main");
 
-            console.log({company_atual});
+          paginaFinal = paginas_2.length + paginaFinal;
 
-            //
-            const paginas_2 = [];
-            let pagina_atual = [];
-            qtd_trabalhadores = data2.length;
-
-            data2.map((item, i) => {
-              if (pagina_atual.length != tamanho_maximo) {
-                pagina_atual.push(item);
-              } else {
-                paginas_2.push(pagina_atual);
-
-                pagina_atual = [];
-                pagina_atual.push(item);
-              }
-              if (i == data2.length - 1) {
-                paginas_2.push(pagina_atual);
-              }
-            });
-            var body = document.getElementById("main");
-
-            paginaFinal = paginas_2.length + paginaFinal;
-
-            paginas_2.map((item, i) => {
-              if (paginas_2.length == i + 1) {
-                if (item.length <= tamanho_maximo - 1) {
-                  paginasAtual += 1;
-                  const element = document.createElement("div");
-                  element.className = "tamanhoPage";
-                  element.innerHTML = `
+          paginas_2.map((item, i) => {
+            if (paginas_2.length == i + 1) {
+              if (item.length <= tamanho_maximo - 1) {
+                paginasAtual += 1;
+                const element = document.createElement("div");
+                element.className = "tamanhoPage";
+                element.innerHTML = `
 <!DOCTYPE html>
   <html lang="en">
 
@@ -195,31 +211,28 @@
           <div class="col" >
               <div class="flex">
                   <label class="subtitulo" for="Empregador">Empregador: </label>
-                  <span class="empregadorNum">${company_atual.Empregador}</span>
+                  <span class="ml15px">${company_atual.Empregador}</span>
               </div>
               
               <div class="flex">
                   <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-                  <span> ${company_atual.Vencimento_guia}</span>
+                  <span class="vencimentoGuia"> ${company_atual.Vencimento_guia}</span>
               </div>
               
           </div>
           <div class="col">
               <div class="flex">
                   <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-                  <span style="padding: 0 15px;"> ${
-                    company_atual.Nome_empregador
+                  <span style="padding: 0 15px;"> ${company_atual.Nome_empregador
                   } </span>
               </div>
               
               <div style="display: flex;">
                   <label for="">Número da Guia:</label>
-                  <span style="padding: 0 15px;">${
-                    company_atual.NumeroGuia
+                  <span style="padding: 0 15px;">${company_atual.NumeroGuia
                   }</span>
                   <label for="">Emitida por:</label>
-                  <span style="padding: 0 15px;">${
-                    company_atual.EmitidaPor
+                  <span style="padding: 0 15px;">${company_atual.EmitidaPor
                   }</span>
               </div>  
               
@@ -305,8 +318,8 @@ Monetária
 <th style="text-align: right">Total</th>
 </tr>
 ${item
-  .map((dado) => {
-    return `<tr>
+                    .map((dado) => {
+                      return `<tr>
 <td style="text-align: center">
 ${dado["Comp. Apuração"]}
 </td>
@@ -314,7 +327,7 @@ ${dado["Comp. Apuração"]}
 ${dado["Comp. Referência"]}
 </td>
 <td style="border-right: 3px solid white">
-${dado["Nome Trabalhador"].slice(0,50)}
+${dado["Nome Trabalhador"].slice(0, 50)}
 </td>
 <td style="border-right: 3px solid white">
 ${dado["Matrícula"]}
@@ -348,16 +361,16 @@ ${numberToReal(dado["Juros"])}
 
 </td>
 <td style="text-align: center">                        ${numberToReal(
-      dado["Multa"]
-    )}
+                        dado["Multa"]
+                      )}
 </td>
 <td style="text-align: right">                        ${numberToReal(
-      dado["Total"]
-    )}
+                        dado["Total"]
+                      )}
 </td>
 </tr>`;
-  })
-  .join("")}
+                    })
+                    .join("")}
 </table>
 <hr />
 
@@ -365,126 +378,124 @@ ${numberToReal(dado["Juros"])}
 
 <div class="infoTable">
   <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Tomador</span>
-  <span style="width: 130px;display:inline-block;margin-right: -8px;">${
-    company_atual.Tomador
-  }</span>
+  <span style="width: 130px;display:inline-block;margin-right: -8px;">${company_atual.Tomador
+                  }</span>
   <span style="width: 78px;display:inline-block;margin-right: -3px;">${numberToReal(
-    sumData(
-      undefined,
-      "Base Remuneração Total",
-      data,
-      "float",
-      "Tomador",
-      company_atual.Tomador,
-      "Sum"
-    )
-  )}</span>
+                    sumData(
+                      undefined,
+                      "Base Remuneração Total",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
   <span style="width:53px;display:inline-block;margin-right:5px">${numberToReal(
-    sumData(
-      undefined,
-      "Valor FGTS na Guia",
-      data,
-      "float",
-      "Tomador",
-      company_atual.Tomador,
-      "Sum"
-    )
-  )}</span>
+                    sumData(
+                      undefined,
+                      "Valor FGTS na Guia",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
   <span style="width:42px;display:inline-block; margin-right: 28px ">${numberToReal(
-    sumData(
-      undefined,
-      "Juros",
-      data,
-      "float",
-      "Tomador",
-      company_atual.Tomador,
-      "Sum"
-    )
-  )} </span>
+                    sumData(
+                      undefined,
+                      "Juros",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )} </span>
   <span style="width:40px;display:inline-block; margin-right: 15px; ">${numberToReal(
-    sumData(
-      undefined,
-      "Atualiz. Monetária",
-      data,
-      "float",
-      "Tomador",
-      company_atual.Tomador,
-      "Sum"
-    )
-  )}</span>
+                    sumData(
+                      undefined,
+                      "Atualiz. Monetária",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
   <span style="display:inline-block;width: 25px;margin-right: 1px;margin-left: 4px;">${numberToReal(
-    sumData(
-      undefined,
-      "Multa",
-      data,
-      "float",
-      "Tomador",
-      company_atual.Tomador,
-      "Sum"
-    )
-  )}</span>
+                    sumData(
+                      undefined,
+                      "Multa",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
   <span style="display:inline-block" >${numberToReal(
-    sumData(
-      undefined,
-      "Total",
-      data,
-      "float",
-      "Tomador",
-      company_atual.Tomador,
-      "Sum"
-    )
-  )}
+                    sumData(
+                      undefined,
+                      "Total",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}
   </span>
 </div>
 
 <div class="infoTable">
   <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Estabelecimento</span>
-  <span style="width: 130px;display:inline-block;margin-right: -8px;"> ${
-    company_atual.Estabelecimento
-  }</span>
+  <span style="width: 130px;display:inline-block;margin-right: -8px;"> ${company_atual.Estabelecimento
+                  }</span>
   <span style="width: 78px;display:inline-block;margin-right: -3px;">${numberToReal(
-    sumData(undefined, "Base Remuneração Total", data, "float")
-  )}</span>
+                    sumData(undefined, "Base Remuneração Total", data, "float")
+                  )}</span>
   <span style="width:53px;display:inline-block;margin-right:5px">${numberToReal(
-    sumData(undefined, "Valor FGTS na Guia", data, "float")
-  )}</span>
+                    sumData(undefined, "Valor FGTS na Guia", data, "float")
+                  )}</span>
   <span style="width:42px;display:inline-block; margin-right: 28px ">${numberToReal(
-    sumData(undefined, "Juros", data, "float")
-  )} 
+                    sumData(undefined, "Juros", data, "float")
+                  )} 
             
             
             </span>
   <span style="width:40px;display:inline-block; margin-right: 15px ">${numberToReal(
-    sumData(undefined, "Atualiz. Monetária", data, "float")
-  )}</span>
+                    sumData(undefined, "Atualiz. Monetária", data, "float")
+                  )}</span>
   <span style="display:inline-block;width: 25px;margin-right: 1px;margin-left: 4px;">${numberToReal(
-    sumData(undefined, "Multa", data, "float")
-  )}</span>
+                    sumData(undefined, "Multa", data, "float")
+                  )}</span>
   <span style="display:inline-block" >${numberToReal(
-    sumData(undefined, "Total", data, "float")
-  )}</span>
+                    sumData(undefined, "Total", data, "float")
+                  )}</span>
 </div>
 <div class="infoTable">
   <span style="width:100px;display:inline-block; margin-right: -45px;"></span>
   <span style="width: 130px;display:inline-block;margin-right: -8px;">Total da Guia</span>
   <span style="width: 78px;display:inline-block;margin-right: -3px;">${numberToReal(
-    sumData(undefined, "Base Remuneração Total", data, "float")
-  )}</span>
+                    sumData(undefined, "Base Remuneração Total", data, "float")
+                  )}</span>
   <span style="width:53px;display:inline-block;margin-right:5px">${numberToReal(
-    sumData(undefined, "Valor FGTS na Guia", data, "float")
-  )}</span>
+                    sumData(undefined, "Valor FGTS na Guia", data, "float")
+                  )}</span>
   <span style="width:42px;display:inline-block; margin-right: 28px ">${numberToReal(
-    sumData(undefined, "Juros", data, "float")
-  )} </span>
+                    sumData(undefined, "Juros", data, "float")
+                  )} </span>
   <span style="width:40px;display:inline-block; margin-right: 15px ">${numberToReal(
-    sumData(undefined, "Atualiz. Monetária", data, "float")
-  )}</span>
+                    sumData(undefined, "Atualiz. Monetária", data, "float")
+                  )}</span>
   <span style="display:inline-block;width: 25px;margin-right: 1px;margin-left: 4px;">${numberToReal(
-    sumData(undefined, "Multa", data, "float")
-  )}</span>
+                    sumData(undefined, "Multa", data, "float")
+                  )}</span>
   <span style="display:inline-block" >${numberToReal(
-    sumData(undefined, "Total", data, "float")
-  )}</span>
+                    sumData(undefined, "Total", data, "float")
+                  )}</span>
 </div>
 </div>
 </main>
@@ -511,14 +522,14 @@ Página ${paginasAtual} de ${paginaFinal}
 <div class="quebraPag"></div>
 `;
 
-                  body.appendChild(element);
-                }
-                if (item.length >= tamanho_maximo) {
-                  paginasAtual += 1;
+                body.appendChild(element);
+              }
+              if (item.length >= tamanho_maximo) {
+                paginasAtual += 1;
 
-                  const element = document.createElement("div");
-                  element.className = "tamanhoPage";
-                  element.innerHTML = `
+                const element = document.createElement("div");
+                element.className = "tamanhoPage";
+                element.innerHTML = `
                 <header>
                   <div class="titulo">
                       <img class="logo" src="http://localhost:8000/logofgts.png" width="93" />
@@ -531,34 +542,30 @@ Página ${paginasAtual} de ${paginaFinal}
                       <div class="col" >
                           <div class="flex">
                               <label class="subtitulo" for="Empregador">Empregador: </label>
-                              <span class="empregadorNum">${
-                                company_atual.Empregador
-                              }</span>
+                              <span class="empregadorNum ml-15">${company_atual.Empregador}</span>
                           </div>
                           
                           <div class="flex">
                               <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-                              <span> ${company_atual.Vencimento_guia}</span>
+                              <span class="vencimentoGuia"> ${company_atual.Vencimento_guia}</span>
                           </div>
+
+                         <div class="flex">
+                            <label for="">Número da Guia:</label>
+                            <span style="padding: 0 15px;">${company_atual.NumeroGuia}</span>
+                         </div>
                           
                       </div>
                       <div class="col">
                           <div class="flex">
                               <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-                              <span style="padding: 0 15px;"> ${
-                                company_atual.Nome_empregador
-                              } </span>
+                              <span style="padding: 0 15px;"> ${company_atual.Nome_empregador}</span>
                           </div>
                           
                           <div style="display: flex;">
-                            <label for="">Número da Guia:</label>
-                  <span style="padding: 0 15px;">${
-                    company_atual.NumeroGuia
-                  }</span>
-                  <label for="">Emitida por:</label>
-                  <span style="padding: 0 15px;">${
-                    company_atual.EmitidaPor
-                  }</span>
+                            
+                            <label for="">Emitida por:</label>
+                            <span style="padding:0 15px;">${company_atual.EmitidaPor}</span>
                           </div>  
                           
                       </div>
@@ -569,9 +576,8 @@ Página ${paginasAtual} de ${paginaFinal}
                       <div class="col">
                           <div class="flex" >
                               <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
-                              <span style="text-align: right;"> ${
-                                data2.length
-                              }</span>
+                              <span style="text-align: right;"> ${data2.length
+                  }</span>
                               <label class="subtitulo" for="Empregador"> Origem:</label>
                               <span>${company_atual.Origem}</span>
                           </div>
@@ -642,8 +648,8 @@ Monetária
 <th style="text-align: right">Total</th>
 </tr>
 ${item
-  .map((dado) => {
-    return `<tr>
+                    .map((dado) => {
+                      return `<tr>
 <td style="text-align: center">
 ${dado["Comp. Apuração"]}
 </td>
@@ -651,7 +657,7 @@ ${dado["Comp. Apuração"]}
 ${dado["Comp. Referência"]}
 </td>
 <td style="border-right: 3px solid white">
-${dado["Nome Trabalhador"].slice(0,50)}
+${dado["Nome Trabalhador"].slice(0, 50)}
 </td>
 <td style="border-right: 3px solid white">
 ${dado["Matrícula"]}
@@ -684,16 +690,16 @@ ${numberToReal(dado["Atualiz. Monetária"])}
 </p> 
 </td>
 <td style="text-align: center">                        ${numberToReal(
-      dado["Multa"]
-    )}
+                        dado["Multa"]
+                      )}
 </td>
 <td style="text-align: right">                        ${numberToReal(
-      dado["Total"]
-    )}
+                        dado["Total"]
+                      )}
 </td>
 </tr>`;
-  })
-  .join("")}
+                    })
+                    .join("")}
 </table>
 <hr />
 
@@ -701,122 +707,120 @@ ${numberToReal(dado["Atualiz. Monetária"])}
 
   <div class="infoTable">
     <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Tomador</span>
-    <span style="width: 130px;display:inline-block;margin-right: -8px;">${
-      company_atual.Tomador
-    }</span>
+    <span style="width: 130px;display:inline-block;margin-right: -8px;">${company_atual.Tomador
+                  }</span>
     <span style="width: 78px;display:inline-block;margin-right: -3px;">${numberToReal(
-      sumData(
-        undefined,
-        "Base Remuneração Total",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )}</span>
+                    sumData(
+                      undefined,
+                      "Base Remuneração Total",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
     <span style="width:53px;display:inline-block;margin-right:5px">${numberToReal(
-      sumData(
-        undefined,
-        "Valor FGTS na Guia",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )}</span>
+                    sumData(
+                      undefined,
+                      "Valor FGTS na Guia",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
     <span style="width:42px;display:inline-block; margin-right: 28px ">${numberToReal(
-      sumData(
-        undefined,
-        "Juros",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )} </span>
+                    sumData(
+                      undefined,
+                      "Juros",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )} </span>
     <span style="width:40px;display:inline-block; margin-right: 15px  ">${numberToReal(
-      sumData(
-        undefined,
-        "Atualiz. Monetária",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )}</span>
+                    sumData(
+                      undefined,
+                      "Atualiz. Monetária",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
     <span style="display:inline-block;width: 25px;margin-right: 1px;margin-left: 4px;">${numberToReal(
-      sumData(
-        undefined,
-        "Multa",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )}</span>
+                    sumData(
+                      undefined,
+                      "Multa",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
     <span style="display:inline-block" >${numberToReal(
-      sumData(
-        undefined,
-        "Total",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )}</span>
+                    sumData(
+                      undefined,
+                      "Total",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
   </div>
   
   <div class="infoTable">
     <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Estabelecimento</span>
-    <span style="width: 130px;display:inline-block;margin-right: -8px;">${
-      company_atual.Estabelecimento
-    }</span>
+    <span style="width: 130px;display:inline-block;margin-right: -8px;">${company_atual.Estabelecimento
+                  }</span>
     <span style="width: 78px;display:inline-block;margin-right: -3px;">${numberToReal(
-      sumData(undefined, "Base Remuneração Total", data, "float")
-    )}</span>
+                    sumData(undefined, "Base Remuneração Total", data, "float")
+                  )}</span>
     <span style="width:53px;display:inline-block;margin-right:5px">${numberToReal(
-      sumData(undefined, "Valor FGTS na Guia", data, "float")
-    )}</span>
+                    sumData(undefined, "Valor FGTS na Guia", data, "float")
+                  )}</span>
     <span style="width:42px;display:inline-block; margin-right: 28px ">${numberToReal(
-      sumData(undefined, "Juros", data, "float")
-    )} </span>
+                    sumData(undefined, "Juros", data, "float")
+                  )} </span>
     <span style="width:40px;display:inline-block; margin-right: 15px ">${numberToReal(
-      sumData(undefined, "Atualiz. Monetária", data, "float")
-    )}</span>
+                    sumData(undefined, "Atualiz. Monetária", data, "float")
+                  )}</span>
     <span style="display:inline-block;width: 25px;margin-right: 1px;margin-left: 4px;">${numberToReal(
-      sumData(undefined, "Multa", data, "float")
-    )}</span>
+                    sumData(undefined, "Multa", data, "float")
+                  )}</span>
     <span style="display:inline-block" >${numberToReal(
-      sumData(undefined, "Total", data, "float")
-    )}</span>
+                    sumData(undefined, "Total", data, "float")
+                  )}</span>
   </div>
   <div class="infoTable">
     <span style="width:100px;display:inline-block; margin-right: -45px;"></span>
     <span style="width: 130px;display:inline-block;margin-right: -8px;">Total da Guia</span>
     <span style="width: 78px;display:inline-block;margin-right: -3px;">${numberToReal(
-      sumData(undefined, "Base Remuneração Total", data, "float")
-    )}</span>
+                    sumData(undefined, "Base Remuneração Total", data, "float")
+                  )}</span>
     <span style="width:53px;display:inline-block;margin-right:5px">${numberToReal(
-      sumData(undefined, "Valor FGTS na Guia", data, "float")
-    )}</span>
+                    sumData(undefined, "Valor FGTS na Guia", data, "float")
+                  )}</span>
     <span style="width:42px;display:inline-block; margin-right: 28px ">${numberToReal(
-      sumData(undefined, "Juros", data, "float")
-    )} </span>
+                    sumData(undefined, "Juros", data, "float")
+                  )} </span>
     <span style="width:40px;display:inline-block; margin-right: 15px ">${numberToReal(
-      sumData(undefined, "Atualiz. Monetária", data, "float")
-    )}</span>
+                    sumData(undefined, "Atualiz. Monetária", data, "float")
+                  )}</span>
     <span style="display:inline-block;width: 25px;margin-right: 1px;margin-left: 4px;">${numberToReal(
-      sumData(undefined, "Multa", data, "float")
-    )}</span>
+                    sumData(undefined, "Multa", data, "float")
+                  )}</span>
     <span style="display:inline-block" >${numberToReal(
-      sumData(undefined, "Total", data, "float")
-    )}</span>
+                    sumData(undefined, "Total", data, "float")
+                  )}</span>
   </div>
   </div>
 </main>
@@ -843,9 +847,8 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
 <div class="quebraPag"></div>
 `;
 
-                  const pagina2 = document.createElement("div");
-                  pagina2.className = "tamanhoPage";
-                  pagina2.innerHTML = `
+                pagina2.className = "tamanhoPage";
+                pagina2.innerHTML = `
                 <header>
                   <div class="titulo">
                       <img class="logo" src="http://localhost:8000/logofgts.png" width="93" />
@@ -858,34 +861,32 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
                       <div class="col" >
                           <div class="flex">
                               <label class="subtitulo" for="Empregador">Empregador: </label>
-                              <span class="empregadorNum">${
-                                company_atual.Empregador
-                              }</span>
+                              <span class="empregadorNum ml-15">${company_atual.Empregador}</span>
                           </div>
                           
                           <div class="flex">
                               <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-                              <span> ${company_atual.Vencimento_guia}</span>
+                              <span class="vencimentoGuia"> ${company_atual.Vencimento_guia}</span>
                           </div>
                           
+                          <div class="flex">
+                            <label for="">Número da Guia:</label>
+                            <span style="padding: 0 15px;">${company_atual.NumeroGuia}</span>
+                          </div>
+
                       </div>
+
+
                       <div class="col">
                           <div class="flex">
                               <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-                              <span style="padding: 0 15px;"> ${
-                                company_atual.Nome_empregador
-                              } </span>
+                              <span style="padding: 0 15px;"> ${company_atual.Nome_empregador} </span>
                           </div>
                           
                           <div style="display: flex;">
-                            <label for="">Número da Guia:</label>
-                  <span style="padding: 0 15px;">${
-                    company_atual.NumeroGuia
-                  }</span>
-                  <label for="">Emitida por:</label>
-                  <span style="padding: 0 15px;">${
-                    company_atual.EmitidaPor
-                  }</span>
+                            
+                            <label for="">Emitida por:</label>
+                            <span style="padding: 0 15px;">${company_atual.EmitidaPor}</span>
                           </div>  
                           
                       </div>
@@ -896,9 +897,8 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
                       <div class="col">
                           <div class="flex" >
                               <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
-                              <span style="text-align: right;"> ${
-                                data2.length
-                              }</span>
+                              <span style="text-align: right;"> ${data2.length
+                  }</span>
                               <label class="subtitulo" for="Empregador"> Origem:</label>
                               <span>${company_atual.Origem}</span>
                           </div>
@@ -935,122 +935,120 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
 
   <div class="infoTable">
     <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Tomador</span>
-    <span style="width: 130px;display:inline-block;margin-right: -8px;">${
-      company_atual.Tomador
-    }</span>
+    <span style="width: 130px;display:inline-block;margin-right: -8px;">${company_atual.Tomador
+                  }</span>
     <span style="width: 78px;display:inline-block;margin-right: -3px;">${numberToReal(
-      sumData(
-        undefined,
-        "Base Remuneração Total",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )}</span>
+                    sumData(
+                      undefined,
+                      "Base Remuneração Total",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
     <span style="width:53px;display:inline-block;margin-right:5px">${numberToReal(
-      sumData(
-        undefined,
-        "Valor FGTS na Guia",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )}</span>
+                    sumData(
+                      undefined,
+                      "Valor FGTS na Guia",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
     <span style="width:42px;display:inline-block; margin-right: 28px ">${numberToReal(
-      sumData(
-        undefined,
-        "Juros",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )} </span>
+                    sumData(
+                      undefined,
+                      "Juros",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )} </span>
     <span style="width:40px;display:inline-block; margin-right: 15px  ">${numberToReal(
-      sumData(
-        undefined,
-        "Atualiz. Monetária",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )}</span>
+                    sumData(
+                      undefined,
+                      "Atualiz. Monetária",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
     <span style="display:inline-block;width: 25px;margin-right: 1px;margin-left: 4px;">${numberToReal(
-      sumData(
-        undefined,
-        "Multa",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )}</span>
+                    sumData(
+                      undefined,
+                      "Multa",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
     <span style="display:inline-block" >${numberToReal(
-      sumData(
-        undefined,
-        "Total",
-        data,
-        "float",
-        "Tomador",
-        company_atual.Tomador,
-        "Sum"
-      )
-    )}</span>
+                    sumData(
+                      undefined,
+                      "Total",
+                      data,
+                      "float",
+                      "Tomador",
+                      company_atual.Tomador,
+                      "Sum"
+                    )
+                  )}</span>
   </div>
   
   <div class="infoTable">
     <span style="width:130px;display:inline-block; margin-right: -45px;">Total do Estabelecimento</span>
-    <span style="width: 130px;display:inline-block;margin-right: -8px;">${
-      company_atual.Estabelecimento
-    }</span>
+    <span style="width: 130px;display:inline-block;margin-right: -8px;">${company_atual.Estabelecimento
+                  }</span>
     <span style="width: 78px;display:inline-block;margin-right: -3px;">${numberToReal(
-      sumData(undefined, "Base Remuneração Total", data, "float")
-    )}</span>
+                    sumData(undefined, "Base Remuneração Total", data, "float")
+                  )}</span>
     <span style="width:53px;display:inline-block;margin-right:5px">${numberToReal(
-      sumData(undefined, "Valor FGTS na Guia", data, "float")
-    )}</span>
+                    sumData(undefined, "Valor FGTS na Guia", data, "float")
+                  )}</span>
     <span style="width:42px;display:inline-block; margin-right: 28px ">${numberToReal(
-      sumData(undefined, "Juros", data, "float")
-    )} </span>
+                    sumData(undefined, "Juros", data, "float")
+                  )} </span>
     <span style="width:40px;display:inline-block; margin-right: 15px ">${numberToReal(
-      sumData(undefined, "Atualiz. Monetária", data, "float")
-    )}</span>
+                    sumData(undefined, "Atualiz. Monetária", data, "float")
+                  )}</span>
     <span style="display:inline-block;width: 25px;margin-right: 1px;margin-left: 4px;">${numberToReal(
-      sumData(undefined, "Multa", data, "float")
-    )}</span>
+                    sumData(undefined, "Multa", data, "float")
+                  )}</span>
     <span style="display:inline-block" >${numberToReal(
-      sumData(undefined, "Total", data, "float")
-    )}</span>
+                    sumData(undefined, "Total", data, "float")
+                  )}</span>
   </div>
   <div class="infoTable">
     <span style="width:100px;display:inline-block; margin-right: -45px;"></span>
     <span style="width: 130px;display:inline-block;margin-right: -8px;">Total da Guia</span>
     <span style="width: 78px;display:inline-block;margin-right: -3px;">${numberToReal(
-      sumData(undefined, "Base Remuneração Total", data, "float")
-    )}</span>
+                    sumData(undefined, "Base Remuneração Total", data, "float")
+                  )}</span>
     <span style="width:53px;display:inline-block;margin-right:5px">${numberToReal(
-      sumData(undefined, "Valor FGTS na Guia", data, "float")
-    )}</span>
+                    sumData(undefined, "Valor FGTS na Guia", data, "float")
+                  )}</span>
     <span style="width:42px;display:inline-block; margin-right: 28px ">${numberToReal(
-      sumData(undefined, "Juros", data, "float")
-    )} </span>
+                    sumData(undefined, "Juros", data, "float")
+                  )} </span>
     <span style="width:40px;display:inline-block; margin-right: 15px ">${numberToReal(
-      sumData(undefined, "Atualiz. Monetária", data, "float")
-    )}</span>
+                    sumData(undefined, "Atualiz. Monetária", data, "float")
+                  )}</span>
     <span style="display:inline-block;width: 25px;margin-right: 1px;margin-left: 4px;">${numberToReal(
-      sumData(undefined, "Multa", data, "float")
-    )}</span>
+                    sumData(undefined, "Multa", data, "float")
+                  )}</span>
     <span style="display:inline-block" >${numberToReal(
-      sumData(undefined, "Total", data, "float")
-    )}</span>
+                    sumData(undefined, "Total", data, "float")
+                  )}</span>
   </div>
   </div>
 </main>
@@ -1077,15 +1075,15 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
 <div class="quebraPag"></div>
 `;
 
-                  body.appendChild(element);
-                  body.appendChild(pagina2);
-                }
-              } else {
-                paginasAtual += 1;
+                body.appendChild(element);
+                body.appendChild(pagina2);
+              }
+            } else {
+              paginasAtual += 1;
 
-                const element = document.createElement("div");
-                element.className = "tamanhoPage";
-                element.innerHTML = `
+              const element = document.createElement("div");
+              element.className = "tamanhoPage";
+              element.innerHTML = `
               <header>
                 <div class="titulo">
                     <img class="logo" src="http://localhost:8000/logofgts.png" width="93" />
@@ -1098,34 +1096,30 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
                     <div class="col" >
                         <div class="flex">
                             <label class="subtitulo" for="Empregador">Empregador: </label>
-                            <span class="empregadorNum">${
-                              company_atual.Empregador
-                            }</span>
+                            <span class="empregadorNum ml-15">${company_atual.Empregador
+                }</span>
                         </div>
                         
                         <div class="flex">
                             <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-                            <span> ${company_atual.Vencimento_guia}</span>
+                            <span class="vencimentoGuia"> ${company_atual.Vencimento_guia}</span>
                         </div>
                         
                     </div>
                     <div class="col">
                         <div class="flex">
                             <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-                            <span style="padding: 0 15px;"> ${
-                              company_atual.Nome_empregador
-                            } </span>
+                            <span style="padding: 0 15px;"> ${company_atual.Nome_empregador
+                } </span>
                         </div>
                         
                         <div style="display: flex;">
                           <label for="">Número da Guia:</label>
-                  <span style="padding: 0 15px;">${
-                    company_atual.NumeroGuia
-                  }</span>
+                  <span style="padding: 0 15px;">${company_atual.NumeroGuia
+                }</span>
                   <label for="">Emitida por:</label>
-                  <span style="padding: 0 15px;">${
-                    company_atual.EmitidaPor
-                  }</span>
+                  <span style="padding: 0 15px;">${company_atual.EmitidaPor
+                }</span>
                         </div>  
                         
                     </div>
@@ -1136,9 +1130,8 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
                     <div class="col">
                         <div class="flex" >
                             <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
-                            <span style="text-align: right;"> ${
-                              data2.length
-                            }</span>
+                            <span style="text-align: right;"> ${data2.length
+                }</span>
                             <label class="subtitulo" for="Empregador"> Origem:</label>
                             <span>${company_atual.Origem}</span>
                         </div>
@@ -1209,8 +1202,8 @@ Monetária
 <th style="text-align: right">Total</th>
 </tr>
 ${item
-  .map((dado) => {
-    return `<tr>
+                  .map((dado) => {
+                    return `<tr>
 <td style="text-align: center">
 ${dado["Comp. Apuração"]}
 </td>
@@ -1218,7 +1211,7 @@ ${dado["Comp. Apuração"]}
 ${dado["Comp. Referência"]}
 </td>
 <td style="border-right: 3px solid white">
-${dado["Nome Trabalhador"].slice(0,50)}
+${dado["Nome Trabalhador"].slice(0, 50)}
 </td>
 <td style="border-right: 3px solid white">
 ${dado["Matrícula"]}
@@ -1251,16 +1244,16 @@ ${numberToReal(dado["Atualiz. Monetária"])}
   </p>
 </td>
 <td style="text-align: center">                        ${numberToReal(
-      dado["Multa"]
-    )}
+                      dado["Multa"]
+                    )}
 </td>
 <td style="text-align: right">                        ${numberToReal(
-      dado["Total"]
-    )}
+                      dado["Total"]
+                    )}
 </td>
 </tr>`;
-  })
-  .join("")}
+                  })
+                  .join("")}
 </table>
 </main>
 
@@ -1286,16 +1279,21 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
 <div class="quebraPag"></div>
 `;
 
-                body.appendChild(element);
-              }
-            });
+              body.appendChild(element);
+            }
           });
+        });
 
-          const body = document.getElementById("main");
-          console.log(general_data);
-          const element = document.createElement("div");
-          element.className = "tamanhoPage";
-          element.innerHTML = `
+        console.log(general_data);
+        element.className = "tamanhoPage";
+        relacao_tipo_valor.className = "tamanhoPage";
+        relacao_tipo_valor.name = "Relação de Tipos de Valor";
+        relacao_trabalhadores.className = "tamanhoPage";
+        relacao_trabalhadores.name = "Relação de Tipos de Valor";
+        relacao_tomadores_servico.className = "tamanhoPage";
+
+
+        element.innerHTML = `
         <header>
           <div class="titulo">
               <img class="logo" src="http://localhost:8000/logofgts.png" width="93" />
@@ -1308,9 +1306,8 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
               <div class="col" >
                   <div class="flex">
                       <label class="subtitulo" for="Empregador">Empregador: </label>
-                      <span class="empregadorNum">${
-                        general_data.Empregador
-                      }</span>
+                      <span class="empregadorNum ml-15">${general_data.Empregador
+          }</span>
                   </div>
                   
                   <div class="flex">
@@ -1322,20 +1319,17 @@ Relatório Emitido em: ${data_atual} (Brasília).</p>
               <div class="col">
                   <div class="flex">
                       <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-                      <span style="padding: 0 15px;"> ${
-                        general_data.Nome_empregador
-                      } </span>
+                      <span style="padding: 0 15px;"> ${general_data.Nome_empregador
+          } </span>
                   </div>
                   
                   <div style="display: flex;">
                     <label for="">Número da Guia:</label>
-                  <span style="padding: 0 15px;">${
-                    general_data.NumeroGuia
-                  }</span>
+                  <span style="padding: 0 15px;">${general_data.NumeroGuia
+          }</span>
                   <label for="">Emitida por:</label>
-                  <span style="padding: 0 15px;">${
-                    general_data.EmitidaPor
-                  }</span>
+                  <span style="padding: 0 15px;">${general_data.EmitidaPor
+          }</span>
                   </div>  
                   
               </div>
@@ -1420,40 +1414,40 @@ background-color: #e4e6d8;
             sumData(undefined, "Valor FGTS na Guia", data, "float")
           )}</td>
 <td style="text-align: right; padding-right: 20px !important">${
-            //FGTS RESCISÒRIO NA GUIA
-            numberToReal(
-              sumData(
-                undefined,
-                "Base Remuneração Total",
-                data,
-                "float",
-                "Tipo Depósito",
-                "Verba Indenizatória"
-              )
+          //FGTS RESCISÒRIO NA GUIA
+          numberToReal(
+            sumData(
+              undefined,
+              "Base Remuneração Total",
+              data,
+              "float",
+              "Tipo Depósito",
+              "Verba Indenizatória"
             )
+          )
           }</td>
 <td style="padding-left: 5px">${
-            //IND COMPESATORIA NA GUIA
-            numberToReal(
-              sumData(
-                undefined,
-                "Valor FGTS na Guia",
-                data,
-                "float",
-                "Tipo Depósito",
-                "Multa Rescisória"
-              )
+          //IND COMPESATORIA NA GUIA
+          numberToReal(
+            sumData(
+              undefined,
+              "Valor FGTS na Guia",
+              data,
+              "float",
+              "Tipo Depósito",
+              "Multa Rescisória"
             )
+          )
           }</td>
 <td>${
-            //JUROS
-            numberToReal(sumData(undefined, "Juros", data, "float"))
+          //JUROS
+          numberToReal(sumData(undefined, "Juros", data, "float"))
           }</td>
 <td style="text-align: right; border-left: 3px solid white">${
-            //ATT MONETÀRIA
-            numberToReal(
-              sumData(undefined, "Atualiz. Monetária", data, "float")
-            )
+          //ATT MONETÀRIA
+          numberToReal(
+            sumData(undefined, "Atualiz. Monetária", data, "float")
+          )
           }</td>
 <td style="text-align: right">${numberToReal(
             sumData(undefined, "Multa", data, "float")
@@ -1470,36 +1464,36 @@ background-color: #e4e6d8;
   <b>Total da Guia</b>
 </td>
 <td style="border-right: 3px solid white"><b>${
-            //BASE REMUNERAÇÃO TOTAL
-            numberToReal(
-              sumData(undefined, "Base Remuneração Total", data, "float")
-            )
+          //BASE REMUNERAÇÃO TOTAL
+          numberToReal(
+            sumData(undefined, "Base Remuneração Total", data, "float")
+          )
           }</b></td>
 <td><b>${
-            //FGTS NA GUIA
-            numberToReal(
-              sumData(
-                undefined,
-                "Valor FGTS na Guia",
-                data,
-                "float",
-                "Tipo Depósito",
-                "Mensal"
-              )
+          //FGTS NA GUIA
+          numberToReal(
+            sumData(
+              undefined,
+              "Valor FGTS na Guia",
+              data,
+              "float",
+              "Tipo Depósito",
+              "Mensal"
             )
+          )
           }</b></td>
 <td style="text-align: right; padding-right: 20px !important"><b>${
-            //
-            numberToReal(
-              sumData(
-                undefined,
-                "Base Remuneração Total",
-                data,
-                "float",
-                "Tipo Depósito",
-                "Verba Indenizatória"
-              )
+          //
+          numberToReal(
+            sumData(
+              undefined,
+              "Base Remuneração Total",
+              data,
+              "float",
+              "Tipo Depósito",
+              "Verba Indenizatória"
             )
+          )
           }</b></td>
 <td style="padding-left: 5px"><b>${numberToReal(
             sumData(
@@ -1514,8 +1508,8 @@ background-color: #e4e6d8;
 <td><b>${numberToReal(sumData(undefined, "Juros", data, "float"))}</b></td>
 <td style="text-align: right; border-left: 3px solid white">
   <b>${numberToReal(
-    sumData(undefined, "Atualiz. Monetária", data, "float")
-  )}</b>
+            sumData(undefined, "Atualiz. Monetária", data, "float")
+          )}</b>
 </td>
 <td style="text-align: right"><b>${numberToReal(
             sumData(undefined, "Multa", data, "float")
@@ -1669,16 +1663,13 @@ público, sem vínculo de emprego/estatutário
       <div class="quebraPag"></div>
 `;
 
-          body.append(element);
 
-          const relacao_tipo_valor = document.createElement("div");
-          relacao_tipo_valor.className = "tamanhoPage";
-          relacao_tipo_valor.name = "Relação de Tipos de Valor";
-          relacao_tipo_valor.innerHTML = `
+
+        relacao_tipo_valor.innerHTML = `
      
         <header>
           <div class="titulo">
-              <img class="logo" src="http://localhost:8000/logofgts.png" width="93" />
+              <img class="logo" src="http://localhost:8000/logofgts.png" width="40" />
     
               <span style="transform: translate(-25%)"><b>Detalhe da Guia a Ser Emitida</b></span>
     
@@ -1688,9 +1679,8 @@ público, sem vínculo de emprego/estatutário
               <div class="col" >
                   <div class="flex">
                       <label class="subtitulo" for="Empregador">Empregador: </label>
-                      <span class="empregadorNum">${
-                        general_data.Empregador
-                      }</span>
+                      <span class="empregadorNum ml-15">${general_data.Empregador
+          }</span>
                   </div>
                   
                   <div class="flex">
@@ -1702,20 +1692,17 @@ público, sem vínculo de emprego/estatutário
               <div class="col">
                   <div class="flex">
                       <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-                      <span style="padding: 0 15px;"> ${
-                        general_data.Nome_empregador
-                      } </span>
+                      <span style="padding: 0 15px;"> ${general_data.Nome_empregador
+          } </span>
                   </div>
                   
                   <div style="display: flex;">
                     <label for="">Número da Guia:</label>
-                  <span style="padding: 0 15px;">${
-                    general_data.NumeroGuia
-                  }</span>
+                  <span style="padding: 0 15px;">${general_data.NumeroGuia
+          }</span>
                   <label for="">Emitida por:</label>
-                  <span style="padding: 0 15px;">${
-                    general_data.EmitidaPor
-                  }</span>
+                  <span style="padding: 0 15px;">${general_data.EmitidaPor
+          }</span>
                   </div>  
                   
               </div>
@@ -1781,120 +1768,118 @@ público, sem vínculo de emprego/estatutário
           <th style="text-align: right; width: 80px">Total</th>
         </tr>
 ${valores_ajustados
-  .map((item, i) => {
-    let dados = data.filter((x) => x["Tipo Depósito"] == tipo_valor[i]);
+            .map((item, i) => {
+              let dados = data.filter((x) => x["Tipo Depósito"] == tipo_valor[i]);
 
-    return `<tr style="padding: 0">
+              return `<tr style="padding: 0">
           <td style="text-align: center">${data[0]["Comp. Apuração"]}</td>
           <td style="text-align: center">${item}</td>
           <td style="text-align: center">${sumData(
-            undefined,
-            "Total",
-            data,
-            "int",
-            "Tipo Depósito",
-            tipo_valor[i],
-            "Index"
-          )}</td>
+                undefined,
+                "Total",
+                data,
+                "int",
+                "Tipo Depósito",
+                tipo_valor[i],
+                "Index"
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(
-              undefined,
-              "Base Remuneração Total",
-              data,
-              "float",
-              "Tipo Depósito",
-              tipo_valor[i],
-              "Sum"
-            )
-          )}</td>
+                sumData(
+                  undefined,
+                  "Base Remuneração Total",
+                  data,
+                  "float",
+                  "Tipo Depósito",
+                  tipo_valor[i],
+                  "Sum"
+                )
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(
-              undefined,
-              "Valor FGTS na Guia",
-              data,
-              "float",
-              "Tipo Depósito",
-              tipo_valor[i],
-              "Sum"
-            )
-          )}</td>
-          <td style="text-align: right">${
-            tipo_valor[i] != "Verba Indenizatória"
-              ? "0,00"
-              : numberToReal(
-                  sumData(
-                    undefined,
-                    "Valor FGTS na Guia",
-                    data,
-                    "float",
-                    "Tipo Depósito",
-                    tipo_valor[i],
-                    "Sum"
-                  )
+                sumData(
+                  undefined,
+                  "Valor FGTS na Guia",
+                  data,
+                  "float",
+                  "Tipo Depósito",
+                  tipo_valor[i],
+                  "Sum"
                 )
-          }</td>
-          <td style="text-align: right">${
-            tipo_valor[i] != "Multa Rescisória"
-              ? "0,00"
-              : numberToReal(
-                  sumData(
-                    undefined,
-                    "Valor FGTS na Guia",
-                    data,
-                    "float",
-                    "Tipo Depósito",
-                    tipo_valor[i],
-                    "Sum"
+              )}</td>
+          <td style="text-align: right">${tipo_valor[i] != "Verba Indenizatória"
+                  ? "0,00"
+                  : numberToReal(
+                    sumData(
+                      undefined,
+                      "Valor FGTS na Guia",
+                      data,
+                      "float",
+                      "Tipo Depósito",
+                      tipo_valor[i],
+                      "Sum"
+                    )
                   )
-                )
-          }</td>
+                }</td>
+          <td style="text-align: right">${tipo_valor[i] != "Multa Rescisória"
+                  ? "0,00"
+                  : numberToReal(
+                    sumData(
+                      undefined,
+                      "Valor FGTS na Guia",
+                      data,
+                      "float",
+                      "Tipo Depósito",
+                      tipo_valor[i],
+                      "Sum"
+                    )
+                  )
+                }</td>
           <td style="text-align: center">${numberToReal(
-            sumData(
-              undefined,
-              "Juros",
-              data,
-              "float",
-              "Tipo Depósito",
-              tipo_valor[i],
-              "Sum"
-            )
-          )}</td>
+                  sumData(
+                    undefined,
+                    "Juros",
+                    data,
+                    "float",
+                    "Tipo Depósito",
+                    tipo_valor[i],
+                    "Sum"
+                  )
+                )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(
-              undefined,
-              "Atualiz. Monetária",
-              data,
-              "float",
-              "Tipo Depósito",
-              tipo_valor[i],
-              "Sum"
-            )
-          )}</td>
+                  sumData(
+                    undefined,
+                    "Atualiz. Monetária",
+                    data,
+                    "float",
+                    "Tipo Depósito",
+                    tipo_valor[i],
+                    "Sum"
+                  )
+                )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(
-              undefined,
-              "Multa",
-              data,
-              "float",
-              "Tipo Depósito",
-              tipo_valor[i],
-              "Sum"
-            )
-          )}</td>
+                  sumData(
+                    undefined,
+                    "Multa",
+                    data,
+                    "float",
+                    "Tipo Depósito",
+                    tipo_valor[i],
+                    "Sum"
+                  )
+                )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(
-              undefined,
-              "Total",
-              data,
-              "float",
-              "Tipo Depósito",
-              tipo_valor[i],
-              "Sum"
-            )
-          )}</td>
+                  sumData(
+                    undefined,
+                    "Total",
+                    data,
+                    "float",
+                    "Tipo Depósito",
+                    tipo_valor[i],
+                    "Sum"
+                  )
+                )}</td>
         </tr>`;
-  })
-  .join("")}
+            })
+            .join("")}
 
 
        <tr style="padding: 0; font-weight: bold; background: white">
@@ -1902,307 +1887,53 @@ ${valores_ajustados
           <td style="text-align: center"></td>
           <td style="text-align: center"><b>Total da Guia</b></td>
           <td style="text-align: right"><b>${numberToReal(
-            sumData(undefined, "Base Remuneração Total", data, "float")
-          )}</b></td>
+              sumData(undefined, "Base Remuneração Total", data, "float")
+            )}</b></td>
           <td style="text-align: right"><b>${numberToReal(
-            sumData(
-              undefined,
-              "Valor FGTS na Guia",
-              data,
-              "float",
-              "Tipo Depósito",
-              "Mensal",
-              "Sum"
-            )
-          )}</b></td>
+              sumData(
+                undefined,
+                "Valor FGTS na Guia",
+                data,
+                "float",
+                "Tipo Depósito",
+                "Mensal",
+                "Sum"
+              )
+            )}</b></td>
           <td style="text-align: right"><b>${numberToReal(
-            sumData(
-              undefined,
-              "Valor FGTS na Guia",
-              data,
-              "float",
-              "Tipo Depósito",
-              "Verba Indenizatória",
-              "Sum"
-            )
-          )}</b></td>
+              sumData(
+                undefined,
+                "Valor FGTS na Guia",
+                data,
+                "float",
+                "Tipo Depósito",
+                "Verba Indenizatória",
+                "Sum"
+              )
+            )}</b></td>
           <td style="text-align: right"><b>${numberToReal(
-            sumData(
-              undefined,
-              "Valor FGTS na Guia",
-              data,
-              "float",
-              "Tipo Depósito",
-              "Multa Rescisória",
-              "Sum"
-            )
-          )}</b></td>
+              sumData(
+                undefined,
+                "Valor FGTS na Guia",
+                data,
+                "float",
+                "Tipo Depósito",
+                "Multa Rescisória",
+                "Sum"
+              )
+            )}</b></td>
           <td style="text-align: center"><b>${numberToReal(
-            sumData(undefined, "Juros", data, "float")
-          )}</b></td>
+              sumData(undefined, "Juros", data, "float")
+            )}</b></td>
           <td style="text-align: right"><b>${numberToReal(
-            sumData(undefined, "Atualiz. Monetária", data, "float")
-          )}</b></td>
-          <td style="text-align: right"><b>${numberToReal(
-            sumData(undefined, "Multa", data, "float")
-          )}</b></td>
-          <td style="text-align: right"><b>${numberToReal(
-            sumData(undefined, "Total", data, "float")
-          )}</b></td>
-        </tr>
-      </table>
-    </main>
-
-    <footer>
-      <hr />
-      <div></div>
-      <div
-        style="
-          display: flex;
-          font-size: 8px;
-          justify-content: space-between;
-          padding: 2px 2px;
-        "
-      >
-        <p>Todos os valores exibidos estão expressos em reais (R$)</p>
-        <div style="display: flex; justify-content: space-around">
-          <p>Relatório Emitido em: ${data_atual}.</p>
-
-          <p style="margin-left: 50px" class=testepagina>Página ${
-            paginaFinal - 2
-          } de ${paginaFinal}</p>
-        </div>
-      </div>
-      <span></span>
-    </footer>
-    <div class="quebraPag"></div>
-`;
-
-          body.append(relacao_tipo_valor);
-
-          const relacao_trabalhadores = document.createElement("div");
-          relacao_trabalhadores.className = "tamanhoPage";
-          relacao_trabalhadores.name = "Relação de Tipos de Valor";
-          relacao_trabalhadores.innerHTML = `
-
-        <header>
-          <div class="titulo">
-              <img class="logo" src="http://localhost:8000/logofgts.png" width="93" />
-    
-              <span style="transform: translate(-25%)"><b>Detalhe da Guia a Ser Emitida</b></span>
-    
-              <span></span>
-          </div>
-          <div class="row">
-              <div class="col" >
-                  <div class="flex">
-                      <label class="subtitulo" for="Empregador">Empregador: </label>
-                      <span class="empregadorNum">${
-                        general_data.Empregador
-                      }</span>
-                  </div>
-                  
-                  <div class="flex">
-                      <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
-                      <span> ${general_data.Vencimento_guia}</span>
-                  </div>
-                  
-              </div>
-              <div class="col">
-                  <div class="flex">
-                      <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-                      <span style="padding: 0 15px;"> ${
-                        general_data.Nome_empregador
-                      } </span>
-                  </div>
-                  
-                  <div style="display: flex;">
-                    <label for="">Número da Guia:</label>
-                  <span style="padding: 0 15px;">${
-                    general_data.NumeroGuia
-                  }</span>
-                  <label for="">Emitida por:</label>
-                  <span style="padding: 0 15px;">${
-                    general_data.EmitidaPor
-                  }</span>
-                  </div>  
-                  
-              </div>
-    
-    
-              
-    
-              <div class="col">
-                  <div class="flex" >
-                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
-                      <span style="text-align: right;"> ${data.length}</span>
-                      <label class="subtitulo" for="Empregador"> Origem:</label>
-                      <span>${general_data.Origem}</span>
-                  </div>
-                  
-                  <div class="flex">
-                    <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; ;
-                  padding-right:42px;">Data Emissão:</label>
-                  <span >${data_atual} (Brasília)</span>
-                  </div>
-                  
-              </div>
-    
-          </div>
-    
-          <div class="tituloTabela">
-              <span><b>Relação de Tipos de Valor</b></span>
-          </div>
-          <hr />
-      </header>
-    <main>
-      <div class="topoTabela">
-        <div class="infoTabela">
-          <label for="">Estabelecimento:</label>
-          <span>${general_data.Estabelecimento}</span>
-        </div>
-
-      </div>
-
-      <table
-        style="
-          width: 100%;
-          border-collapse: collapse;
-          text-align: left;
-          background-color: #e4e6d8;
-        "
-      >
-        <tr style="background-color: #ccccbe; height: 25px">
-          <th style="text-align: center">Comp. Apuração</th>
-          <th style="text-align: center">Categoria</th>
-          <th style="max-width: 600px">Qtd. Trabalhadores</th>
-          <th style="width: 125px">
-            Base Remuneração<br />
-            Total
-          </th>
-          <th style="max-width: 150px">FGTS Mensal na Guia</th>
-          <th style="text-align: right; padding-right: 20px">
-            FGTS Rescisório na<br />
-            Guia
-          </th>
-          <th>
-            Ind. Compensatória<br />
-            na Guia
-          </th>
-          <th>Juros</th>
-          <th style="text-align: right; max-width: 50px">Atualiz. Monetária</th>
-          <th style="text-align: right">Multa</th>
-
-          <th style="text-align: right">Total</th>
-        </tr>
-
-        <tr>
-          <td style="text-align: center">${data[0]["Comp. Apuração"]}</td> 
-          <td style="text-align: center">${data[0]["Categoria"]}</td>
-          <td style="border-right: 3px solid white">${data.length}</td>
-          <td style="border-right: 3px solid white">${numberToReal(
-            sumData(undefined, "Base Remuneração Total", data, "float")
-          )}</td>
-          <td>${numberToReal(
-            sumData(
-              undefined,
-              "Valor FGTS na Guia",
-              data,
-              "float",
-              "Tipo Depósito",
-              "Mensal"
-            )
-          )}</td>
-          <td style="text-align: right; padding-right: 20px!important">${numberToReal(
-            sumData(
-              undefined,
-              "Valor FGTS na Guia",
-              data,
-              "float",
-              "Tipo Depósito",
-              "Verba Indenizatória",
-              "Sum"
-            )
-          )}</td>
-          <td style="padding-left: 5px!important">${numberToReal(
-            sumData(
-              undefined,
-              "Valor FGTS na Guia",
-              data,
-              "float",
-              "Tipo Depósito",
-              "Multa Rescisória",
-              "Sum"
-            )
-          )}</td>
-          <td>${numberToReal(sumData(undefined, "Juros", data, "float"))}</td>
-          <td style="text-align: right; border-left: 3px solid white">${numberToReal(
-            sumData(undefined, "Atualiz. Monetária", data, "float")
-          )}</td>
-          <td style="text-align: right">${numberToReal(
-            sumData(undefined, "Multa", data, "float")
-          )}</td>
-          <td style="text-align: right">${numberToReal(
-            sumData(undefined, "Total", data, "float")
-          )}</td>
-        </tr>
-
-        <tr style="background-color: white">
-          <td style="text-align: center"></td>
-          <td></td>
-          <td style="border-right: 3px solid white">
-            <b>Total da Guia</b>
-          </td>
-          <td style="border-right: 3px solid white"><b>${numberToReal(
-            sumData(undefined, "Base Remuneração Total", data, "float")
-          )}
-            </b></td>
-          <td><b>${numberToReal(
-            sumData(
-              undefined,
-              "Valor FGTS na Guia",
-              data,
-              "float",
-              "Tipo Depósito",
-              "Mensal"
-            )
-          )}</b></td>
-          <td style="text-align: right; padding-right: 20px!important"><b>${numberToReal(
-            sumData(
-              undefined,
-              "Valor FGTS na Guia",
-              data,
-              "float",
-              "Tipo Depósito",
-              "Verba Indenizatória",
-              "Sum"
-            )
-          )}</b></td>
-          <td style="padding-left: 5px!important"><b>${numberToReal(
-            sumData(
-              undefined,
-              "Valor FGTS na Guia",
-              data,
-              "float",
-              "Tipo Depósito",
-              "Multa Rescisória",
-              "Sum"
-            )
-          )}</b></td>
-          <td><b>${numberToReal(
-            sumData(undefined, "Juros", data, "float")
-          )}</b></td>
-          <td style="text-align: right; border-left: 3px solid white">
-            <b>${numberToReal(
               sumData(undefined, "Atualiz. Monetária", data, "float")
-            )}</b>
-          </td>
+            )}</b></td>
           <td style="text-align: right"><b>${numberToReal(
-            sumData(undefined, "Multa", data, "float")
-          )}</b></td>
+              sumData(undefined, "Multa", data, "float")
+            )}</b></td>
           <td style="text-align: right"><b>${numberToReal(
-            sumData(undefined, "Total", data, "float")
-          )}</b></td>
+              sumData(undefined, "Total", data, "float")
+            )}</b></td>
         </tr>
       </table>
     </main>
@@ -2222,23 +1953,17 @@ ${valores_ajustados
         <div style="display: flex; justify-content: space-around">
           <p>Relatório Emitido em: ${data_atual}.</p>
 
-          <p style="margin-left: 50px" class=testepagina>Página ${
-            paginaFinal - 1
+          <p style="margin-left: 50px" class=testepagina>Página ${paginaFinal - 2
           } de ${paginaFinal}</p>
         </div>
       </div>
       <span></span>
     </footer>
     <div class="quebraPag"></div>
-
-
 `;
 
-          body.append(relacao_trabalhadores);
 
-          const relacao_tomadores_servico = document.createElement("div");
-          relacao_tomadores_servico.className = "tamanhoPage";
-          relacao_tomadores_servico.innerHTML = `
+        relacao_tomadores_servico.innerHTML = `
          
         <header>
           <div class="titulo">
@@ -2252,9 +1977,8 @@ ${valores_ajustados
               <div class="col" >
                   <div class="flex">
                       <label class="subtitulo" for="Empregador">Empregador: </label>
-                      <span class="empregadorNum">${
-                        general_data.Empregador
-                      }</span>
+                      <span class="empregadorNum ml-15">${general_data.Empregador
+          }</span>
                   </div>
                   
                   <div class="flex">
@@ -2266,20 +1990,17 @@ ${valores_ajustados
               <div class="col">
                   <div class="flex">
                       <label class="subtitulo" for="Empregador">Nome Empregador: </label>
-                      <span style="padding: 0 15px;"> ${
-                        general_data.Nome_empregador
-                      } </span>
+                      <span style="padding: 0 15px;"> ${general_data.Nome_empregador
+          } </span>
                   </div>
                   
                   <div style="display: flex;">
                     <label for="">Número da Guia:</label>
-                  <span style="padding: 0 15px;">${
-                    general_data.NumeroGuia
-                  }</span>
+                  <span style="padding: 0 15px;">${general_data.NumeroGuia
+          }</span>
                   <label for="">Emitida por:</label>
-                  <span style="padding: 0 15px;">${
-                    general_data.EmitidaPor
-                  }</span>
+                  <span style="padding: 0 15px;">${general_data.EmitidaPor
+          }</span>
                   </div>  
                   
               </div>
@@ -2311,8 +2032,8 @@ ${valores_ajustados
           <hr />
       </header>
   ${companys
-    .map((company) => {
-      return `
+            .map((company) => {
+              return `
     
     
     <main>
@@ -2349,70 +2070,70 @@ ${valores_ajustados
         <tr style="padding: 0">
           <td style="text-align: center">${data[0]["Comp. Apuração"]}</td>
           <td style="text-align: center">${sumData(
-            company,
-            "Total",
-            data,
-            "Int",
-            "Tomador",
-            company,
-            "Index"
-          )}</td>
+                company,
+                "Total",
+                data,
+                "Int",
+                "Tomador",
+                company,
+                "Index"
+              )}</td>
           <td style="text-align: center">${numberToReal(
-            sumData(
-              company,
-              "Base Remuneração Total",
-              data,
-              "Float",
-              "Tomador",
-              company,
-              "Sum"
-            )
-          )}</td>
+                sumData(
+                  company,
+                  "Base Remuneração Total",
+                  data,
+                  "Float",
+                  "Tomador",
+                  company,
+                  "Sum"
+                )
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(
-              company,
-              "Valor FGTS na Guia",
-              data,
-              "Float",
-              "Tomador",
-              company,
-              "Sum"
-            )
-          )}</td>
+                sumData(
+                  company,
+                  "Valor FGTS na Guia",
+                  data,
+                  "Float",
+                  "Tomador",
+                  company,
+                  "Sum"
+                )
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(
-              company,
-              "Valor FGTS na Guia",
-              data,
-              "Float",
-              "Tipo Depósito",
-              "Verba Indenizatória",
-              "Sum"
-            )
-          )}</td>
+                sumData(
+                  company,
+                  "Valor FGTS na Guia",
+                  data,
+                  "Float",
+                  "Tipo Depósito",
+                  "Verba Indenizatória",
+                  "Sum"
+                )
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(
-              company,
-              "Valor FGTS na Guia",
-              data,
-              "Float",
-              "Tipo Depósito",
-              "Multa Rescisória",
-              "Sum"
-            )
-          )}</td>
+                sumData(
+                  company,
+                  "Valor FGTS na Guia",
+                  data,
+                  "Float",
+                  "Tipo Depósito",
+                  "Multa Rescisória",
+                  "Sum"
+                )
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(company, "Juros", data, "Float")
-          )}</td>
+                sumData(company, "Juros", data, "Float")
+              )}</td>
           <td style="text-align: center">${numberToReal(
-            sumData(company, "Atualiz. Monetária", data, "Float")
-          )}</td>
+                sumData(company, "Atualiz. Monetária", data, "Float")
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(company, "Multa", data, "Float")
-          )}</td>
+                sumData(company, "Multa", data, "Float")
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(company, "Total", data, "Float")
-          )}</td>
+                sumData(company, "Total", data, "Float")
+              )}</td>
         </tr>
 
         <tr
@@ -2427,67 +2148,67 @@ ${valores_ajustados
           <td style="text-align: center">Total do Tomador</td>
           <td style="text-align: center">${company}</td>
           <td style="text-align: center">${numberToReal(
-            sumData(
-              company,
-              "Base Remuneração Total",
-              data,
-              "Float",
-              "Tomador",
-              company,
-              "Sum"
-            )
-          )}</td>
+                sumData(
+                  company,
+                  "Base Remuneração Total",
+                  data,
+                  "Float",
+                  "Tomador",
+                  company,
+                  "Sum"
+                )
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(
-              company,
-              "Valor FGTS na Guia",
-              data,
-              "Float",
-              "Tomador",
-              company,
-              "Sum"
-            )
-          )}</td>
+                sumData(
+                  company,
+                  "Valor FGTS na Guia",
+                  data,
+                  "Float",
+                  "Tomador",
+                  company,
+                  "Sum"
+                )
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(
-              company,
-              "Valor FGTS na Guia",
-              data,
-              "Float",
-              "Tipo Depósito",
-              "Verba Indenizatória",
-              "Sum"
-            )
-          )}</td>
+                sumData(
+                  company,
+                  "Valor FGTS na Guia",
+                  data,
+                  "Float",
+                  "Tipo Depósito",
+                  "Verba Indenizatória",
+                  "Sum"
+                )
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(
-              company,
-              "Valor FGTS na Guia",
-              data,
-              "Float",
-              "Tipo Depósito",
-              "Multa Rescisória",
-              "Sum"
-            )
-          )}</td>
+                sumData(
+                  company,
+                  "Valor FGTS na Guia",
+                  data,
+                  "Float",
+                  "Tipo Depósito",
+                  "Multa Rescisória",
+                  "Sum"
+                )
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(company, "Juros", data, "Float")
-          )}</td>
+                sumData(company, "Juros", data, "Float")
+              )}</td>
           <td style="text-align: center">${numberToReal(
-            sumData(company, "Atualiz. Monetária", data, "Float")
-          )}</td>
+                sumData(company, "Atualiz. Monetária", data, "Float")
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(company, "Multa", data, "Float")
-          )}</td>
+                sumData(company, "Multa", data, "Float")
+              )}</td>
           <td style="text-align: right">${numberToReal(
-            sumData(company, "Total", data, "Float")
-          )}</td>
+                sumData(company, "Total", data, "Float")
+              )}</td>
         </tr>
       </table>
     </main>
     `;
-    })
-    .join("")}
+            })
+            .join("")}
   
 
     <footer>
@@ -2515,18 +2236,264 @@ ${valores_ajustados
 
 `;
 
+        relacao_trabalhadores.innerHTML = `<header>
+          <div class="titulo">
+              <img class="logo" src="http://localhost:8000/logofgts.png" width="93" />
+    
+              <span style="transform: translate(-25%)"><b>Detalhe da Guia a Ser Emitida</b></span>
+    
+              <span></span>
+          </div>
+          <div class="row">
+              <div class="col" >
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Empregador: </label>
+                      <span class="empregadorNum ml-15">${general_data.Empregador}</span>
+                  </div>
+                  
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Vencimento da Guia: </label>
+                      <span> ${general_data.Vencimento_guia}</span>
+                  </div>
+                  
+              </div>
+              <div class="col">
+                  <div class="flex">
+                      <label class="subtitulo" for="Empregador">Nome Empregador: </label>
+                      <span style="padding: 0 15px;"> ${general_data.Nome_empregador}</span>
+                  </div>
+                  
+                  <div style="display: flex;">
+                    <label for="">Número da Guia:</label>
+                  <span style="padding: 0 15px;">${general_data.NumeroGuia}</span>
+                  <label for="">Emitida por:</label>
+                  <span style="padding: 0 15px;">${general_data.EmitidaPor}</span>
+                  </div>  
+                  
+              </div>
+    
+              <div class="col">
+                  <div class="flex" >
+                      <label class="subtitulo" for="Empregador" style=" font-weight: bold; padding-right:15px;" > Qtd. Trabalhadores:</label>
+                      <span style="text-align: right;"> ${data.length}</span>
+                      <label class="subtitulo" for="Empregador"> Origem:</label>
+                      <span>${general_data.Origem}</span>
+                  </div>
+                  
+                  <div class="flex">
+                    <label for="" class="subtitulo" style=" font-weight: bold; text-align: right; ;
+                  padding-right:42px;">Data Emissão:</label>
+                  <span >${data_atual} (Brasília)</span>
+                  </div>
+                  
+              </div>
+    
+          </div>
+    
+          <div class="tituloTabela">
+              <span><b>Relação de Tipos de Valor</b></span>
+          </div>
+          <hr />
+          </header>
+          <main>
+          <div class="topoTabela">
+            <div class="infoTabela">
+              <label for="">Estabelecimento:</label>
+              <span>${general_data.Estabelecimento}</span>
+            </div>
+
+          </div>
+
+          <table
+            style="
+              width: 100%;
+              border-collapse: collapse;
+              text-align: left;
+              background-color: #e4e6d8;
+            "
+          >
+            <tr style="background-color: #ccccbe; height: 25px">
+              <th style="text-align: center">Comp. Apuração</th>
+              <th style="text-align: center">Categoria</th>
+              <th style="max-width: 600px">Qtd. Trabalhadores</th>
+              <th style="width: 125px">
+                Base Remuneração<br />
+                Total
+              </th>
+              <th style="max-width: 150px">FGTS Mensal na Guia</th>
+              <th style="text-align: right; padding-right: 20px">
+                FGTS Rescisório na<br />
+                Guia
+              </th>
+              <th>
+                Ind. Compensatória<br />
+                na Guia
+              </th>
+              <th>Juros</th>
+              <th style="text-align: right; max-width: 50px">Atualiz. Monetária</th>
+              <th style="text-align: right">Multa</th>
+
+              <th style="text-align: right">Total</th>
+            </tr>
+
+            <tr>
+              <td style="text-align: center">${data[0]["Comp. Apuração"]}</td> 
+              <td style="text-align: center">${data[0]["Categoria"]}</td>
+              <td style="border-right: 3px solid white">${data.length}</td>
+              <td style="border-right: 3px solid white">${numberToReal(
+          sumData(undefined, "Base Remuneração Total", data, "float")
+        )}</td>
+              <td>${numberToReal(
+          sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Mensal"
+          )
+        )}</td>
+              <td style="text-align: right; padding-right: 20px!important">${numberToReal(
+          sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Verba Indenizatória",
+            "Sum"
+          )
+        )}</td>
+              <td style="padding-left: 5px!important">${numberToReal(
+          sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Multa Rescisória",
+            "Sum"
+          )
+        )}</td>
+              <td>${numberToReal(sumData(undefined, "Juros", data, "float"))}</td>
+              <td style="text-align: right; border-left: 3px solid white">${numberToReal(
+          sumData(undefined, "Atualiz. Monetária", data, "float")
+        )}</td>
+              <td style="text-align: right">${numberToReal(
+          sumData(undefined, "Multa", data, "float")
+        )}</td>
+              <td style="text-align: right">${numberToReal(
+          sumData(undefined, "Total", data, "float")
+        )}</td>
+            </tr>
+
+            <tr style="background-color: white">
+              <td style="text-align: center"></td>
+              <td></td>
+              <td style="border-right: 3px solid white">
+                <b>Total da Guia</b>
+              </td>
+              <td style="border-right: 3px solid white"><b>${numberToReal(
+          sumData(undefined, "Base Remuneração Total", data, "float")
+        )}
+                </b></td>
+              <td><b>${numberToReal(
+          sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Mensal"
+          )
+        )}</b></td>
+              <td style="text-align: right; padding-right: 20px!important"><b>${numberToReal(
+          sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Verba Indenizatória",
+            "Sum"
+          )
+        )}</b></td>
+              <td style="padding-left: 5px!important"><b>${numberToReal(
+          sumData(
+            undefined,
+            "Valor FGTS na Guia",
+            data,
+            "float",
+            "Tipo Depósito",
+            "Multa Rescisória",
+            "Sum"
+          )
+        )}</b></td>
+              <td><b>${numberToReal(
+          sumData(undefined, "Juros", data, "float")
+        )}</b></td>
+              <td style="text-align: right; border-left: 3px solid white">
+                <b>${numberToReal(
+          sumData(undefined, "Atualiz. Monetária", data, "float")
+        )}</b>
+              </td>
+              <td style="text-align: right"><b>${numberToReal(
+          sumData(undefined, "Multa", data, "float")
+        )}</b></td>
+              <td style="text-align: right"><b>${numberToReal(
+          sumData(undefined, "Total", data, "float")
+        )}</b></td>
+            </tr>
+          </table>
+        </main>
+
+        <footer>
+          <hr />
+          <div></div>
+          <div
+            style="
+              display: flex;
+              font-size: 8px;
+              justify-content: space-between;
+              padding: 2px 2px;
+            "
+          >
+            <p>Todos os valores exibidos estão expressos em reais (R$)</p>
+            <div style="display: flex; justify-content: space-around">
+              <p>Relatório Emitido em: ${data_atual}.</p>
+
+              <p style="margin-left: 50px" class=testepagina>Página ${paginaFinal - 1
+          } de ${paginaFinal}</p>
+            </div>
+          </div>
+          <span></span>
+        </footer>
+        <div class="quebraPag"></div>
+
+
+`;
+
+
+
+
+          body.append(element);
           body.append(relacao_tomadores_servico);
-          fixPages();
-        });
-      }
-      run();
-      function fixPages() {
-        const pages = document.querySelectorAll(".testepagina");
-        pages.forEach((page, i) => {
-          page.innerHTML = `Página ${i + 1} de ${pages.length}`;
-        });
-        return;
-      }
-    </script>
-  </body>
+          body.append(relacao_trabalhadores);
+          body.append(relacao_tipo_valor);
+
+
+        fixPages();
+      });
+    }
+    run();
+    function fixPages() {
+      const pages = document.querySelectorAll(".testepagina");
+      pages.forEach((page, i) => {
+        page.innerHTML = `Página ${i + 1} de ${pages.length}`;
+      });
+      return;
+    }
+  </script>
+</body>
+
 </html>

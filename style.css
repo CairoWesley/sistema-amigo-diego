@@ -136,3 +136,12 @@ footer {
 .quebraPag {
   page-break-after: always;
 }
+
+
+.ml-15{
+  margin-left: 45px;
+}
+
+.vencimentoGuia{
+  margin-left: 10px;
+}
